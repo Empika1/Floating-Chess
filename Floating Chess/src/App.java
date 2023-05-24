@@ -1,20 +1,17 @@
 import javax.swing.*;
+import Game.*;
 
-import Images.ImageManager;
-
-import java.awt.*;
-
-public class App extends JFrame {
+public class App {
     public static void main(String[] args) {
-        new App();
-    }
+        JFrame f = new JFrame("title");
+        f.setLayout(null);
 
-    public App() {
-        setSize(1000, 1000);
-        setVisible(true);
-    }
-
-    public void paint(Graphics g) {
-        ImageManager.resize(ImageManager.board, 256, 256).paintIcon(this, g, 0, 0);
+        f.setSize(1024, 1024);
+        f.setLayout(null);
+        f.setVisible(true);
+        Game r = new Game();
+        r.setLocation(100, 100);
+        f.add(r);
+        r.startRendering();
     }
 }
