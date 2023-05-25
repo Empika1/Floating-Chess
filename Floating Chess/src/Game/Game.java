@@ -130,7 +130,6 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
                 movePieces();
                 validate();
                 repaint();
-                updateInput();
             }
         });
         gameThread.run();
@@ -145,18 +144,13 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
     ArrayList<Piece> blackPiecesCaptured = new ArrayList<Piece>();
 
     public void movePieces() {
-        try {
-            Thread.sleep(1);
-        }
-        catch (Exception e) {
-
-        }
+        //Thread.yield();
         if (turnNumber % 2 == 0)
             turn = ChessColor.BLACK;
         else
             turn = ChessColor.WHITE;
 
-        if (mouseJustPressed && heldPiece == null) {
+        if (mousePressed && heldPiece == null) {
             if (turn == ChessColor.WHITE) {
                 for (Piece p : whitePieces) {
                     if (p.isInHitbox(mouseX, mouseY)) {
@@ -176,7 +170,7 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
             }
         }
 
-        if (mouseJustReleased && heldPiece != null) {
+        if (!mousePressed && heldPiece != null) {
             if (turn == ChessColor.WHITE) {
                 whitePieces.add(heldPiece);
             } else {
@@ -218,11 +212,6 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         g.dispose();
     }
 
-    public void updateInput() {
-        mouseJustPressed = false;
-        mouseJustReleased = false;
-    }
-
     public int boardXToPanelX(double xOrig) {
         return (int) (xOrig / 8 * boardIcon.getIconWidth());
     }
@@ -242,8 +231,6 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
     volatile double mouseX;
     volatile double mouseY;
     volatile boolean mousePressed = false;
-    volatile boolean mouseJustPressed = false;
-    volatile boolean mouseJustReleased = false;
 
     @Override
     public void mouseMoved(MouseEvent m) {
@@ -261,15 +248,13 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
     public void mousePressed(MouseEvent m) {
         if(m.getButton() == MouseEvent.BUTTON1) {
             mousePressed = true;
-            mouseJustPressed = true;
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent m) {
         if(m.getButton() == MouseEvent.BUTTON1) {
-            mousePressed = true;
-            mouseJustReleased = true;
+            mousePressed = false;
         }
     }
 
