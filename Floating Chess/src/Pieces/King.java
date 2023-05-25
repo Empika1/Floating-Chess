@@ -37,7 +37,7 @@ public final class King extends Piece {
         }
 
         Vector2 diff = pos.subtract(getTruePos());
-        Vector2 scaledDiff = diff.scale(moveRadius);
+        Vector2 scaledDiff = diff.setLength(moveRadius);
         return getTruePos().add(scaledDiff);
     }
 

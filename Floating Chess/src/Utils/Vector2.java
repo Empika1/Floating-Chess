@@ -24,18 +24,22 @@ public class Vector2 {
     public double getSquaredLength() {
         return x * x + y * y;
     }
+    
+    public Vector2 scale(double scale) {
+        return new Vector2(x * scale, y * scale);
+    }
 
     public double getLength() {
         return Math.sqrt(getSquaredLength());
     }
 
-    public Vector2 scale(double desiredlength) {
+    public Vector2 setLength(double desiredlength) {
         double currentLength = Math.sqrt(x * x + y * y);
         return new Vector2(x / currentLength * desiredlength, y / currentLength * desiredlength);
     }
 
     public Vector2 normalize() {
-        return scale(1);
+        return setLength(1);
     }
 
     public Vector2 inverse() {

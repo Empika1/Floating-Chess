@@ -25,17 +25,21 @@ public class Vector2I {
         return x * x + y * y;
     }
 
+    public Vector2I scale(double scale) {
+        return new Vector2I((int)(x * scale), (int)(y * scale));
+    }
+
     public double getLength() {
         return Math.sqrt(getSquaredLength());
     }
 
-    public Vector2I scale(double desiredlength) {
+    public Vector2I setLength(double desiredlength) {
         double currentLength = Math.sqrt(x * x + y * y);
         return new Vector2I((int) (x / currentLength * desiredlength), (int) (y / currentLength * desiredlength));
     }
 
     public Vector2I normalize() {
-        return scale(1);
+        return setLength(1);
     }
 
     public Vector2I inverse() {
