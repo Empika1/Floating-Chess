@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.util.*;
 import Images.*;
 
-public class Knight extends Piece {
+public final class Knight extends Piece {
     static final String pieceName = "Knight";
 
     public String getPieceName() {

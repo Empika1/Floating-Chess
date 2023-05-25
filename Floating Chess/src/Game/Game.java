@@ -145,6 +145,12 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
     ArrayList<Piece> blackPiecesCaptured = new ArrayList<Piece>();
 
     public void movePieces() {
+        try {
+            Thread.sleep(1);
+        }
+        catch (Exception e) {
+
+        }
         if (turnNumber % 2 == 0)
             turn = ChessColor.BLACK;
         else
@@ -205,6 +211,8 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         if(heldPiece != null)
             heldPiece.draw(bbg, this);
 
+        //new ImageManager().test.paintIcon(this, bbg, 0, 0);
+
         // draw bbg to g
         g.drawImage(offScreenBuffer, 0, 0, this);
         g.dispose();
@@ -231,11 +239,11 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         return ((double) yOrig * 8) / boardIcon.getIconHeight();
     }
 
-    double mouseX;
-    double mouseY;
-    boolean mousePressed = false;
-    boolean mouseJustPressed = false;
-    boolean mouseJustReleased = false;
+    volatile double mouseX;
+    volatile double mouseY;
+    volatile boolean mousePressed = false;
+    volatile boolean mouseJustPressed = false;
+    volatile boolean mouseJustReleased = false;
 
     @Override
     public void mouseMoved(MouseEvent m) {
