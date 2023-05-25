@@ -3,6 +3,7 @@ package Pieces;
 import javax.swing.*;
 import java.util.*;
 import Images.*;
+import Utils.*;
 
 public final class King extends Piece {
     static final String pieceName = "King";
@@ -13,12 +14,31 @@ public final class King extends Piece {
 
     public double moveRadius = 1;
 
-    public boolean canMoveTo(double x, double y, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        if (isOverlappingEdge(x, y) || isOverlappingSameColorPiece(x, y, whitePieces, blackPieces))
-            return false;
-        if ((x - getTrueX()) * (x - getTrueX()) + (y - getTrueY()) * (y - getTrueY()) <= moveRadius * moveRadius)
+    public boolean canMoveTo(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        /*
+         * if (isOverlappingEdge(x, y) || isOverlappingSameColorPiece(x, y, whitePieces,
+         * blackPieces))
+         * return false;
+         */
+        if (pos.subtract(getTruePos()).getSquaredLength() <= moveRadius * moveRadius)
             return true;
         return false;
+    }
+
+    public Vector2 closestValidPoint(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        if (canMoveTo(pos, whitePieces, blackPieces))
+            return pos;
+
+        if (pos.y == getTruePos().y) {
+            if (pos.x > getTruePos().x)
+                return new Vector2(getTruePos().x + moveRadius, getTruePos().y);
+            if (pos.x > getTruePos().x)
+            return new Vector2(getTruePos().x - moveRadius, getTruePos().y);
+        }
+
+        Vector2 diff = pos.subtract(getTruePos());
+        Vector2 scaledDiff = diff.scale(moveRadius);
+        return getTruePos().add(scaledDiff);
     }
 
     static final double hitboxRadius = 0.375;

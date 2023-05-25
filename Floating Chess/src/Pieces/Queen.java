@@ -3,6 +3,7 @@ package Pieces;
 import javax.swing.*;
 import java.util.*;
 import Images.*;
+import Utils.*;
 
 public final class Queen extends Piece {
     static final String pieceName = "Queen";
@@ -11,10 +12,12 @@ public final class Queen extends Piece {
         return pieceName;
     }
 
-    public boolean canMoveTo(double x, double y, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        if (isOverlappingEdge(x, y) || isOverlappingSameColorPiece(x, y, whitePieces, blackPieces))
-            return false;
+    public boolean canMoveTo(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         return true;
+    }
+
+    public Vector2 closestValidPoint(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        return pos.copy();
     }
 
     static final double hitboxRadius = 0.375;
