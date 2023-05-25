@@ -22,42 +22,42 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         int id = 0;
         blackPieces.add(new Rook());
         blackPieces.get(0).setID(id++);
-        blackPieces.get(0).setXPos(0.5);
-        blackPieces.get(0).setYPos(0.5);
+        blackPieces.get(0).setTrueX(0.5);
+        blackPieces.get(0).setTrueY(0.5);
         blackPieces.add(new Knight());
         blackPieces.get(1).setID(id++);
-        blackPieces.get(1).setXPos(1.5);
-        blackPieces.get(1).setYPos(0.5);
+        blackPieces.get(1).setTrueX(1.5);
+        blackPieces.get(1).setTrueY(0.5);
         blackPieces.add(new Bishop());
         blackPieces.get(2).setID(id++);
-        blackPieces.get(2).setXPos(2.5);
-        blackPieces.get(2).setYPos(0.5);
+        blackPieces.get(2).setTrueX(2.5);
+        blackPieces.get(2).setTrueY(0.5);
         blackPieces.add(new Queen());
         blackPieces.get(3).setID(id++);
-        blackPieces.get(3).setXPos(3.5);
-        blackPieces.get(3).setYPos(0.5);
+        blackPieces.get(3).setTrueX(3.5);
+        blackPieces.get(3).setTrueY(0.5);
         blackPieces.add(new King());
         blackPieces.get(4).setID(id++);
-        blackPieces.get(4).setXPos(4.5);
-        blackPieces.get(4).setYPos(0.5);
+        blackPieces.get(4).setTrueX(4.5);
+        blackPieces.get(4).setTrueY(0.5);
         blackPieces.add(new Bishop());
         blackPieces.get(5).setID(id++);
-        blackPieces.get(5).setXPos(5.5);
-        blackPieces.get(5).setYPos(0.5);
+        blackPieces.get(5).setTrueX(5.5);
+        blackPieces.get(5).setTrueY(0.5);
         blackPieces.add(new Knight());
         blackPieces.get(6).setID(id++);
-        blackPieces.get(6).setXPos(6.5);
-        blackPieces.get(6).setYPos(0.5);
+        blackPieces.get(6).setTrueX(6.5);
+        blackPieces.get(6).setTrueY(0.5);
         blackPieces.add(new Rook());
         blackPieces.get(7).setID(id++);
-        blackPieces.get(7).setXPos(7.5);
-        blackPieces.get(7).setYPos(0.5);
+        blackPieces.get(7).setTrueX(7.5);
+        blackPieces.get(7).setTrueY(0.5);
 
         for (int i = 0; i <= 7; i++) {
             blackPieces.add(new Pawn());
             blackPieces.get(i + 8).setID(id++);
-            blackPieces.get(i + 8).setXPos(i + 0.5);
-            blackPieces.get(i + 8).setYPos(1.5);
+            blackPieces.get(i + 8).setTrueX(i + 0.5);
+            blackPieces.get(i + 8).setTrueY(1.5);
         }
 
         for (int i = 0; i <= 15; i++)
@@ -65,42 +65,42 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
 
         whitePieces.add(new Rook());
         whitePieces.get(0).setID(id++);
-        whitePieces.get(0).setXPos(0.5);
-        whitePieces.get(0).setYPos(7.5);
+        whitePieces.get(0).setTrueX(0.5);
+        whitePieces.get(0).setTrueY(7.5);
         whitePieces.add(new Knight());
         whitePieces.get(1).setID(id++);
-        whitePieces.get(1).setXPos(1.5);
-        whitePieces.get(1).setYPos(7.5);
+        whitePieces.get(1).setTrueX(1.5);
+        whitePieces.get(1).setTrueY(7.5);
         whitePieces.add(new Bishop());
         whitePieces.get(2).setID(id++);
-        whitePieces.get(2).setXPos(2.5);
-        whitePieces.get(2).setYPos(7.5);
+        whitePieces.get(2).setTrueX(2.5);
+        whitePieces.get(2).setTrueY(7.5);
         whitePieces.add(new Queen());
         whitePieces.get(3).setID(id++);
-        whitePieces.get(3).setXPos(3.5);
-        whitePieces.get(3).setYPos(7.5);
+        whitePieces.get(3).setTrueX(3.5);
+        whitePieces.get(3).setTrueY(7.5);
         whitePieces.add(new King());
         whitePieces.get(4).setID(id++);
-        whitePieces.get(4).setXPos(4.5);
-        whitePieces.get(4).setYPos(7.5);
+        whitePieces.get(4).setTrueX(4.5);
+        whitePieces.get(4).setTrueY(7.5);
         whitePieces.add(new Bishop());
         whitePieces.get(5).setID(id++);
-        whitePieces.get(5).setXPos(5.5);
-        whitePieces.get(5).setYPos(7.5);
+        whitePieces.get(5).setTrueX(5.5);
+        whitePieces.get(5).setTrueY(7.5);
         whitePieces.add(new Knight());
         whitePieces.get(6).setID(id++);
-        whitePieces.get(6).setXPos(6.5);
-        whitePieces.get(6).setYPos(7.5);
+        whitePieces.get(6).setTrueX(6.5);
+        whitePieces.get(6).setTrueY(7.5);
         whitePieces.add(new Rook());
         whitePieces.get(7).setID(id++);
-        whitePieces.get(7).setXPos(7.5);
-        whitePieces.get(7).setYPos(7.5);
+        whitePieces.get(7).setTrueX(7.5);
+        whitePieces.get(7).setTrueY(7.5);
 
         for (int i = 0; i <= 7; i++) {
             whitePieces.add(new Pawn());
             whitePieces.get(i + 8).setID(id++);
-            whitePieces.get(i + 8).setXPos(i + 0.5);
-            whitePieces.get(i + 8).setYPos(6.5);
+            whitePieces.get(i + 8).setTrueX(i + 0.5);
+            whitePieces.get(i + 8).setTrueY(6.5);
         }
 
         for (int i = 0; i <= 15; i++)
@@ -170,6 +170,8 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         }
 
         if (!mousePressed && heldPiece != null) {
+            heldPiece.setTrueX(heldPiece.getVisibleX());
+            heldPiece.setTrueY(heldPiece.getVisibleY());
             if (turn == ChessColor.WHITE) {
                 whitePieces.add(heldPiece);
             } else {
@@ -179,9 +181,9 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
             turnNumber++;
         }
 
-        if (heldPiece != null) {
-            heldPiece.setXPos(mouseX);
-            heldPiece.setYPos(mouseY);
+        if (heldPiece != null && heldPiece.canMoveTo(mouseX, mouseY, whitePieces, blackPieces)) {
+            heldPiece.setVisibleX(mouseX);
+            heldPiece.setVisibleY(mouseY);
         }
     }
 
@@ -203,8 +205,6 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
             p.draw(bbg, this);
         if(heldPiece != null)
             heldPiece.draw(bbg, this);
-
-        //new ImageManager().test.paintIcon(this, bbg, 0, 0);
 
         // draw bbg to g
         g.drawImage(offScreenBuffer, 0, 0, this);

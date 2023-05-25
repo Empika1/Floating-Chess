@@ -28,24 +28,46 @@ public abstract class Piece {
         color = set;
     }
 
-    protected double xPos;
+    protected double trueX;
 
-    public double getXPos() {
-        return xPos;
+    public double getTrueX() {
+        return trueX;
     }
 
-    public void setXPos(double set) {
-        xPos = set;
+    public void setTrueX(double set) {
+        trueX = set;
+        visibleX = set;
     }
 
-    protected double yPos;
+    protected double trueY;
 
-    public double getYPos() {
-        return yPos;
+    public double getTrueY() {
+        return trueY;
     }
 
-    public void setYPos(double set) {
-        yPos = set;
+    public void setTrueY(double set) {
+        trueY = set;
+        visibleY = set;
+    }
+
+    protected double visibleX;
+
+    public double getVisibleX() {
+        return visibleX;
+    }
+
+    public void setVisibleX(double set) {
+        visibleX = set;
+    }
+
+    protected double visibleY;
+
+    public double getVisibleY() {
+        return visibleY;
+    }
+
+    public void setVisibleY(double set) {
+        visibleY = set;
     }
 
     public abstract boolean canMoveTo(double x, double y, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
@@ -55,46 +77,46 @@ public abstract class Piece {
     public abstract double getHurtboxRadius();
 
     public boolean isInHitbox(double xOther, double yOther) {
-        double xDiff = xOther - xPos;
-        double yDiff = yOther - yPos;
+        double xDiff = xOther - trueX;
+        double yDiff = yOther - trueY;
         double distanceSquared = xDiff * xDiff + yDiff * yDiff;
         return distanceSquared <= getHitboxRadius();
     }
 
     public boolean isInHurtbox(double xOther, double yOther) {
-        double xDiff = xOther - xPos;
-        double yDiff = yOther - yPos;
+        double xDiff = xOther - trueX;
+        double yDiff = yOther - trueY;
         double distanceSquared = xDiff * xDiff + yDiff * yDiff;
         return distanceSquared <= getHurtboxRadius();
     }
 
     public static boolean hitboxOverlapsHitbox(Piece a, Piece b) {
-        double xDiff = a.getXPos() - b.getXPos();
-        double yDiff = a.getYPos() - b.getYPos();
+        double xDiff = a.getTrueX() - b.getTrueX();
+        double yDiff = a.getTrueY() - b.getTrueY();
         double distanceSquared = xDiff * xDiff + yDiff * yDiff;
         return distanceSquared <= a.getHitboxRadius() + b.getHitboxRadius();
     }
 
     public static boolean hurtboxOverlapsHitbox(Piece a, Piece b) {
-        double xDiff = a.getXPos() - b.getXPos();
-        double yDiff = a.getYPos() - b.getYPos();
+        double xDiff = a.getTrueX() - b.getTrueX();
+        double yDiff = a.getTrueY() - b.getTrueY();
         double distanceSquared = xDiff * xDiff + yDiff * yDiff;
         return distanceSquared <= a.getHurtboxRadius() + b.getHitboxRadius();
     }
 
     public static boolean hurtboxOverlapsHurtbox(Piece a, Piece b) {
-        double xDiff = a.getXPos() - b.getXPos();
-        double yDiff = a.getYPos() - b.getYPos();
+        double xDiff = a.getTrueX() - b.getTrueX();
+        double yDiff = a.getTrueY() - b.getTrueY();
         double distanceSquared = xDiff * xDiff + yDiff * yDiff;
         return distanceSquared <= a.getHurtboxRadius() + b.getHurtboxRadius();
     }
 
     public boolean isOverlappingEdge() {
-        return getXPos() - getHitboxRadius() < 0 || getXPos() - getHurtboxRadius() < 0
-                || getYPos() - getHitboxRadius() < 0
-                || getYPos() - getHurtboxRadius() < 0 || getXPos() + getHitboxRadius() > 8
-                || getXPos() + getHurtboxRadius() > 8 || getYPos() + getHitboxRadius() > 8
-                || getYPos() + getHurtboxRadius() > 8;
+        return getTrueX() - getHitboxRadius() < 0 || getTrueX() - getHurtboxRadius() < 0
+                || getTrueY() - getHitboxRadius() < 0
+                || getTrueY() - getHurtboxRadius() < 0 || getTrueX() + getHitboxRadius() > 8
+                || getTrueX() + getHurtboxRadius() > 8 || getTrueY() + getHitboxRadius() > 8
+                || getTrueY() + getHurtboxRadius() > 8;
     }
 
     public boolean isOverlappingSameColorPiece(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
@@ -118,8 +140,8 @@ public abstract class Piece {
     public static final int pieceSizeY = Game.boardSizeY / 8;
 
     public void draw(Graphics g, Game game) {
-        int xPosPanel = game.boardXToPanelX(getXPos());
-        int yPosPanel = game.boardYToPanelY(getYPos());
+        int xPosPanel = game.boardXToPanelX(getVisibleX());
+        int yPosPanel = game.boardYToPanelY(getVisibleY());
         getImageIcon().paintIcon(game, g, xPosPanel - (pieceSizeX / 2), yPosPanel - (pieceSizeY / 2));
     }
 }

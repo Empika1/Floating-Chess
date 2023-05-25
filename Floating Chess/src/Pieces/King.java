@@ -11,10 +11,14 @@ public final class King extends Piece {
         return pieceName;
     }
 
+    public double moveRadius = 1;
+
     public boolean canMoveTo(double x, double y, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (isOverlappingEdge() || isOverlappingSameColorPiece(whitePieces, blackPieces))
             return false;
-        return true;
+        if ((x - getTrueX()) * (x - getTrueX()) + (y - getTrueY()) * (y - getTrueY()) <= moveRadius * moveRadius)
+            return true;
+        return false;
     }
 
     static final double hitboxRadius = 0.375;
