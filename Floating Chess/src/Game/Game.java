@@ -144,7 +144,6 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
     ArrayList<Piece> blackPiecesCaptured = new ArrayList<Piece>();
 
     public void movePieces() {
-        //Thread.yield();
         if (turnNumber % 2 == 0)
             turn = ChessColor.BLACK;
         else
