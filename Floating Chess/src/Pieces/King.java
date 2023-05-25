@@ -14,7 +14,7 @@ public final class King extends Piece {
     public double moveRadius = 1;
 
     public boolean canMoveTo(double x, double y, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        if (isOverlappingEdge() || isOverlappingSameColorPiece(whitePieces, blackPieces))
+        if (isOverlappingEdge(x, y) || isOverlappingSameColorPiece(x, y, whitePieces, blackPieces))
             return false;
         if ((x - getTrueX()) * (x - getTrueX()) + (y - getTrueY()) * (y - getTrueY()) <= moveRadius * moveRadius)
             return true;

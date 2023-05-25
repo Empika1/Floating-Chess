@@ -124,9 +124,16 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         addMouseMotionListener(this);
     }
 
+    double mouseXGame;
+    double mouseYGame;
+    boolean mousePressedGame;
+
     public void startRendering() {
         Thread gameThread = new Thread(() -> {
             while (true) {
+                mouseXGame = mouseX;
+                mouseYGame = mouseY;
+                mousePressedGame = mousePressed;
                 movePieces();
                 validate();
                 repaint();
@@ -149,10 +156,10 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         else
             turn = ChessColor.WHITE;
 
-        if (mousePressed && heldPiece == null) {
+        if (mousePressedGame && heldPiece == null) {
             if (turn == ChessColor.WHITE) {
                 for (Piece p : whitePieces) {
-                    if (p.isInHitbox(mouseX, mouseY)) {
+                    if (p.isInHitbox(mouseXGame, mouseYGame)) {
                         heldPiece = p;
                         whitePieces.remove(p);
                         break;
@@ -160,7 +167,7 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
                 }
             } else {
                 for (Piece p : blackPieces) {
-                    if (p.isInHitbox(mouseX, mouseY)) {
+                    if (p.isInHitbox(mouseXGame, mouseYGame)) {
                         heldPiece = p;
                         blackPieces.remove(p);
                         break;
@@ -169,7 +176,7 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
             }
         }
 
-        if (!mousePressed && heldPiece != null) {
+        if (!mousePressedGame && heldPiece != null) {
             heldPiece.setTrueX(heldPiece.getVisibleX());
             heldPiece.setTrueY(heldPiece.getVisibleY());
             if (turn == ChessColor.WHITE) {
@@ -181,12 +188,13 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
             turnNumber++;
         }
 
-        if (heldPiece != null && heldPiece.canMoveTo(mouseX, mouseY, whitePieces, blackPieces)) {
-            heldPiece.setVisibleX(mouseX);
-            heldPiece.setVisibleY(mouseY);
+        if (heldPiece != null && heldPiece.canMoveTo(mouseXGame, mouseYGame, whitePieces, blackPieces)) {
+            heldPiece.setVisibleX(mouseXGame);
+            heldPiece.setVisibleY(mouseYGame);
         }
     }
 
+    BufferedImage b = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -203,8 +211,17 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
             p.draw(bbg, this);
         for (Piece p : whitePieces)
             p.draw(bbg, this);
-        if(heldPiece != null)
+        if (heldPiece != null)
             heldPiece.draw(bbg, this);
+
+        /*for(int i = 0; i < 1000; i++) {
+            for(int i2 = 0; i2 < 1000; i2++) {
+                int p = ((i/4) << 24) | ((i2/4) << 16) | ((i/4) << 8) | (i2/4);
+                b.setRGB(i, i2, p);
+            }
+        }*/
+        ImageIcon test = new ImageIcon(b);
+        test.paintIcon(this, bbg, 0, 0);
 
         // draw bbg to g
         g.drawImage(offScreenBuffer, 0, 0, this);
@@ -245,14 +262,14 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent m) {
-        if(m.getButton() == MouseEvent.BUTTON1) {
+        if (m.getButton() == MouseEvent.BUTTON1) {
             mousePressed = true;
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent m) {
-        if(m.getButton() == MouseEvent.BUTTON1) {
+        if (m.getButton() == MouseEvent.BUTTON1) {
             mousePressed = false;
         }
     }

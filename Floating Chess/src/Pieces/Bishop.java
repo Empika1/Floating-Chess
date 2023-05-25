@@ -12,7 +12,7 @@ public final class Bishop extends Piece {
     }
 
     public boolean canMoveTo(double x, double y, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        if (isOverlappingEdge() || isOverlappingSameColorPiece(whitePieces, blackPieces))
+        if (isOverlappingEdge(x, y) || isOverlappingSameColorPiece(x, y, whitePieces, blackPieces))
             return false;
         return true;
     }

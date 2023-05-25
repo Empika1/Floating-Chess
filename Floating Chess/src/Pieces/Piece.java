@@ -90,44 +90,51 @@ public abstract class Piece {
         return distanceSquared <= getHurtboxRadius();
     }
 
-    public static boolean hitboxOverlapsHitbox(Piece a, Piece b) {
-        double xDiff = a.getTrueX() - b.getTrueX();
-        double yDiff = a.getTrueY() - b.getTrueY();
+    public static boolean hitboxOverlapsHitbox(Piece a, double aX, double aY, Piece b) {
+        double xDiff = aX - b.getTrueX();
+        double yDiff = aY - b.getTrueY();
         double distanceSquared = xDiff * xDiff + yDiff * yDiff;
         return distanceSquared <= a.getHitboxRadius() + b.getHitboxRadius();
     }
 
-    public static boolean hurtboxOverlapsHitbox(Piece a, Piece b) {
-        double xDiff = a.getTrueX() - b.getTrueX();
-        double yDiff = a.getTrueY() - b.getTrueY();
+    public static boolean hurtboxOverlapsHitbox(Piece a, double aX, double aY, Piece b) {
+        double xDiff = aX - b.getTrueX();
+        double yDiff = aY - b.getTrueY();
         double distanceSquared = xDiff * xDiff + yDiff * yDiff;
         return distanceSquared <= a.getHurtboxRadius() + b.getHitboxRadius();
     }
 
-    public static boolean hurtboxOverlapsHurtbox(Piece a, Piece b) {
-        double xDiff = a.getTrueX() - b.getTrueX();
-        double yDiff = a.getTrueY() - b.getTrueY();
+    public static boolean hurtboxOverlapsHurtbox(Piece a, double aX, double aY, Piece b) {
+        double xDiff = aX - b.getTrueX();
+        double yDiff = aY - b.getTrueY();
         double distanceSquared = xDiff * xDiff + yDiff * yDiff;
         return distanceSquared <= a.getHurtboxRadius() + b.getHurtboxRadius();
     }
 
-    public boolean isOverlappingEdge() {
-        return getTrueX() - getHitboxRadius() < 0 || getTrueX() - getHurtboxRadius() < 0
-                || getTrueY() - getHitboxRadius() < 0
-                || getTrueY() - getHurtboxRadius() < 0 || getTrueX() + getHitboxRadius() > 8
-                || getTrueX() + getHurtboxRadius() > 8 || getTrueY() + getHitboxRadius() > 8
-                || getTrueY() + getHurtboxRadius() > 8;
+    public boolean isOverlappingEdge(double x, double y) {
+        return x - getHitboxRadius() < 0 || x - getHurtboxRadius() < 0
+                || y - getHitboxRadius() < 0
+                || y - getHurtboxRadius() < 0 || x + getHitboxRadius() > 8
+                || x + getHurtboxRadius() > 8 || y + getHitboxRadius() > 8
+                || y + getHurtboxRadius() > 8;
     }
 
-    public boolean isOverlappingSameColorPiece(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public boolean isOverlappingSameColorPiece(double x, double y, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (color == ChessColor.WHITE) {
-            for (Piece p : whitePieces)
-                if (hitboxOverlapsHitbox(this, p) || hurtboxOverlapsHitbox(this, p) || hurtboxOverlapsHurtbox(this, p))
+            for (Piece p : whitePieces) {
+                if(equals(p))
+                    continue;
+                if (hitboxOverlapsHitbox(this, x, y, p))
                     return true;
+            }
+                
         } else {
-            for (Piece p : blackPieces)
-                if (hitboxOverlapsHitbox(this, p) || hurtboxOverlapsHitbox(this, p) || hurtboxOverlapsHurtbox(this, p))
+            for (Piece p : blackPieces) {
+                if(equals(p))
+                    continue;
+                if (hitboxOverlapsHitbox(this, x, y, p))
                     return true;
+            }
         }
         return false;
     }
