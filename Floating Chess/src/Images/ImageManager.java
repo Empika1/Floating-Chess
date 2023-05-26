@@ -2,6 +2,7 @@ package Images;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import Utils.*;
 
 public final class ImageManager {
     public static final ImageIcon wp = new ImageIcon(ImageManager.class.getResource("/Images/wp.png"));
@@ -27,9 +28,9 @@ public final class ImageManager {
     private ImageManager() {
     }
 
-    public static ImageIcon resize(ImageIcon original, int width, int height) {
+    public static ImageIcon resize(ImageIcon original, Vector2I size) {
         Image imgOriginal = original.getImage();
-        Image imgScaled = imgOriginal.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        Image imgScaled = imgOriginal.getScaledInstance(size.x, size.y, Image.SCALE_SMOOTH);
         return new ImageIcon(imgScaled);
     }
 }

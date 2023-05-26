@@ -29,52 +29,52 @@ public abstract class Piece {
         color = set;
     }
 
-    protected Vector2 truePos;
+    protected Vector2I truePos;
 
-    public Vector2 getTruePos() {
+    public Vector2I getTruePos() {
         return truePos;
     }
 
-    public void setTruePos(Vector2 set) {
+    public void setTruePos(Vector2I set) {
         truePos = set;
         visiblePos = set;
     }
 
-    protected Vector2 visiblePos;
+    protected Vector2I visiblePos;
 
-    public Vector2 getVisiblePos() {
+    public Vector2I getVisiblePos() {
         return visiblePos;
     }
 
-    public void setVisiblePos(Vector2 set) {
+    public void setVisiblePos(Vector2I set) {
         visiblePos = set;
     }
 
-    public abstract boolean canMoveTo(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
+    public abstract boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
 
-    public abstract Vector2 closestValidPoint(Vector2 pos, ArrayList<Piece> whitePieces,
+    public abstract Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces,
             ArrayList<Piece> blackPieces);
 
-    public abstract double getHitboxRadius();
+    public abstract int getHitboxRadius();
 
-    public boolean isInHitbox(Vector2 pos) {
-        Vector2 diff = pos.subtract(getTruePos());
+    public boolean isInHitbox(Vector2I pos) {
+        Vector2I diff = pos.subtract(getTruePos());
         double distanceSquared = diff.x * diff.x + diff.y * diff.y;
         return distanceSquared <= getHitboxRadius() * getHitboxRadius();
     }
 
-    public boolean hitboxOverlapsHitbox(Vector2 thisPos, Piece b) {
-        Vector2 diff = thisPos.subtract(b.getTruePos());
+    public boolean hitboxOverlapsHitbox(Vector2I thisPos, Piece b) {
+        Vector2I diff = thisPos.subtract(b.getTruePos());
         double distanceSquared = diff.x * diff.x + diff.y * diff.y;
         return distanceSquared <= (getHitboxRadius() + b.getHitboxRadius()) * (getHitboxRadius() + b.getHitboxRadius());
     }
 
-    public boolean isOverlappingEdge(Vector2 thisPos) {
+    public boolean isOverlappingEdge(Vector2I thisPos) {
         return thisPos.x - getHitboxRadius() < 0 || thisPos.y - getHitboxRadius() < 0
-                || thisPos.x + getHitboxRadius() > 8 || thisPos.y + getHitboxRadius() > 8;
+                || thisPos.x + getHitboxRadius() > Game.boardSizePixels.x || thisPos.y + Game.boardSizePixels.y > 8;
     }
 
-    public boolean isOverlappingSameColorPiece(Vector2 thisPos, ArrayList<Piece> whitePieces,
+    public boolean isOverlappingSameColorPiece(Vector2I thisPos, ArrayList<Piece> whitePieces,
             ArrayList<Piece> blackPieces) {
         if (color == ChessColor.WHITE) {
             for (Piece p : whitePieces) {
@@ -99,11 +99,10 @@ public abstract class Piece {
 
     public abstract ImageIcon getImageIcon();
 
-    public static final int pieceSizeX = Game.boardSizeX / 8;
-    public static final int pieceSizeY = Game.boardSizeY / 8;
+    public static final Vector2I pieceSizePixels = new Vector2I(Game.boardSizePixels.x / 8, Game.boardSizePixels.y / 8);
 
     public void draw(Graphics g, Game game) {
         Vector2I posPanel = game.boardPosToPanelPos(getVisiblePos());
-        getImageIcon().paintIcon(game, g, posPanel.x - (pieceSizeX / 2), posPanel.y - (pieceSizeY / 2));
+        getImageIcon().paintIcon(game, g, posPanel.x - (pieceSizePixels.x / 2), posPanel.y - (pieceSizePixels.y / 2));
     }
 }

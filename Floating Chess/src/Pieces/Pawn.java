@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.util.*;
 import Images.*;
 import Utils.*;
+import Game.*;
 
 public final class Pawn extends Piece {
     static final String pieceName = "Pawn";
@@ -12,24 +13,18 @@ public final class Pawn extends Piece {
         return pieceName;
     }
 
-    public boolean canMoveTo(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         return true;
     }
 
-    public Vector2 closestValidPoint(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         return pos.copy();
     }
 
-    static final double hitboxRadius = 0.375;
+    static final int hitboxRadius = (int)(0.375 * Game.boardSizeI.x / 8);
 
-    public double getHitboxRadius() {
+    public int getHitboxRadius() {
         return hitboxRadius;
-    }
-
-    static final double hurtboxRadius = 0.375;
-
-    public double getHurtboxRadius() {
-        return hurtboxRadius;
     }
 
     static final int materialValue = 1;
@@ -38,8 +33,8 @@ public final class Pawn extends Piece {
         return materialValue;
     }
 
-    static ImageIcon blackImage = ImageManager.resize(ImageManager.bp, pieceSizeX, pieceSizeY);
-    static ImageIcon whiteImage = ImageManager.resize(ImageManager.wp, pieceSizeX, pieceSizeY);
+    static ImageIcon blackImage = ImageManager.resize(ImageManager.bp, pieceSizePixels);
+    static ImageIcon whiteImage = ImageManager.resize(ImageManager.wp, pieceSizePixels);
 
     public ImageIcon getImageIcon() {
         switch (color) {

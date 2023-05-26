@@ -23,33 +23,34 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         int id = 0;
         blackPieces.add(new Rook());
         blackPieces.get(0).setID(id++);
-        blackPieces.get(0).setTruePos(new Vector2(0.5, 0.5));
+        blackPieces.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
         blackPieces.add(new Knight());
         blackPieces.get(1).setID(id++);
-        blackPieces.get(1).setTruePos(new Vector2(1.5, 0.5));
+        blackPieces.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
         blackPieces.add(new Bishop());
         blackPieces.get(2).setID(id++);
-        blackPieces.get(2).setTruePos(new Vector2(2.5, 0.5));
+        blackPieces.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
         blackPieces.add(new Queen());
         blackPieces.get(3).setID(id++);
-        blackPieces.get(3).setTruePos(new Vector2(3.5, 0.5));
+        blackPieces.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
         blackPieces.add(new King());
         blackPieces.get(4).setID(id++);
-        blackPieces.get(4).setTruePos(new Vector2(4.5, 0.5));
+        blackPieces.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
         blackPieces.add(new Bishop());
         blackPieces.get(5).setID(id++);
-        blackPieces.get(5).setTruePos(new Vector2(5.5, 0.5));
+        blackPieces.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
         blackPieces.add(new Knight());
         blackPieces.get(6).setID(id++);
-        blackPieces.get(6).setTruePos(new Vector2(6.5, 0.5));
+        blackPieces.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
         blackPieces.add(new Rook());
         blackPieces.get(7).setID(id++);
-        blackPieces.get(7).setTruePos(new Vector2(7.5, 0.5));
+        blackPieces.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
 
         for (int i = 0; i <= 7; i++) {
             blackPieces.add(new Pawn());
             blackPieces.get(i + 8).setID(id++);
-            blackPieces.get(i + 8).setTruePos(new Vector2(i + 0.5, 1.5));
+            blackPieces.get(i + 8)
+                    .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (1.5 * boardSizeI.x / 8)));
         }
 
         for (int i = 0; i <= 15; i++)
@@ -57,47 +58,47 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
 
         whitePieces.add(new Rook());
         whitePieces.get(0).setID(id++);
-        whitePieces.get(0).setTruePos(new Vector2(0.5, 7.5));
+        whitePieces.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
         whitePieces.add(new Knight());
         whitePieces.get(1).setID(id++);
-        whitePieces.get(1).setTruePos(new Vector2(1.5, 7.5));
+        whitePieces.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
         whitePieces.add(new Bishop());
         whitePieces.get(2).setID(id++);
-        whitePieces.get(2).setTruePos(new Vector2(2.5, 7.5));
+        whitePieces.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
         whitePieces.add(new Queen());
         whitePieces.get(3).setID(id++);
-        whitePieces.get(3).setTruePos(new Vector2(3.5, 7.5));
+        whitePieces.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
         whitePieces.add(new King());
         whitePieces.get(4).setID(id++);
-        whitePieces.get(4).setTruePos(new Vector2(4.5, 7.5));
+        whitePieces.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
         whitePieces.add(new Bishop());
         whitePieces.get(5).setID(id++);
-        whitePieces.get(5).setTruePos(new Vector2(5.5, 7.5));
+        whitePieces.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
         whitePieces.add(new Knight());
         whitePieces.get(6).setID(id++);
-        whitePieces.get(6).setTruePos(new Vector2(6.5, 7.5));
+        whitePieces.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
         whitePieces.add(new Rook());
         whitePieces.get(7).setID(id++);
-        whitePieces.get(7).setTruePos(new Vector2(7.5, 7.5));
+        whitePieces.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
 
         for (int i = 0; i <= 7; i++) {
             whitePieces.add(new Pawn());
             whitePieces.get(i + 8).setID(id++);
-            whitePieces.get(i + 8).setTruePos(new Vector2(i + 0.5, 6.5));
+            whitePieces.get(i + 8)
+                    .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (6.5 * boardSizeI.x / 8)));
         }
 
         for (int i = 0; i <= 15; i++)
             whitePieces.get(i).setColor(ChessColor.WHITE);
     }
 
-    public static final int boardSizeX = 512;
-    public static final int boardSizeY = 512;
+    public static final Vector2I boardSizePixels = new Vector2I(512, 512);
 
     BufferedImage offScreenBuffer;
-    static ImageIcon boardIcon = ImageManager.resize(ImageManager.board, boardSizeX, boardSizeY);
+    static ImageIcon boardIcon = ImageManager.resize(ImageManager.board, boardSizePixels);
 
     void setupPanel() {
-        setSize(boardSizeX, boardSizeY);
+        setSize(boardSizePixels.x, boardSizePixels.y);
         setVisible(true);
         offScreenBuffer = new BufferedImage(getSize().width, getSize().height, BufferedImage.TYPE_INT_ARGB);
     }
@@ -107,7 +108,7 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         addMouseMotionListener(this);
     }
 
-    Vector2 mousePosGame = new Vector2();
+    Vector2I mousePosGame = new Vector2I();
     boolean mousePressedGame;
 
     public void startRendering() {
@@ -130,6 +131,8 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
     ArrayList<Piece> blackPieces = new ArrayList<Piece>();
     ArrayList<Piece> whitePiecesCaptured = new ArrayList<Piece>();
     ArrayList<Piece> blackPiecesCaptured = new ArrayList<Piece>();
+
+    public static final Vector2I boardSizeI = new Vector2I(4096, 4096);
 
     public void movePieces() {
         if (turnNumber % 2 == 0)
@@ -169,9 +172,8 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         }
 
         if (heldPiece != null) {
-            Vector2 closestValidPointToMouse = heldPiece.closestValidPoint(mousePosGame, whitePieces, blackPieces);
+            Vector2I closestValidPointToMouse = heldPiece.closestValidPoint(mousePosGame, whitePieces, blackPieces);
             heldPiece.setVisiblePos(closestValidPointToMouse);
-            System.out.println(closestValidPointToMouse.x + " " + closestValidPointToMouse.y);
         }
     }
 
@@ -212,16 +214,15 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         g.dispose();
     }
 
-    public Vector2I boardPosToPanelPos(Vector2 orig) {
-        return new Vector2I((int) (orig.x / 8 * boardIcon.getIconWidth()),
-                (int) (orig.y / 8 * boardIcon.getIconHeight()));
+    public Vector2I boardPosToPanelPos(Vector2I orig) {
+        return new Vector2I(orig.x * boardSizePixels.x / boardSizeI.x, orig.y * boardSizePixels.y / boardSizeI.y);
     }
 
-    public Vector2 panelPosToBoardPos(Vector2I orig) {
-        return new Vector2(((double) orig.x * 8) / boardIcon.getIconWidth(), ((double) orig.y * 8) / boardIcon.getIconHeight());
+    public Vector2I panelPosToBoardPos(Vector2I orig) {
+        return new Vector2I(orig.x * boardSizeI.x / boardSizePixels.x, orig.y * boardSizeI.y / boardSizePixels.y);
     }
 
-    volatile Vector2 mousePos = new Vector2();
+    volatile Vector2I mousePos = new Vector2I();
     volatile boolean mousePressed = false;
 
     @Override

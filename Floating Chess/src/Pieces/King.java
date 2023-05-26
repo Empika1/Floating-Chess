@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.util.*;
 import Images.*;
 import Utils.*;
+import Game.*;
 
 public final class King extends Piece {
     static final String pieceName = "King";
@@ -12,9 +13,9 @@ public final class King extends Piece {
         return pieceName;
     }
 
-    public double moveRadius = 1;
+    int moveRadius = Game.boardSizeI.x / 8;
 
-    public boolean canMoveTo(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         /*
          * if (isOverlappingEdge(x, y) || isOverlappingSameColorPiece(x, y, whitePieces,
          * blackPieces))
@@ -25,32 +26,26 @@ public final class King extends Piece {
         return false;
     }
 
-    public Vector2 closestValidPoint(Vector2 pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (canMoveTo(pos, whitePieces, blackPieces))
             return pos;
 
         if (pos.y == getTruePos().y) {
             if (pos.x > getTruePos().x)
-                return new Vector2(getTruePos().x + moveRadius, getTruePos().y);
+                return new Vector2I(getTruePos().x + moveRadius, getTruePos().y);
             if (pos.x > getTruePos().x)
-            return new Vector2(getTruePos().x - moveRadius, getTruePos().y);
+            return new Vector2I(getTruePos().x - moveRadius, getTruePos().y);
         }
 
-        Vector2 diff = pos.subtract(getTruePos());
-        Vector2 scaledDiff = diff.setLength(moveRadius);
+        Vector2I diff = pos.subtract(getTruePos());
+        Vector2I scaledDiff = diff.setLength(moveRadius);
         return getTruePos().add(scaledDiff);
     }
 
-    static final double hitboxRadius = 0.375;
+    static final int hitboxRadius = (int)(0.375 * Game.boardSizeI.x / 8);
 
-    public double getHitboxRadius() {
+    public int getHitboxRadius() {
         return hitboxRadius;
-    }
-
-    static final double hurtboxRadius = 0.375;
-
-    public double getHurtboxRadius() {
-        return hurtboxRadius;
     }
 
     static final int materialValue = Integer.MAX_VALUE;
@@ -59,8 +54,8 @@ public final class King extends Piece {
         return materialValue;
     }
 
-    static ImageIcon blackImage = ImageManager.resize(ImageManager.bk, pieceSizeX, pieceSizeY);
-    static ImageIcon whiteImage = ImageManager.resize(ImageManager.wk, pieceSizeX, pieceSizeY);
+    static ImageIcon blackImage = ImageManager.resize(ImageManager.bk, pieceSizePixels);
+    static ImageIcon whiteImage = ImageManager.resize(ImageManager.wk, pieceSizePixels);
 
     public ImageIcon getImageIcon() {
         switch (color) {
