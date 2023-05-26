@@ -61,4 +61,8 @@ public class Vector2 {
     public double cross(Vector2 b) {
         return x * b.y - y * b.x;
     }
+
+    public String toString() {
+        return x + " " + y;
+    }
 }

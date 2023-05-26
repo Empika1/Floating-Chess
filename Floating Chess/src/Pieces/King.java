@@ -13,12 +13,13 @@ public final class King extends Piece {
         return pieceName;
     }
 
-    int moveRadius = Game.boardSizeI.x / 8;
+    int moveRadius = (int) (0.375 * Game.boardSizeI.x / 8);
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
-                blackPieces))
+                blackPieces)) {
             return false;
+        }
 
         if (pos.subtract(getTruePos()).getSquaredLength() <= moveRadius * moveRadius)
             return true;

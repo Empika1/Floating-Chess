@@ -53,47 +53,37 @@ public abstract class Piece {
     public abstract boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        if (pos == getTruePos() || canMoveTo(pos, whitePieces, blackPieces))
-            return pos;
-
-        Vector2I currentSearchingPos = pos.copy();
-        int searchSquareMaxWidthOrHeight;
-        Vector2I searchSquareCenter = new Vector2I();
-        Vector2I searchSquareBottomRight = new Vector2I();
-        Vector2I searchSquareTopLeft = new Vector2I();
-        Vector2I closestSoFar = new Vector2I();
-        double closestSoFarLength = Double.MAX_VALUE;
-        searchForCloser: while (true) {
-            searchSquareMaxWidthOrHeight = Math.max(Math.abs(getTruePos().x - pos.x), Math.abs(getTruePos().y - pos.y));
-            searchSquareCenter.x = Math.min(currentSearchingPos.x, getTruePos().x);
-            searchSquareCenter.y = Math.min(currentSearchingPos.y, getTruePos().y);
-            searchSquareBottomRight.x = searchSquareCenter.x + searchSquareMaxWidthOrHeight;
-            searchSquareBottomRight.x = searchSquareCenter.x + searchSquareMaxWidthOrHeight;
-            searchSquareBottomRight.y = searchSquareCenter.y + searchSquareMaxWidthOrHeight;
-            searchSquareTopLeft = searchSquareCenter.subtract(searchSquareBottomRight);
-            if (searchSquareTopLeft.x < 0)
-                searchSquareTopLeft.x = 0;
-            if (searchSquareTopLeft.y < 0)
-                searchSquareTopLeft.y = 0;
-            if (searchSquareBottomRight.x >= Game.boardSizeI.x)
-                searchSquareBottomRight.x = Game.boardSizeI.x;
-            if (searchSquareBottomRight.y >= Game.boardSizeI.y)
-                searchSquareBottomRight.y = Game.boardSizeI.y;
-
-            for (currentSearchingPos.x = searchSquareTopLeft.x; currentSearchingPos.x < searchSquareBottomRight.x; currentSearchingPos.x++) {
-                for (currentSearchingPos.y = searchSquareTopLeft.y; currentSearchingPos.y < searchSquareBottomRight.y; currentSearchingPos.y++) {
-                    System.out.println(currentSearchingPos.x + " " + currentSearchingPos.y);
-                    if (canMoveTo(currentSearchingPos, whitePieces, blackPieces)) {
-                        double length = currentSearchingPos.subtract(pos).getLength();
-                        if (length < closestSoFarLength) {
-                            closestSoFar = currentSearchingPos;
-                            closestSoFarLength = length;
-                            continue searchForCloser;
-                        }
+        int leg = 0, layer = 1;
+        int x = 0, y = 0;
+        while (true) {
+            //System.out.println(x + " " + y + " " + leg);
+            switch (leg) {
+                case 0:
+                    x++;
+                    if (x == layer)
+                        leg = 1;
+                    break;
+                case 1:
+                    y++;
+                    if (y == layer)
+                        leg = 2;
+                    break;
+                case 2:
+                    x--;
+                    if (-x == layer)
+                        leg = 3;
+                    break;
+                case 3:
+                    y--;
+                    if (-y == layer) {
+                        leg = 0;
+                        layer++;
                     }
-                }
+                    break;
             }
-            return closestSoFar;
+            Vector2I searchPos = new Vector2I(pos.x + x, pos.y + y);
+            if (canMoveTo(searchPos, whitePieces, blackPieces))
+                return searchPos;
         }
     }
 
@@ -113,7 +103,8 @@ public abstract class Piece {
 
     public boolean isOverlappingEdge(Vector2I thisPos) {
         return thisPos.x - getHitboxRadius() < 0 || thisPos.y - getHitboxRadius() < 0
-                || thisPos.x + getHitboxRadius() > Game.boardSizePixels.x || thisPos.y + Game.boardSizePixels.y > 8;
+                || thisPos.x + getHitboxRadius() > Game.boardSizeI.x
+                || thisPos.y + getHitboxRadius() > Game.boardSizeI.y;
     }
 
     public boolean isOverlappingSameColorPiece(Vector2I thisPos, ArrayList<Piece> whitePieces,
