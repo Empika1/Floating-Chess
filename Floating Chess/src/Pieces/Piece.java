@@ -52,7 +52,8 @@ public abstract class Piece {
 
     public abstract boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
 
-    public abstract Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
+    public abstract Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces,
+            ArrayList<Piece> blackPieces);
 
     public abstract int getHitboxRadius();
 
@@ -77,6 +78,27 @@ public abstract class Piece {
     public boolean isOverlappingSameColorPiece(Vector2I thisPos, ArrayList<Piece> whitePieces,
             ArrayList<Piece> blackPieces) {
         if (color == ChessColor.WHITE) {
+            for (Piece p : whitePieces) {
+                if (equals(p))
+                    continue;
+                if (hitboxOverlapsHitbox(thisPos, p))
+                    return true;
+            }
+
+        } else {
+            for (Piece p : blackPieces) {
+                if (equals(p))
+                    continue;
+                if (hitboxOverlapsHitbox(thisPos, p))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isOverlappingOppositeColorPiece(Vector2I thisPos, ArrayList<Piece> whitePieces,
+            ArrayList<Piece> blackPieces) {
+        if (color == ChessColor.BLACK) {
             for (Piece p : whitePieces) {
                 if (equals(p))
                     continue;
