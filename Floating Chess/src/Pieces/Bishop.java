@@ -17,6 +17,10 @@ public final class Bishop extends Piece {
         return true;
     }
 
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        return new Vector2I(0, 0);
+    }
+
     static final int hitboxRadius = (int)(0.375 * Game.boardSizeI.x / 8);
 
     public int getHitboxRadius() {

@@ -15,15 +15,36 @@ public final class King extends Piece {
 
     int moveRadius = (int) (0.375 * Game.boardSizeI.x / 8);
 
+    public boolean isInMoveRadius(Vector2I pos) {
+        return pos.subtract(getTruePos()).getSquaredLength() <= moveRadius * moveRadius;
+    }
+
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
                 blackPieces)) {
             return false;
         }
 
-        if (pos.subtract(getTruePos()).getSquaredLength() <= moveRadius * moveRadius)
-            return true;
-        return false;
+        return isInMoveRadius(pos);
+    }
+
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        Vector2I searchPos = new Vector2I();
+        double closestLengthSquaredSoFar = Double.MAX_VALUE;
+        Vector2I closestPointSoFar = new Vector2I();
+
+        for(searchPos.x = getTruePos().x - moveRadius; searchPos.x <= getTruePos().x + moveRadius; searchPos.x++) {
+            for(searchPos.y = getTruePos().y - moveRadius; searchPos.y <= getTruePos().y + moveRadius; searchPos.y++) {
+                if(canMoveTo(searchPos, whitePieces, blackPieces)) {
+                double lengthSquared = searchPos.subtract(pos).getSquaredLength();
+                    if(lengthSquared < closestLengthSquaredSoFar) {
+                        closestLengthSquaredSoFar = lengthSquared;
+                        closestPointSoFar = searchPos.copy();
+                    }
+                }
+            }
+        }
+        return closestPointSoFar;
     }
 
     static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);

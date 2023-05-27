@@ -52,40 +52,7 @@ public abstract class Piece {
 
     public abstract boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
 
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        int leg = 0, layer = 1;
-        int x = 0, y = 0;
-        while (true) {
-            //System.out.println(x + " " + y + " " + leg);
-            switch (leg) {
-                case 0:
-                    x++;
-                    if (x == layer)
-                        leg = 1;
-                    break;
-                case 1:
-                    y++;
-                    if (y == layer)
-                        leg = 2;
-                    break;
-                case 2:
-                    x--;
-                    if (-x == layer)
-                        leg = 3;
-                    break;
-                case 3:
-                    y--;
-                    if (-y == layer) {
-                        leg = 0;
-                        layer++;
-                    }
-                    break;
-            }
-            Vector2I searchPos = new Vector2I(pos.x + x, pos.y + y);
-            if (canMoveTo(searchPos, whitePieces, blackPieces))
-                return searchPos;
-        }
-    }
+    public abstract Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
 
     public abstract int getHitboxRadius();
 

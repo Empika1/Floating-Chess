@@ -132,7 +132,7 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
     ArrayList<Piece> whitePiecesCaptured = new ArrayList<Piece>();
     ArrayList<Piece> blackPiecesCaptured = new ArrayList<Piece>();
 
-    public static final Vector2I boardSizeI = new Vector2I(64, 64);
+    public static final Vector2I boardSizeI = new Vector2I(2048, 2048);
 
     public void movePieces() {
         if (turnNumber % 2 == 0)
