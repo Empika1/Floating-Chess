@@ -35,9 +35,11 @@ public abstract class Piece {
         return truePos;
     }
 
-    public void setTruePos(Vector2I set) {
+    public void setTruePos(Vector2I set, boolean isInGame) {
         truePos = set;
         visiblePos = set;
+        if (isInGame)
+            setHasMoved(true);
     }
 
     protected boolean hasMoved = false;
@@ -125,6 +127,29 @@ public abstract class Piece {
             }
         }
         return false;
+    }
+
+    public ArrayList<Piece> oppositeColorPiecesOverlapping(Vector2I thisPos, ArrayList<Piece> whitePieces,
+            ArrayList<Piece> blackPieces) {
+        ArrayList<Piece> toReturn = new ArrayList<Piece>();
+        if (color == ChessColor.BLACK) {
+            for (Piece p : whitePieces) {
+                if (equals(p))
+                    continue;
+                if (hitboxOverlapsHitbox(thisPos, p))
+                    toReturn.add(p);
+            }
+            return toReturn;
+
+        } else {
+            for (Piece p : blackPieces) {
+                if (equals(p))
+                    continue;
+                if (hitboxOverlapsHitbox(thisPos, p))
+                    toReturn.add(p);
+            }
+            return toReturn;
+        }
     }
 
     public abstract int getMaterialValue();

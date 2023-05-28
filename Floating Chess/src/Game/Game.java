@@ -23,34 +23,34 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         int id = 0;
         blackPieces.add(new Rook());
         blackPieces.get(0).setID(id++);
-        blackPieces.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
+        blackPieces.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)), false);
         blackPieces.add(new Knight());
         blackPieces.get(1).setID(id++);
-        blackPieces.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
+        blackPieces.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)), false);
         blackPieces.add(new Bishop());
         blackPieces.get(2).setID(id++);
-        blackPieces.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
+        blackPieces.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)), false);
         blackPieces.add(new Queen());
         blackPieces.get(3).setID(id++);
-        blackPieces.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
+        blackPieces.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)), false);
         blackPieces.add(new King());
         blackPieces.get(4).setID(id++);
-        blackPieces.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
+        blackPieces.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)), false);
         blackPieces.add(new Bishop());
         blackPieces.get(5).setID(id++);
-        blackPieces.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
+        blackPieces.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)), false);
         blackPieces.add(new Knight());
         blackPieces.get(6).setID(id++);
-        blackPieces.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
+        blackPieces.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)), false);
         blackPieces.add(new Rook());
         blackPieces.get(7).setID(id++);
-        blackPieces.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)));
+        blackPieces.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)), false);
 
         for (int i = 0; i <= 7; i++) {
             blackPieces.add(new Pawn());
             blackPieces.get(i + 8).setID(id++);
             blackPieces.get(i + 8)
-                    .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (1.5 * boardSizeI.x / 8)));
+                    .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (1.5 * boardSizeI.x / 8)), false);
         }
 
         for (int i = 0; i <= 15; i++)
@@ -58,34 +58,34 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
 
         whitePieces.add(new Rook());
         whitePieces.get(0).setID(id++);
-        whitePieces.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
+        whitePieces.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)), false);
         whitePieces.add(new Knight());
         whitePieces.get(1).setID(id++);
-        whitePieces.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
+        whitePieces.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)), false);
         whitePieces.add(new Bishop());
         whitePieces.get(2).setID(id++);
-        whitePieces.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
+        whitePieces.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)), false);
         whitePieces.add(new Queen());
         whitePieces.get(3).setID(id++);
-        whitePieces.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
+        whitePieces.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)), false);
         whitePieces.add(new King());
         whitePieces.get(4).setID(id++);
-        whitePieces.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
+        whitePieces.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)), false);
         whitePieces.add(new Bishop());
         whitePieces.get(5).setID(id++);
-        whitePieces.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
+        whitePieces.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)), false);
         whitePieces.add(new Knight());
         whitePieces.get(6).setID(id++);
-        whitePieces.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
+        whitePieces.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)), false);
         whitePieces.add(new Rook());
         whitePieces.get(7).setID(id++);
-        whitePieces.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)));
+        whitePieces.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)), false);
 
         for (int i = 0; i <= 7; i++) {
             whitePieces.add(new Pawn());
             whitePieces.get(i + 8).setID(id++);
             whitePieces.get(i + 8)
-                    .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (6.5 * boardSizeI.x / 8)));
+                    .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (6.5 * boardSizeI.x / 8)), false);
         }
 
         for (int i = 0; i <= 15; i++)
@@ -161,10 +161,17 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener {
         }
 
         if (!mousePressedGame && heldPiece != null) {
-            heldPiece.setTruePos(heldPiece.getVisiblePos());
+            heldPiece.setTruePos(heldPiece.getVisiblePos(), true);
+            ArrayList<Piece> capturedPieces = heldPiece.oppositeColorPiecesOverlapping(heldPiece.getVisiblePos(), whitePieces, blackPieces);
             if (turn == ChessColor.WHITE) {
+                for(Piece p : capturedPieces) {
+                    blackPieces.remove(p);
+                }
                 whitePieces.add(heldPiece);
             } else {
+                for(Piece p : capturedPieces) {
+                    whitePieces.remove(p);
+                }
                 blackPieces.add(heldPiece);
             }
             heldPiece = null;
