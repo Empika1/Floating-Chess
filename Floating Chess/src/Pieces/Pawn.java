@@ -61,12 +61,12 @@ public final class Pawn extends Piece {
 
         Vector2I foundPos1;
         double foundLengthSquared1 = Double.MAX_VALUE;
-        if (pos.y < truePosRelative.y - moveLength)
+        if (posRelative.y < truePosRelative.y - moveLength)
             searchStartPos.y = truePosRelative.y - moveLength;
-        if (pos.y > truePosRelative.y)
+        if (posRelative.y > truePosRelative.y)
             searchStartPos.y = truePosRelative.y;
         else
-            searchStartPos.y = pos.y;
+            searchStartPos.y = posRelative.y;
 
         for (int i = 0;; i++) {
             searchPos.y = searchStartPos.y + i;
@@ -75,8 +75,8 @@ public final class Pawn extends Piece {
             else
                 searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
 
-            if (canMoveTo(searchPos, whitePieces, blackPieces)) {
-                foundPos1 = searchPos.copy();
+            if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
+                foundPos1 = searchPosAbsolute.copy();
                 foundLengthSquared1 = pos.subtract(searchPosAbsolute).getSquaredLength();
                 break;
             }
@@ -87,8 +87,8 @@ public final class Pawn extends Piece {
             else
                 searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
 
-            if (canMoveTo(searchPos, whitePieces, blackPieces)) {
-                foundPos1 = searchPos.copy();
+            if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
+                foundPos1 = searchPosAbsolute.copy();
                 foundLengthSquared1 = pos.subtract(searchPosAbsolute).getSquaredLength();
                 break;
             }
