@@ -40,6 +40,16 @@ public abstract class Piece {
         visiblePos = set;
     }
 
+    protected boolean hasMoved = false;
+
+    public boolean getHasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean set) {
+        hasMoved = set;
+    }
+
     protected Vector2I visiblePos;
 
     public Vector2I getVisiblePos() {

@@ -21,6 +21,8 @@ public final class Pawn extends Piece {
                 blackPieces))
             return false;
 
+        final int moveLengthScaled = (hasMoved ? moveLength : moveLength * 2);
+
         Vector2I posRelative = new Vector2I(pos.x, 0);
         Vector2I truePosRelative = new Vector2I(getTruePos().x, 0);
         if (getColor() == ChessColor.WHITE) {
@@ -32,7 +34,7 @@ public final class Pawn extends Piece {
         }
 
         if (posRelative.x == truePosRelative.x && posRelative.y <= truePosRelative.y
-                && posRelative.y >= truePosRelative.y - moveLength)
+                && posRelative.y >= truePosRelative.y - moveLengthScaled && !isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces))
             return true;
 
         if (Math.abs(posRelative.x - truePosRelative.x) == truePosRelative.y - posRelative.y
@@ -45,6 +47,8 @@ public final class Pawn extends Piece {
     }
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        final int moveLengthScaled = (hasMoved ? moveLength : moveLength * 2);
+
         Vector2I posRelative = new Vector2I(pos.x, 0);
         Vector2I truePosRelative = new Vector2I(getTruePos().x, 0);
         if (getColor() == ChessColor.WHITE) {
@@ -61,8 +65,8 @@ public final class Pawn extends Piece {
 
         Vector2I foundPos1;
         double foundLengthSquared1 = Double.MAX_VALUE;
-        if (posRelative.y < truePosRelative.y - moveLength)
-            searchStartPos.y = truePosRelative.y - moveLength;
+        if (posRelative.y < truePosRelative.y - moveLengthScaled)
+            searchStartPos.y = truePosRelative.y - moveLengthScaled;
         if (posRelative.y > truePosRelative.y)
             searchStartPos.y = truePosRelative.y;
         else
@@ -168,18 +172,12 @@ public final class Pawn extends Piece {
 
         double minLengthSquared = Math.min(foundLengthSquared1, Math.min(foundLengthSquared2, foundLengthSquared3));
         if (minLengthSquared == foundLengthSquared1) {
-            if (foundPos1.equals(getTruePos()))
-                return null;
             return foundPos1;
         }
         if (minLengthSquared == foundLengthSquared2) {
-            if (foundPos2.equals(getTruePos()))
-                return null;
             return foundPos2;
         }
         if (minLengthSquared == foundLengthSquared3) {
-            if (foundPos3.equals(getTruePos()))
-                return null;
             return foundPos3;
         }
         return null;
