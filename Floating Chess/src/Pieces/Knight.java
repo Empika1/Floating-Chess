@@ -13,15 +13,79 @@ public final class Knight extends Piece {
         return pieceName;
     }
 
+    static final int moveRadius = (int) (Math.sqrt(5) * Game.boardSizeI.x / 8.0);
+
+    Vector2I closestPointOnRadius(Vector2I pos) {
+        Vector2I diff = pos.subtract(getTruePos());
+        if (diff.getSquaredLength() == 0)
+            return new Vector2I(getTruePos().x + moveRadius, getTruePos().y);
+        Vector2I diffScaled = diff.setLength(moveRadius);
+        return getTruePos().add(diffScaled);
+    }
+
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        return true;
+        if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
+                blackPieces))
+            return false;
+
+        return pos == closestPointOnRadius(pos);
     }
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        return new Vector2I(0, 0);
+        Vector2I searchPosSquare = new Vector2I(getTruePos().x + moveRadius, getTruePos().y + moveRadius);
+        Vector2I searchPos;
+        double searchDistanceSquared;
+        Vector2I closestPosSoFar = null;
+        double closestSquaredDistanceSoFar = Double.MAX_VALUE;
+        for (; searchPosSquare.x >= getTruePos().x - moveRadius; searchPosSquare.x--) {
+            searchPos = closestPointOnRadius(searchPosSquare);
+            if (!(isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces,
+                    blackPieces))) {
+                searchDistanceSquared = searchPos.subtract(pos).getSquaredLength();
+                if(searchDistanceSquared < closestSquaredDistanceSoFar) {
+                    closestSquaredDistanceSoFar = searchDistanceSquared;
+                    closestPosSoFar = searchPos.copy();
+                }
+            }
+        }
+        for (; searchPosSquare.y >= getTruePos().y - moveRadius; searchPosSquare.y--) {
+            searchPos = closestPointOnRadius(searchPosSquare);
+            if (!(isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces,
+                    blackPieces))) {
+                searchDistanceSquared = searchPos.subtract(pos).getSquaredLength();
+                if(searchDistanceSquared < closestSquaredDistanceSoFar) {
+                    closestSquaredDistanceSoFar = searchDistanceSquared;
+                    closestPosSoFar = searchPos.copy();
+                }
+            }
+        }
+        for (; searchPosSquare.x <= getTruePos().x + moveRadius; searchPosSquare.x++) {
+            searchPos = closestPointOnRadius(searchPosSquare);
+            if (!(isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces,
+                    blackPieces))) {
+                searchDistanceSquared = searchPos.subtract(pos).getSquaredLength();
+                if(searchDistanceSquared < closestSquaredDistanceSoFar) {
+                    closestSquaredDistanceSoFar = searchDistanceSquared;
+                    closestPosSoFar = searchPos.copy();
+                }
+            }
+        }
+        for (; searchPosSquare.y < getTruePos().y + moveRadius; searchPosSquare.y++) {
+            searchPos = closestPointOnRadius(searchPosSquare);
+            if (!(isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces,
+                    blackPieces))) {
+                searchDistanceSquared = searchPos.subtract(pos).getSquaredLength();
+                if(searchDistanceSquared < closestSquaredDistanceSoFar) {
+                    closestSquaredDistanceSoFar = searchDistanceSquared;
+                    closestPosSoFar = searchPos.copy();
+                }
+            }
+        }
+
+        return closestPosSoFar;
     }
 
-    static final int hitboxRadius = (int)(0.375 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;

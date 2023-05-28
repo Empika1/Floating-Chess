@@ -44,6 +44,7 @@ public final class King extends Piece {
                 }
             }
         }
+        if(closestPointSoFar.equals(getTruePos()));
         return closestPointSoFar;
     }
 

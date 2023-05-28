@@ -17,6 +17,10 @@ public final class Pawn extends Piece {
     static final int moveLengthDiagonal = (int) (moveLength / Math.sqrt(2));
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
+                blackPieces))
+            return false;
+
         Vector2I posRelative = new Vector2I(pos.x, 0);
         Vector2I truePosRelative = new Vector2I(getTruePos().x, 0);
         if (getColor() == ChessColor.WHITE) {
@@ -27,10 +31,6 @@ public final class Pawn extends Piece {
             truePosRelative.y = Game.boardSizeI.y - getTruePos().y;
         }
 
-        if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
-                blackPieces))
-            return false;
-
         if (posRelative.x == truePosRelative.x && posRelative.y <= truePosRelative.y
                 && posRelative.y >= truePosRelative.y - moveLength)
             return true;
@@ -38,7 +38,7 @@ public final class Pawn extends Piece {
         if (Math.abs(posRelative.x - truePosRelative.x) == truePosRelative.y - posRelative.y
                 && posRelative.y <= truePosRelative.y
                 && posRelative.y >= truePosRelative.y - moveLengthDiagonal
-                /*&& isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces)*/)
+                && isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces))
             return true;
 
         return false;
@@ -96,8 +96,10 @@ public final class Pawn extends Piece {
 
         Vector2I foundPos2;
         double foundLengthSquared2 = Double.MAX_VALUE;
-        Vector2I topRightIntersection = new Vector2I((truePosRelative.y - posRelative.y) + truePosRelative.x, posRelative.y);
-        Vector2I bottomLeftIntersection = new Vector2I(posRelative.x, truePosRelative.y - (posRelative.x - truePosRelative.x));
+        Vector2I topRightIntersection = new Vector2I((truePosRelative.y - posRelative.y) + truePosRelative.x,
+                posRelative.y);
+        Vector2I bottomLeftIntersection = new Vector2I(posRelative.x,
+                truePosRelative.y - (posRelative.x - truePosRelative.x));
         searchStartPos.x = (topRightIntersection.x + bottomLeftIntersection.x) / 2;
         searchStartPos.y = (topRightIntersection.y + bottomLeftIntersection.y) / 2;
         for (int i = 0;; i++) {
@@ -130,8 +132,10 @@ public final class Pawn extends Piece {
 
         Vector2I foundPos3;
         double foundLengthSquared3 = Double.MAX_VALUE;
-        Vector2I topLeftIntersection = new Vector2I(truePosRelative.x - (truePosRelative.y - posRelative.y), posRelative.y);
-        Vector2I bottomRightIntersection = new Vector2I(posRelative.x, truePosRelative.y + (posRelative.x - truePosRelative.x));
+        Vector2I topLeftIntersection = new Vector2I(truePosRelative.x - (truePosRelative.y - posRelative.y),
+                posRelative.y);
+        Vector2I bottomRightIntersection = new Vector2I(posRelative.x,
+                truePosRelative.y + (posRelative.x - truePosRelative.x));
         searchStartPos.x = (topLeftIntersection.x + bottomRightIntersection.x) / 2;
         searchStartPos.y = (int) Math.ceil((topLeftIntersection.y + bottomRightIntersection.y) / 2.0);
         for (int i = 0;; i++) {
@@ -162,14 +166,22 @@ public final class Pawn extends Piece {
             }
         }
 
-        System.out.println(foundLengthSquared1 + ", " + foundLengthSquared2 + ", " + foundLengthSquared3);
         double minLengthSquared = Math.min(foundLengthSquared1, Math.min(foundLengthSquared2, foundLengthSquared3));
-        if (minLengthSquared == foundLengthSquared1)
+        if (minLengthSquared == foundLengthSquared1) {
+            if (foundPos1.equals(getTruePos()))
+                return null;
             return foundPos1;
-        if (minLengthSquared == foundLengthSquared2)
+        }
+        if (minLengthSquared == foundLengthSquared2) {
+            if (foundPos2.equals(getTruePos()))
+                return null;
             return foundPos2;
-        if (minLengthSquared == foundLengthSquared3)
+        }
+        if (minLengthSquared == foundLengthSquared3) {
+            if (foundPos3.equals(getTruePos()))
+                return null;
             return foundPos3;
+        }
         return null;
     }
 

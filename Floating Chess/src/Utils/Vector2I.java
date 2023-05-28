@@ -17,6 +17,10 @@ public class Vector2I {
     public Vector2I() {
     }
 
+    public boolean equals(Vector2I b) {
+        return x == b.x && y == b.y;
+    }
+
     public Vector2I copy() {
         return new Vector2I(x, y);
     }
