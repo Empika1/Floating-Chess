@@ -17,35 +17,61 @@ public final class Pawn extends Piece {
     static final int moveLengthDiagonal = (int) (moveLength / Math.sqrt(2));
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        Vector2I posRelative = new Vector2I(pos.x, 0);
+        Vector2I truePosRelative = new Vector2I(getTruePos().x, 0);
+        if (getColor() == ChessColor.WHITE) {
+            posRelative.y = pos.y;
+            truePosRelative.y = getTruePos().y;
+        } else {
+            posRelative.y = Game.boardSizeI.y - pos.y;
+            truePosRelative.y = Game.boardSizeI.y - getTruePos().y;
+        }
+
         if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
                 blackPieces))
             return false;
 
-        if (pos.x == getTruePos().x && pos.y <= getTruePos().y && pos.y >= getTruePos().y - moveLength)
+        if (posRelative.x == truePosRelative.x && posRelative.y <= truePosRelative.y && posRelative.y >= truePosRelative.y - moveLength)
             return true;
 
-        if (Math.abs(pos.x - getTruePos().x) == getTruePos().y - pos.y && pos.y <= getTruePos().y
-                && pos.y >= getTruePos().y - moveLengthDiagonal && isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces))
+        if (Math.abs(posRelative.x - truePosRelative.x) == truePosRelative.y - posRelative.y && posRelative.y <= truePosRelative.y
+                && posRelative.y >= truePosRelative.y - moveLengthDiagonal && isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces))
             return true;
 
         return false;
     }
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        Vector2I searchStartPos = new Vector2I(getTruePos().x, 0);
+        Vector2I posRelative = new Vector2I(pos.x, 0);
+        Vector2I truePosRelative = new Vector2I(getTruePos().x, 0);
+        if (getColor() == ChessColor.WHITE) {
+            posRelative.y = pos.y;
+            truePosRelative.y = getTruePos().y;
+        } else {
+            posRelative.y = Game.boardSizeI.y - pos.y;
+            truePosRelative.y = Game.boardSizeI.y - getTruePos().y;
+        }
+
+        Vector2I searchStartPos = new Vector2I(truePosRelative.x, 0);
         Vector2I searchPos = searchStartPos.copy();
+        Vector2I searchPosAbsolute = searchStartPos.copy();
 
         Vector2I foundPos1;
         double foundLengthSquared1 = Double.MAX_VALUE;
-        if (pos.y < getTruePos().y - moveLength)
-            searchStartPos.y = getTruePos().y - moveLength;
-        if (pos.y > getTruePos().y)
-            searchStartPos.y = getTruePos().y;
+        if (pos.y < truePosRelative.y - moveLength)
+            searchStartPos.y = truePosRelative.y - moveLength;
+        if (pos.y > truePosRelative.y)
+            searchStartPos.y = truePosRelative.y;
         else
             searchStartPos.y = pos.y;
 
         for (int i = 0;; i++) {
             searchPos.y = searchStartPos.y + i;
+            if (getColor() == ChessColor.WHITE)
+                searchPosAbsolute.y = searchPos.y;
+            else
+                searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+
             if (canMoveTo(searchPos, whitePieces, blackPieces)) {
                 foundPos1 = searchPos.copy();
                 foundLengthSquared1 = pos.subtract(searchPos).getSquaredLength();
@@ -53,14 +79,19 @@ public final class Pawn extends Piece {
             }
 
             searchPos.y = searchStartPos.y - i;
+            if (getColor() == ChessColor.WHITE)
+                searchPosAbsolute.y = searchPos.y;
+            else
+                searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+
             if (canMoveTo(searchPos, whitePieces, blackPieces)) {
                 foundPos1 = searchPos.copy();
-                foundLengthSquared1 = pos.subtract(searchPos).getSquaredLength();
+                foundLengthSquared1 = pos.subtract(searchPosAbsolute).getSquaredLength();
                 break;
             }
         }
 
-        Vector2I foundPos2;
+        /*Vector2I foundPos2;
         double foundLengthSquared2 = Double.MAX_VALUE;
         Vector2I topRightIntersection = new Vector2I((getTruePos().y - pos.y) + getTruePos().x, pos.y);
         Vector2I bottomLeftIntersection = new Vector2I(pos.x, getTruePos().y - (pos.x - getTruePos().x));
@@ -69,6 +100,9 @@ public final class Pawn extends Piece {
         for (int i = 0;; i++) {
             searchPos.x = searchStartPos.x + i;
             searchPos.y = searchStartPos.y - i;
+            if (getColor() == ChessColor.BLACK)
+                searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+
             if (canMoveTo(searchPos, whitePieces, blackPieces)) {
                 foundPos2 = searchPos.copy();
                 foundLengthSquared2 = pos.subtract(searchPos).getSquaredLength();
@@ -77,6 +111,9 @@ public final class Pawn extends Piece {
 
             searchPos.x = searchStartPos.x - i;
             searchPos.y = searchStartPos.y + i;
+            if (getColor() == ChessColor.BLACK)
+                searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+
             if (canMoveTo(searchPos, whitePieces, blackPieces)) {
                 foundPos2 = searchPos.copy();
                 foundLengthSquared2 = pos.subtract(searchPos).getSquaredLength();
@@ -90,11 +127,12 @@ public final class Pawn extends Piece {
         Vector2I bottomRightIntersection = new Vector2I(pos.x, getTruePos().y + (pos.x - getTruePos().x));
         searchStartPos.x = (topLeftIntersection.x + bottomRightIntersection.x) / 2;
         searchStartPos.y = (int) Math.ceil((topLeftIntersection.y + bottomRightIntersection.y) / 2.0);
-        System.out.println(searchStartPos);
-        System.out.println(searchStartPos);
         for (int i = 0;; i++) {
             searchPos.x = searchStartPos.x - i;
             searchPos.y = searchStartPos.y - i;
+            if (getColor() == ChessColor.BLACK)
+                searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+
             if (canMoveTo(searchPos, whitePieces, blackPieces)) {
                 foundPos3 = searchPos.copy();
                 foundLengthSquared3 = pos.subtract(searchPos).getSquaredLength();
@@ -103,6 +141,9 @@ public final class Pawn extends Piece {
 
             searchPos.x = searchStartPos.x + i;
             searchPos.y = searchStartPos.y + i;
+            if (getColor() == ChessColor.BLACK)
+                searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+
             if (canMoveTo(searchPos, whitePieces, blackPieces)) {
                 foundPos3 = searchPos.copy();
                 foundLengthSquared3 = pos.subtract(searchPos).getSquaredLength();
@@ -117,7 +158,8 @@ public final class Pawn extends Piece {
             return foundPos2;
         if (minLengthSquared == foundLengthSquared3)
             return foundPos3;
-        return null;
+        return null;*/
+        return foundPos1;
     }
 
     static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);
