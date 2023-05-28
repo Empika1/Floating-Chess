@@ -13,6 +13,22 @@ public final class Rook extends Piece {
         return pieceName;
     }
 
+    static final double maxAngleFromCardinal = 5;
+    static final double maxSlopeFromRightCardinal = Math.tan(maxAngleFromCardinal);
+    static final double minSlopeFromTopCardinal = 1/maxSlopeFromRightCardinal;
+
+    public boolean isInValidAngle(Vector2I pos) {
+        if(pos.x == getTruePos().x)
+            return true;
+
+        Vector2I diff = pos.subtract(getTruePos());
+        diff.x = Math.abs(diff.x);
+        diff.y = Math.abs(diff.y);
+        double absoluteSlope = diff.y / diff.x;
+
+        return absoluteSlope <= maxSlopeFromRightCardinal || absoluteSlope >= minSlopeFromTopCardinal;
+    }
+
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         return true;
     }
