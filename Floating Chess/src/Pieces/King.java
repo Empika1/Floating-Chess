@@ -13,7 +13,7 @@ public final class King extends Piece {
         return pieceName;
     }
 
-    int moveRadius = (int) (0.375 * Game.boardSizeI.x / 8);
+    int moveRadius = (int) (Game.boardSizeI.x / 8);
 
     public boolean isInMoveRadius(Vector2I pos) {
         return pos.subtract(getTruePos()).getSquaredLength() <= moveRadius * moveRadius;
