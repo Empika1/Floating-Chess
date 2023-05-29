@@ -196,6 +196,12 @@ public final class Rook extends Piece {
                     }
                 }
             }
+            
+            int i = 0;
+            for(Piece p : piecesThatHaveBeenOverlapped) {
+                i++;
+            }
+            System.out.println(i);
 
             closestSquaredDistanceOnLineSoFar = currentSquaredDistance;
             closestPosOnLineSoFar = currentSearchPos.copy();
