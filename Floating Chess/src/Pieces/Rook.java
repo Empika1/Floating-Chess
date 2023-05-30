@@ -80,41 +80,25 @@ public final class Rook extends Piece {
             Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
                     new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
             if (lineCircleIntersections.length == 1) {
-                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])) {
-                    if (!hitboxOverlapsHitbox(getTruePos(), p)) {
-                        double squaredDistanceToIntersection = truePosV2.subtract(lineCircleIntersections[0])
-                                .getSquaredLength();
-                        if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
-                            furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
-                            furthestPosSoFar = new Vector2I(lineCircleIntersections[0]);
-                        }
-                    }
+                double squaredDistanceToIntersection = truePosV2.subtract(lineCircleIntersections[0])
+                        .getSquaredLength();
+                if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
+                    furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
+                    furthestPosSoFar = new Vector2I(lineCircleIntersections[0]);
                 }
             } else if (lineCircleIntersections.length == 2) {
-                boolean point1Invalid = false;
-                boolean point2Invalid = false;
-                double squaredDistanceToIntersection1 = Double.MAX_VALUE;
-                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])) {
-                    if (!hitboxOverlapsHitbox(getTruePos(), p)) {
-                        point1Invalid = true;
-                        squaredDistanceToIntersection1 = truePosV2.subtract(lineCircleIntersections[0])
-                                .getSquaredLength();
-                    }
-                }
-                double squaredDistanceToIntersection2 = Double.MAX_VALUE;
-                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[1])) {
-                    if (!hitboxOverlapsHitbox(getTruePos(), p)) {
-                        point2Invalid = true;
-                        squaredDistanceToIntersection2 = truePosV2.subtract(lineCircleIntersections[1])
-                                .getSquaredLength();
-                    }
-                }
-                if (point1Invalid && point2Invalid) {
-                    if (squaredDistanceToIntersection1 < squaredDistanceToIntersection2) {
+                double squaredDistanceToIntersection1 = truePosV2.subtract(lineCircleIntersections[0])
+                        .getSquaredLength();
+                double squaredDistanceToIntersection2 = truePosV2.subtract(lineCircleIntersections[1])
+                        .getSquaredLength();
+                if (squaredDistanceToIntersection1 > squaredDistanceToIntersection2) {
+                    if (squaredDistanceToIntersection1 < furthestSquaredDistanceSoFar) {
                         furthestSquaredDistanceSoFar = squaredDistanceToIntersection1;
                         furthestPosSoFar = new Vector2I(lineCircleIntersections[0]);
-                    } else {
-                        furthestSquaredDistanceSoFar = squaredDistanceToIntersection1;
+                    }
+                } else {
+                    if (squaredDistanceToIntersection2 < furthestSquaredDistanceSoFar) {
+                        furthestSquaredDistanceSoFar = squaredDistanceToIntersection2;
                         furthestPosSoFar = new Vector2I(lineCircleIntersections[1]);
                     }
                 }
@@ -134,6 +118,7 @@ public final class Rook extends Piece {
     }
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+
         if (pos == getTruePos())
             return pos;
 
