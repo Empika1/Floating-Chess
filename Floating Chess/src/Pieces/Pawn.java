@@ -34,15 +34,57 @@ public final class Pawn extends Piece {
         }
 
         if (posRelative.x == truePosRelative.x && posRelative.y <= truePosRelative.y
-                && posRelative.y >= truePosRelative.y - moveLengthScaled && !isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces))
+                && posRelative.y >= truePosRelative.y - moveLengthScaled
+                && !isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces)) {
+            for (Piece p : whitePieces) {
+                Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(pos),
+                        new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                        getHitboxRadius() + p.getHitboxRadius());
+                for (Vector2 v : lineCircleIntersections) {
+                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v))
+                        return false;
+                }
+            }
+            for (Piece p : blackPieces) {
+                Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(pos),
+                        new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                        getHitboxRadius() + p.getHitboxRadius());
+                for (Vector2 v : lineCircleIntersections) {
+                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v))
+                        return false;
+                }
+            }
             return true;
+        }
 
         if (Math.abs(posRelative.x - truePosRelative.x) == truePosRelative.y - posRelative.y
                 && posRelative.y <= truePosRelative.y
                 && posRelative.y >= truePosRelative.y - moveLengthDiagonal
-                && isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces))
-            return true;
+                && isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces)) {
+            ArrayList<Piece> sameColorPieces = color == ChessColor.WHITE ? whitePieces : blackPieces;
+            for (Piece p : sameColorPieces) {
+                Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(pos),
+                        new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                        getHitboxRadius() + p.getHitboxRadius());
+                for (Vector2 v : lineCircleIntersections) {
+                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v))
+                        return false;
+                }
+            }  
 
+            ArrayList<Piece> oppositeColorPieces = color == ChessColor.WHITE ? blackPieces : whitePieces;
+            for (Piece p : oppositeColorPieces) {
+                Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(pos),
+                        new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                        getHitboxRadius() + p.getHitboxRadius());
+                for (Vector2 v : lineCircleIntersections) {
+                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v) && !hitboxOverlapsHitbox(pos, p))
+                        return false;
+                }
+            }
+            return true;
+        }
+                
         return false;
     }
 
