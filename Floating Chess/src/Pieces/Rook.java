@@ -79,14 +79,7 @@ public final class Rook extends Piece {
         for (Piece p : oppositeColorPieces) {
             Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
                     new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
-            if (lineCircleIntersections.length == 1) {
-                double squaredDistanceToIntersection = truePosV2.subtract(lineCircleIntersections[0])
-                        .getSquaredLength();
-                if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
-                    furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
-                    furthestPosSoFar = new Vector2I(lineCircleIntersections[0]);
-                }
-            } else if (lineCircleIntersections.length == 2) {
+            if (lineCircleIntersections.length == 2) {
                 double squaredDistanceToIntersection1 = truePosV2.subtract(lineCircleIntersections[0])
                         .getSquaredLength();
                 double squaredDistanceToIntersection2 = truePosV2.subtract(lineCircleIntersections[1])
@@ -101,6 +94,12 @@ public final class Rook extends Piece {
                         furthestSquaredDistanceSoFar = squaredDistanceToIntersection2;
                         furthestPosSoFar = new Vector2I(lineCircleIntersections[1]);
                     }
+                }
+
+                double squaredDistanceToPiece = getTruePos().subtract(p.getTruePos()).getSquaredLength();
+                if(squaredDistanceToPiece < furthestSquaredDistanceSoFar) {
+                    furthestSquaredDistanceSoFar = squaredDistanceToPiece;
+                    furthestPosSoFar = getTruePos().add(pos.subtract(getTruePos()).setLength(Math.sqrt(squaredDistanceToPiece)));
                 }
             }
         }
