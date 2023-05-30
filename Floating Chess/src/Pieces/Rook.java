@@ -30,199 +30,95 @@ public final class Rook extends Piece {
     }
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
-                blackPieces))
+        if (isOverlappingEdge(pos))
             return false;
-
-        if (pos == getTruePos())
-            return true;
 
         if (!isInValidAngle(pos))
             return false;
 
-        Vector2I diff = pos.subtract(getTruePos());
-        Vector2I searchDir = new Vector2I();
-        if (diff.y > 0 && diff.y > Math.abs(diff.x))
-            searchDir = new Vector2I(0, 1);
-        if (diff.y < 0 && -diff.y > Math.abs(diff.x))
-            searchDir = new Vector2I(0, -1);
-        if (diff.x > 0 && diff.x > Math.abs(diff.y))
-            searchDir = new Vector2I(1, 0);
-        if (diff.x < 0 && -diff.x > Math.abs(diff.y))
-            searchDir = new Vector2I(-1, 0);
-
-        Vector2I perpendicularSearchDir1 = new Vector2I(searchDir.y, searchDir.x);
-        Vector2I perpendicularSearchDir2 = new Vector2I(-searchDir.y, -searchDir.x);
-        Vector2I currentSearchPos = getTruePos();
-        HashSet<Piece> piecesThatHaveBeenOverlapped = new HashSet<Piece>();
-        for (int i = 0;; i++) {
-            currentSearchPos = getTruePos().add(searchDir.scale(i));
-            if (isOverlappingSameColorPiece(currentSearchPos, whitePieces, blackPieces)) {
-                for (int i2 = 1;; i2++) {
-                    currentSearchPos = getTruePos().add(searchDir.scale(i)).add(perpendicularSearchDir1.scale(i2));
-                    if (!isInValidAngle(currentSearchPos))
-                        return false;
-                    if (!isOverlappingSameColorPiece(currentSearchPos, whitePieces, blackPieces))
-                        break;
-                    currentSearchPos = getTruePos().add(searchDir.scale(i)).add(perpendicularSearchDir2.scale(i2));
-                    if (!isOverlappingSameColorPiece(currentSearchPos, whitePieces, blackPieces))
-                        break;
-                }
-            }
-
-            ArrayList<Piece> oppositeColorPiecesOverlapping = oppositeColorPiecesOverlapping(currentSearchPos,
-                    whitePieces, blackPieces);
-            for (Piece p : piecesThatHaveBeenOverlapped) {
-                if (!oppositeColorPiecesOverlapping.contains(p))
+        ArrayList<Piece> sameColorPieces = color == ChessColor.WHITE ? whitePieces : blackPieces;
+        for (Piece p : sameColorPieces) {
+            Vector2 posV2 = new Vector2(pos);
+            Vector2 truePosV2 = new Vector2(getTruePos());
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
+                    new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
+            for (Vector2 intersectionPoint : lineCircleIntersections) {
+                System.out.println(p.getPieceName() + " " + p.getColor());
+                if (Geometry.isPointInRect(posV2, truePosV2, intersectionPoint))
                     return false;
             }
+        }
 
-            currentSearchPos = getTruePos().add(searchDir.scale(i));
-            HashSet<Piece> piecesOverlappedNow = new HashSet<Piece>();
-            if (isOverlappingOppositeColorPiece(currentSearchPos, whitePieces, blackPieces)) {
-                for (int i2 = 1;; i2++) {
-                    currentSearchPos = getTruePos().add(searchDir.scale(i)).add(perpendicularSearchDir1.scale(i2));
-                    if (!isInValidAngle(currentSearchPos)) {
-                        piecesThatHaveBeenOverlapped.addAll(piecesOverlappedNow);
-                        break;
-                    }
-                    if (isOverlappingOppositeColorPiece(currentSearchPos, whitePieces, blackPieces)) {
-                        piecesOverlappedNow
-                                .addAll(oppositeColorPiecesOverlapping(currentSearchPos, whitePieces, blackPieces));
-                    } else {
-                        piecesOverlappedNow.clear();
-                        break;
-                    }
-                    currentSearchPos = getTruePos().add(searchDir.scale(i)).add(perpendicularSearchDir2.scale(i2));
-                    if (isOverlappingOppositeColorPiece(currentSearchPos, whitePieces, blackPieces)) {
-                        piecesOverlappedNow
-                                .addAll(oppositeColorPiecesOverlapping(currentSearchPos, whitePieces, blackPieces));
-                    } else {
-                        piecesOverlappedNow.clear();
-                        break;
-                    }
+        ArrayList<Piece> oppositeColorPieces = color == ChessColor.WHITE ? blackPieces : whitePieces;
+        for (Piece p : oppositeColorPieces) {
+            Vector2 posV2 = new Vector2(pos);
+            Vector2 truePosV2 = new Vector2(getTruePos());
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
+                    new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
+            if (lineCircleIntersections.length == 1) {
+                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])) {
+                    if (!hitboxOverlapsHitbox(getTruePos(), p))
+                        return false;
                 }
-            }
-
-            if (searchDir.x == 0) {
-                if (currentSearchPos.y == pos.y)
-                    return true;
-            } else {
-                if (currentSearchPos.x == pos.x)
-                    return true;
+            } else if (lineCircleIntersections.length == 2) {
+                boolean point1Invalid = false;
+                boolean point2Invalid = false;
+                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])) {
+                    if (!hitboxOverlapsHitbox(getTruePos(), p))
+                        point1Invalid = true;
+                }
+                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[1])) {
+                    if (!hitboxOverlapsHitbox(getTruePos(), p))
+                        point2Invalid = true;
+                }
+                if (point1Invalid && point2Invalid)
+                    return false;
             }
         }
+
+        return true;
     }
+
+    Vector2I oldValidPos = new Vector2I();
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        Vector2I closestValidPointTopQuadrant = closestValidPointInQuadrant(pos, whitePieces, blackPieces, new Vector2I(0, -1));
-        Vector2I closestValidPointBottomQuadrant = closestValidPointInQuadrant(pos, whitePieces, blackPieces, new Vector2I(0, 1));
-        Vector2I closestValidPointRightQuadrant = closestValidPointInQuadrant(pos, whitePieces, blackPieces, new Vector2I(1, 0));
-        Vector2I closestValidPointLeftQuadrant = closestValidPointInQuadrant(pos, whitePieces, blackPieces, new Vector2I(-1, 0));
-        double closestDistanceTopQuadrant = pos.subtract(closestValidPointTopQuadrant).getLength();
-        double closestDistanceBottomQuadrant = pos.subtract(closestValidPointBottomQuadrant).getLength();
-        double closestDistanceRightQuadrant = pos.subtract(closestValidPointRightQuadrant).getLength();
-        double closestDistanceLeftQuadrant = pos.subtract(closestValidPointLeftQuadrant).getLength();
-        double closestDistance = Math.min(closestDistanceTopQuadrant, Math.min(closestDistanceBottomQuadrant, Math.min(closestDistanceLeftQuadrant, closestDistanceRightQuadrant)));
-        if(closestDistance == closestDistanceTopQuadrant) return closestValidPointTopQuadrant;
-        if(closestDistance == closestDistanceBottomQuadrant) return closestValidPointBottomQuadrant;
-        if(closestDistance == closestDistanceRightQuadrant) return closestValidPointRightQuadrant;
-        if(closestDistance == closestDistanceLeftQuadrant) return closestValidPointLeftQuadrant;
-        return pos;
-    }
+        if (pos == getTruePos())
+            return pos;
 
-    public Vector2I closestValidPointInQuadrant(Vector2I pos, ArrayList<Piece> whitePieces,
-            ArrayList<Piece> blackPieces, Vector2I searchDir) {
-        Vector2I perpendicularSearchDir1 = new Vector2I(searchDir.y, searchDir.x);
-        Vector2I perpendicularSearchDir2 = new Vector2I(-searchDir.y, -searchDir.x);
-        Vector2I currentSearchPos = getTruePos();
-        Vector2I closestPosOnLineSoFar = new Vector2I();
-        double closestSquaredDistanceOnLineSoFar = Double.MAX_VALUE;
-        HashSet<Piece> piecesThatHaveBeenOverlapped = new HashSet<Piece>();
-        searchOnLine: while (true) {
-            currentSearchPos = currentSearchPos.add(searchDir);
-            double currentSquaredDistance = pos.subtract(currentSearchPos).getSquaredLength();
-            if (currentSquaredDistance >= closestSquaredDistanceOnLineSoFar || isOverlappingEdge(currentSearchPos))
-                break;
-
-            if (isOverlappingSameColorPiece(currentSearchPos, whitePieces, blackPieces)) {
-                Vector2I currentSearchPosGoAround;
-                for (int i = 1;; i++) {
-                    currentSearchPosGoAround = currentSearchPos.add(perpendicularSearchDir1.scale(i));
-                    if (!isInValidAngle(currentSearchPosGoAround))
-                        break searchOnLine;
-                    if (isOverlappingEdge(currentSearchPosGoAround)) 
-                        continue;
-                    if (!isOverlappingSameColorPiece(currentSearchPosGoAround, whitePieces, blackPieces))
-                        break;
-                    currentSearchPosGoAround = currentSearchPos.add(perpendicularSearchDir2.scale(i));
-                    if (!isOverlappingSameColorPiece(currentSearchPosGoAround, whitePieces, blackPieces))
-                        break;
-                }
-            }
-
-            ArrayList<Piece> oppositeColorPiecesOverlapping = oppositeColorPiecesOverlapping(currentSearchPos,
-                    whitePieces, blackPieces);
-            for (Piece p : piecesThatHaveBeenOverlapped) {
-                if (!oppositeColorPiecesOverlapping.contains(p))
-                    break;
-            }
-
-            HashSet<Piece> piecesOverlappedNow = new HashSet<Piece>();
-            if (isOverlappingOppositeColorPiece(currentSearchPos, whitePieces, blackPieces)) {
-                Vector2I currentSearchPosGoAround;
-                for (int i = 1;; i++) {
-                    currentSearchPosGoAround = currentSearchPos.add(perpendicularSearchDir1.scale(i));
-                    if (!isInValidAngle(currentSearchPosGoAround)) {
-                        piecesThatHaveBeenOverlapped.addAll(piecesOverlappedNow);
-                        break;
-                    }
-                    if (isOverlappingEdge(currentSearchPosGoAround)) 
-                        continue;
-                    if (isOverlappingOppositeColorPiece(currentSearchPosGoAround, whitePieces, blackPieces)) {
-                        piecesOverlappedNow
-                                .addAll(oppositeColorPiecesOverlapping(currentSearchPosGoAround, whitePieces, blackPieces));
-                    } else {
-                        piecesOverlappedNow.clear();
-                        break;
-                    }
-                    currentSearchPosGoAround = currentSearchPos.add(perpendicularSearchDir1.scale(i));
-                    if (isOverlappingOppositeColorPiece(currentSearchPosGoAround, whitePieces, blackPieces)) {
-                        piecesOverlappedNow
-                                .addAll(oppositeColorPiecesOverlapping(currentSearchPosGoAround, whitePieces, blackPieces));
-                    } else {
-                        piecesOverlappedNow.clear();
-                        break;
-                    }
-                }
-            }
-            
-            int i = 0;
-            for(Piece p : piecesThatHaveBeenOverlapped) {
-                i++;
-            }
-            System.out.println(i);
-
-            closestSquaredDistanceOnLineSoFar = currentSquaredDistance;
-            closestPosOnLineSoFar = currentSearchPos.copy();
+        Vector2I diff = pos.subtract(getTruePos());
+        Vector2I searchStartPos = new Vector2I();
+        Vector2I searchDir1 = new Vector2I();
+        Vector2I searchDir2 = new Vector2I();
+        if (Math.abs(diff.y) <= Math.abs(diff.x)) {
+            searchStartPos = new Vector2I(pos.x, getTruePos().y);
+            searchDir1 = new Vector2I(0, 1);
+            searchDir2 = new Vector2I(0, -1);
+        } else {
+            searchStartPos = new Vector2I(getTruePos().x, pos.y);
+            searchDir1 = new Vector2I(1, 0);
+            searchDir2 = new Vector2I(-1, 0);
         }
 
-        Vector2I closestPosSoFar = new Vector2I();
-        double closestSquaredDistanceSoFar = Double.MAX_VALUE;
-        for(int i = 1;; i++) {
-            currentSearchPos = closestPosOnLineSoFar.add(perpendicularSearchDir1.scale(i));
-            if(!isInValidAngle(currentSearchPos))
+        Vector2I searchPos;
+        Vector2I closestPosSoFar = null;
+        double closestDistanceSoFar = Double.MAX_VALUE;
+        double searchDistance;
+        for (int i = 0;; i++) {
+            searchPos = searchStartPos.add(searchDir1.scale(i));
+            if (!isInValidAngle(searchPos))
                 return closestPosSoFar;
-            double squaredDistance = currentSearchPos.subtract(pos).getLength();
-            if(squaredDistance < closestSquaredDistanceSoFar) {
-                closestSquaredDistanceSoFar = squaredDistance;
-                closestPosSoFar = currentSearchPos.copy();
+                
+            searchDistance = pos.subtract(searchPos).getLength();
+            if (searchDistance < closestDistanceSoFar) {
+                closestDistanceSoFar = searchDistance;
+                closestPosSoFar = searchPos;
             }
-            currentSearchPos = closestPosOnLineSoFar.add(perpendicularSearchDir2.scale(i));
-            squaredDistance = currentSearchPos.subtract(pos).getLength();
-            if(squaredDistance < closestSquaredDistanceSoFar) {
-                closestSquaredDistanceSoFar = squaredDistance;
-                closestPosSoFar = currentSearchPos.copy();
+
+            searchPos = searchStartPos.add(searchDir2.scale(i));
+            searchDistance = pos.subtract(searchPos).getLength();
+            if (searchDistance < closestDistanceSoFar) {
+                closestDistanceSoFar = searchDistance;
+                closestPosSoFar = searchPos;
             }
         }
     }

@@ -2,7 +2,14 @@ package Utils;
 
 public class Geometry {
     public static final double bigSlope = 1E25;
-    public static Vector2[] LineCircleIntersections(Vector2 linePoint, double lineSlope, Vector2 circleCenter, double circleRadius) {
+    public static double slopeBetweenTwoPoints(Vector2 point1, Vector2 point2) {
+        double slope = (point2.y - point1.y) / (point2.x - point1.x);
+        if(Double.isNaN(slope) || Double.isInfinite(slope)) 
+            return bigSlope;
+        return slope;
+    }
+
+    public static Vector2[] lineCircleIntersections(Vector2 linePoint, double lineSlope, Vector2 circleCenter, double circleRadius) {
         double m = lineSlope;
         double b = linePoint.y - m*linePoint.x;
 
@@ -32,7 +39,12 @@ public class Geometry {
             return new Vector2[0];
     } 
 
-    public static Vector2 LineLineIntersection(Vector2 line1Point, double line1Slope, Vector2 line2Point, double line2Slope) {
+    public static Vector2[] lineCircleIntersections(Vector2 linePoint1, Vector2 linePoint2, Vector2 circleCenter, double circleRadius) {
+        double lineSlope = slopeBetweenTwoPoints(linePoint1, linePoint2);
+        return lineCircleIntersections(linePoint1, lineSlope, circleCenter, circleRadius);
+    }
+
+    public static Vector2 lineLineIntersection(Vector2 line1Point, double line1Slope, Vector2 line2Point, double line2Slope) {
         double m = line1Slope;
         double b = line1Point.y - m*line1Point.x;
 
@@ -46,5 +58,27 @@ public class Geometry {
             return new Vector2(intersectionX, intersectionY);
         else
             return null;
+    }
+
+    public static Vector2 lineLineIntersection(Vector2 line1Point1, Vector2 line1Point2, Vector2 line2Point1, Vector2 line2Point2) {
+        double line1Slope = slopeBetweenTwoPoints(line1Point1, line1Point2);
+        double line2Slope = slopeBetweenTwoPoints(line2Point1, line2Point2);
+        return lineLineIntersection(line1Point1, line1Slope, line2Point1, line2Slope);
+    }
+
+    public static boolean isPointInRect(Vector2 oneCorner, Vector2 oppositeCorner, Vector2 point) {
+        Vector2 topLeftCorner = new Vector2(Math.min(oneCorner.x, oppositeCorner.x), Math.min(oneCorner.y, oppositeCorner.y));
+        Vector2 bottomRightCorner = new Vector2(Math.max(oneCorner.x, oppositeCorner.x), Math.max(oneCorner.y, oppositeCorner.y));
+        if(topLeftCorner.x <= point.x && point.x <= bottomRightCorner.x && topLeftCorner.y <= point.y && point.y <= bottomRightCorner.y) 
+            return true;
+        return false;
+    }
+
+    public static boolean isPointInRect(Vector2I oneCorner, Vector2I oppositeCorner, Vector2I point) {
+        Vector2I topLeftCorner = new Vector2I(Math.min(oneCorner.x, oppositeCorner.x), Math.min(oneCorner.y, oppositeCorner.y));
+        Vector2I bottomRightCorner = new Vector2I(Math.max(oneCorner.x, oppositeCorner.x), Math.max(oneCorner.y, oppositeCorner.y));
+        if(topLeftCorner.x <= point.x && point.x <= bottomRightCorner.x && topLeftCorner.y <= point.y && point.y <= bottomRightCorner.y) 
+            return true;
+        return false;
     }
 }
