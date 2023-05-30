@@ -66,9 +66,11 @@ public class Geometry {
         return lineLineIntersection(line1Point1, line1Slope, line2Point1, line2Slope);
     }
 
+    static final double epsilon = 0.001;
     public static boolean isPointInRect(Vector2 oneCorner, Vector2 oppositeCorner, Vector2 point) {
-        Vector2 topLeftCorner = new Vector2(Math.min(oneCorner.x, oppositeCorner.x), Math.min(oneCorner.y, oppositeCorner.y));
-        Vector2 bottomRightCorner = new Vector2(Math.max(oneCorner.x, oppositeCorner.x), Math.max(oneCorner.y, oppositeCorner.y));
+        
+        Vector2 topLeftCorner = new Vector2(Math.min(oneCorner.x, oppositeCorner.x) - epsilon, Math.min(oneCorner.y, oppositeCorner.y) - epsilon);
+        Vector2 bottomRightCorner = new Vector2(Math.max(oneCorner.x, oppositeCorner.x) + epsilon, Math.max(oneCorner.y, oppositeCorner.y) + epsilon);
         if(topLeftCorner.x <= point.x && point.x <= bottomRightCorner.x && topLeftCorner.y <= point.y && point.y <= bottomRightCorner.y) 
             return true;
         return false;
