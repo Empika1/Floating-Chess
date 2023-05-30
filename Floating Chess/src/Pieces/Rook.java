@@ -29,6 +29,100 @@ public final class Rook extends Piece {
         return absoluteSlope <= maxSlopeFromRightCardinal || absoluteSlope >= minSlopeFromTopCardinal;
     }
 
+    public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        Vector2I furthestPosSoFar = pos;
+        double furthestSquaredDistanceSoFar = pos.subtract(getTruePos()).getSquaredLength();
+
+        Vector2 posV2 = new Vector2(pos);
+        Vector2 truePosV2 = new Vector2(getTruePos());
+
+        Vector2 topIntersection = Geometry.lineLineIntersection(truePosV2, posV2, new Vector2(0, getHitboxRadius()),
+                new Vector2(Game.boardSizeI.x, getHitboxRadius()));
+        Vector2 bottomIntersection = Geometry.lineLineIntersection(truePosV2, posV2,
+                new Vector2(0, Game.boardSizeI.y - getHitboxRadius()),
+                new Vector2(Game.boardSizeI.x, Game.boardSizeI.y - getHitboxRadius()));
+        Vector2 leftIntersection = Geometry.lineLineIntersection(truePosV2, posV2, new Vector2(getHitboxRadius(), 0),
+                new Vector2(getHitboxRadius(), Game.boardSizeI.y));
+        Vector2 rightIntersection = Geometry.lineLineIntersection(truePosV2, posV2,
+                new Vector2(Game.boardSizeI.x - getHitboxRadius(), 0),
+                new Vector2(Game.boardSizeI.x - getHitboxRadius(), Game.boardSizeI.y));
+        Vector2[] edgeIntersections = new Vector2[] { topIntersection, bottomIntersection, leftIntersection,
+                rightIntersection };
+        for (Vector2 i : edgeIntersections) {
+            if (i == null)
+                continue;
+            if (Geometry.isPointInRect(posV2, truePosV2, i)) {
+                double squaredDistanceToIntersection = truePosV2.subtract(i).getSquaredLength();
+                if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
+                    furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
+                    furthestPosSoFar = new Vector2I(i);
+                }
+            }
+        }
+
+        ArrayList<Piece> sameColorPieces = color == ChessColor.WHITE ? whitePieces : blackPieces;
+        for (Piece p : sameColorPieces) {
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
+                    new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
+            for (Vector2 intersectionPoint : lineCircleIntersections) {
+                if (Geometry.isPointInRect(posV2, truePosV2, intersectionPoint)) {
+                    double squaredDistanceToIntersection = truePosV2.subtract(intersectionPoint).getSquaredLength();
+                    if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
+                        furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
+                        furthestPosSoFar = new Vector2I(intersectionPoint);
+                    }
+                }
+            }
+        }
+
+        ArrayList<Piece> oppositeColorPieces = color == ChessColor.WHITE ? blackPieces : whitePieces;
+        for (Piece p : oppositeColorPieces) {
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
+                    new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
+            if (lineCircleIntersections.length == 1) {
+                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])) {
+                    if (!hitboxOverlapsHitbox(getTruePos(), p)) {
+                        double squaredDistanceToIntersection = truePosV2.subtract(lineCircleIntersections[0])
+                                .getSquaredLength();
+                        if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
+                            furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
+                            furthestPosSoFar = new Vector2I(lineCircleIntersections[0]);
+                        }
+                    }
+                }
+            } else if (lineCircleIntersections.length == 2) {
+                boolean point1Invalid = false;
+                boolean point2Invalid = false;
+                double squaredDistanceToIntersection1 = Double.MAX_VALUE;
+                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])) {
+                    if (!hitboxOverlapsHitbox(getTruePos(), p)) {
+                        point1Invalid = true;
+                        squaredDistanceToIntersection1 = truePosV2.subtract(lineCircleIntersections[0])
+                                .getSquaredLength();
+                    }
+                }
+                double squaredDistanceToIntersection2 = Double.MAX_VALUE;
+                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[1])) {
+                    if (!hitboxOverlapsHitbox(getTruePos(), p)) {
+                        point2Invalid = true;
+                        squaredDistanceToIntersection2 = truePosV2.subtract(lineCircleIntersections[1])
+                                .getSquaredLength();
+                    }
+                }
+                if (point1Invalid && point2Invalid) {
+                    if (squaredDistanceToIntersection1 < squaredDistanceToIntersection2) {
+                        furthestSquaredDistanceSoFar = squaredDistanceToIntersection1;
+                        furthestPosSoFar = new Vector2I(lineCircleIntersections[0]);
+                    } else {
+                        furthestSquaredDistanceSoFar = squaredDistanceToIntersection1;
+                        furthestPosSoFar = new Vector2I(lineCircleIntersections[1]);
+                    }
+                }
+            }
+        }
+        return furthestPosSoFar;
+    }
+
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (isOverlappingEdge(pos))
             return false;
@@ -36,50 +130,8 @@ public final class Rook extends Piece {
         if (!isInValidAngle(pos))
             return false;
 
-        ArrayList<Piece> sameColorPieces = color == ChessColor.WHITE ? whitePieces : blackPieces;
-        for (Piece p : sameColorPieces) {
-            Vector2 posV2 = new Vector2(pos);
-            Vector2 truePosV2 = new Vector2(getTruePos());
-            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
-                    new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
-            for (Vector2 intersectionPoint : lineCircleIntersections) {
-                System.out.println(p.getPieceName() + " " + p.getColor());
-                if (Geometry.isPointInRect(posV2, truePosV2, intersectionPoint))
-                    return false;
-            }
-        }
-
-        ArrayList<Piece> oppositeColorPieces = color == ChessColor.WHITE ? blackPieces : whitePieces;
-        for (Piece p : oppositeColorPieces) {
-            Vector2 posV2 = new Vector2(pos);
-            Vector2 truePosV2 = new Vector2(getTruePos());
-            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
-                    new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
-            if (lineCircleIntersections.length == 1) {
-                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])) {
-                    if (!hitboxOverlapsHitbox(getTruePos(), p))
-                        return false;
-                }
-            } else if (lineCircleIntersections.length == 2) {
-                boolean point1Invalid = false;
-                boolean point2Invalid = false;
-                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])) {
-                    if (!hitboxOverlapsHitbox(getTruePos(), p))
-                        point1Invalid = true;
-                }
-                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[1])) {
-                    if (!hitboxOverlapsHitbox(getTruePos(), p))
-                        point2Invalid = true;
-                }
-                if (point1Invalid && point2Invalid)
-                    return false;
-            }
-        }
-
-        return true;
+        return closestClearPointOnLine(pos, whitePieces, blackPieces).equals(pos);
     }
-
-    Vector2I oldValidPos = new Vector2I();
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (pos == getTruePos())
@@ -99,26 +151,28 @@ public final class Rook extends Piece {
             searchDir2 = new Vector2I(-1, 0);
         }
 
-        Vector2I searchPos;
         Vector2I closestPosSoFar = null;
-        double closestDistanceSoFar = Double.MAX_VALUE;
-        double searchDistance;
+        double closestSquaredDistanceSoFar = Double.MAX_VALUE;
+        Vector2I searchPos;
+        double searchSquaredDistance;
         for (int i = 0;; i++) {
             searchPos = searchStartPos.add(searchDir1.scale(i));
             if (!isInValidAngle(searchPos))
                 return closestPosSoFar;
-                
-            searchDistance = pos.subtract(searchPos).getLength();
-            if (searchDistance < closestDistanceSoFar) {
-                closestDistanceSoFar = searchDistance;
-                closestPosSoFar = searchPos;
+
+            searchPos = closestClearPointOnLine(searchPos, whitePieces, blackPieces);
+            searchSquaredDistance = searchPos.subtract(pos).getSquaredLength();
+            if (searchSquaredDistance < closestSquaredDistanceSoFar) {
+                closestSquaredDistanceSoFar = searchSquaredDistance;
+                closestPosSoFar = searchPos.copy();
             }
 
             searchPos = searchStartPos.add(searchDir2.scale(i));
-            searchDistance = pos.subtract(searchPos).getLength();
-            if (searchDistance < closestDistanceSoFar) {
-                closestDistanceSoFar = searchDistance;
-                closestPosSoFar = searchPos;
+            searchPos = closestClearPointOnLine(searchPos, whitePieces, blackPieces);
+            searchSquaredDistance = searchPos.subtract(pos).getSquaredLength();
+            if (searchSquaredDistance < closestSquaredDistanceSoFar) {
+                closestSquaredDistanceSoFar = searchSquaredDistance;
+                closestPosSoFar = searchPos.copy();
             }
         }
     }
