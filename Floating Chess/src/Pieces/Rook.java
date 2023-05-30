@@ -117,7 +117,6 @@ public final class Rook extends Piece {
     }
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-
         if (pos == getTruePos())
             return pos;
 
