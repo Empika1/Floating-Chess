@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.*;
 import Game.*;
 import Utils.*;
+import Board.*;
 
 public abstract class Piece {
     protected int id;
@@ -158,8 +159,8 @@ public abstract class Piece {
 
     public static final Vector2I pieceSizePixels = new Vector2I(Game.boardSizePixels.x / 8, Game.boardSizePixels.y / 8);
 
-    public void draw(Graphics g, Game game) {
-        Vector2I posPanel = game.boardPosToPanelPos(getVisiblePos());
+    public void draw(Graphics g, JPanel game) {
+        Vector2I posPanel = Board.boardPosToPanelPos(getVisiblePos());
         getImageIcon().paintIcon(game, g, posPanel.x - (pieceSizePixels.x / 2), posPanel.y - (pieceSizePixels.y / 2));
     }
 }

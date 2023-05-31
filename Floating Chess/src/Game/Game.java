@@ -1,15 +1,13 @@
 package Game;
 
 import javax.swing.*;
-
-import Images.ImageManager;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.util.*;
 import Pieces.*;
 import Utils.*;
+import Images.*;
 
 public class Game extends JPanel implements MouseListener, MouseMotionListener {
 

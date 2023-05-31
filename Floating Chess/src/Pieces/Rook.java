@@ -121,10 +121,56 @@ public final class Rook extends Piece {
         }
 
         Vector2 diff = furthestPosSoFar.subtract(posV2);
-        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x) * 3), (int) (diff.y + Math.signum(diff.y) * 3));
-        Vector2I furthestSoFarRounded = pos.add(diffI);
+        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x) * 3),
+                (int) (diff.y + Math.signum(diff.y) * 3));
+        Vector2I furthestPosSoFarRounded = pos.add(diffI);
 
-        return furthestSoFarRounded;
+        /*Vector2I furthestPosSoFarWiggled = furthestPosSoFarRounded.copy();
+        if (isOverlappingEdge(furthestPosSoFarWiggled)
+                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
+            furthestPosSoFarWiggled.x++;
+            System.out.println("wiggle 1");
+        }
+        if (isOverlappingEdge(furthestPosSoFarWiggled)
+                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
+            furthestPosSoFarWiggled.y++;
+            System.out.println("wiggle 1.5");
+        }
+        if (isOverlappingEdge(furthestPosSoFarWiggled)
+                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
+            furthestPosSoFarWiggled.x--;
+            System.out.println("wiggle 2");
+        }
+        if (isOverlappingEdge(furthestPosSoFarWiggled)
+                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
+            furthestPosSoFarWiggled.x--;
+            System.out.println("wiggle 3");
+        }
+        if (isOverlappingEdge(furthestPosSoFarWiggled)
+                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
+            furthestPosSoFarWiggled.y--;
+            System.out.println("wiggle 4");
+        }
+        if (isOverlappingEdge(furthestPosSoFarWiggled)
+                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
+            furthestPosSoFarWiggled.y--;
+            System.out.println("wiggle 5");
+        }
+        if (isOverlappingEdge(furthestPosSoFarWiggled)
+                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
+            furthestPosSoFarWiggled.x++;
+            System.out.println("wiggle 6");
+        }
+        if (isOverlappingEdge(furthestPosSoFarWiggled)
+                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
+            furthestPosSoFarWiggled.x++;
+            System.out.println("wiggle 7");
+        }
+
+        System.out.println(isOverlappingEdge(furthestPosSoFarWiggled)
+        || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces));*/
+
+        return furthestPosSoFarRounded;
     }
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
@@ -159,9 +205,8 @@ public final class Rook extends Piece {
         double closestSquaredDistanceSoFar = Double.MAX_VALUE;
         Vector2I searchPos;
         double searchSquaredDistance;
-        int maxSearch = (int)(Game.boardSizeI.x * 0.11);
+        int maxSearch = (int) (Game.boardSizeI.x * 0.11);
         for (int i = 0; i < maxSearch; i++) {
-            System.out.println(i);
             searchPos = searchStartPos.add(searchDir1.scale(i));
             if (!isInValidAngle(searchPos))
                 return closestPosSoFar;
