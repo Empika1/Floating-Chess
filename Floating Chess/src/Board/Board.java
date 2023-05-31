@@ -9,7 +9,7 @@ import Pieces.*;
 import Utils.*;
 import Images.*;
 
-public class Board extends JPanel {
+public class Board extends JPanel implements MouseListener, MouseMotionListener {
     public static final Vector2I boardSizePixels = new Vector2I(512, 512);
     public static final Vector2I boardSizeI = new Vector2I(2048, 2048);
 
@@ -24,16 +24,18 @@ public class Board extends JPanel {
     void setupPanel() {
         setPreferredSize(new Dimension(boardSizePixels.x, boardSizePixels.y));
         setVisible(true);
-        offScreenBuffer = new BufferedImage(getSize().width, getSize().height, BufferedImage.TYPE_INT_ARGB);
+        offScreenBuffer = new BufferedImage(boardSizePixels.x, boardSizePixels.y, BufferedImage.TYPE_INT_ARGB);
+        addMouseListener(this);
+        addMouseMotionListener(this);
     }
 
-    int turnNumber = 1;
-    ChessColor turn = ChessColor.WHITE;
-    Piece heldPiece;
-    ArrayList<Piece> whitePieces = new ArrayList<Piece>();
-    ArrayList<Piece> blackPieces = new ArrayList<Piece>();
-    ArrayList<Piece> whitePiecesCaptured = new ArrayList<Piece>();
-    ArrayList<Piece> blackPiecesCaptured = new ArrayList<Piece>();
+    public int turnNumber = 1;
+    public ChessColor turn = ChessColor.WHITE;
+    public Piece heldPiece;
+    public ArrayList<Piece> whitePieces = new ArrayList<Piece>();
+    public ArrayList<Piece> blackPieces = new ArrayList<Piece>();
+    public ArrayList<Piece> whitePiecesCaptured = new ArrayList<Piece>();
+    public ArrayList<Piece> blackPiecesCaptured = new ArrayList<Piece>();
 
     void setupPieces() {
         int id = 0;
@@ -174,5 +176,44 @@ public class Board extends JPanel {
 
     public static Vector2I panelPosToBoardPos(Vector2I orig) {
         return new Vector2I(orig.x * boardSizeI.x / boardSizePixels.x, orig.y * boardSizeI.y / boardSizePixels.y);
+    }
+
+    public volatile Vector2I mousePos = new Vector2I();
+    public volatile boolean mousePressed = false;
+
+    @Override
+    public void mouseMoved(MouseEvent m) {
+        mousePos = panelPosToBoardPos(new Vector2I(m.getX(), m.getY()));
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent m) {
+        mousePos = panelPosToBoardPos(new Vector2I(m.getX(), m.getY()));
+    }
+
+    @Override
+    public void mousePressed(MouseEvent m) {
+        if (m.getButton() == MouseEvent.BUTTON1) {
+            mousePressed = true;
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent m) {
+        if (m.getButton() == MouseEvent.BUTTON1) {
+            mousePressed = false;
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent m) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent m) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent m) {
     }
 }

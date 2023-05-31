@@ -157,7 +157,7 @@ public abstract class Piece {
 
     public abstract ImageIcon getImageIcon();
 
-    public static final Vector2I pieceSizePixels = new Vector2I(Game.boardSizePixels.x / 8, Game.boardSizePixels.y / 8);
+    public static final Vector2I pieceSizePixels = new Vector2I(Board.boardSizePixels.x / 8, Board.boardSizePixels.y / 8);
 
     public void draw(Graphics g, JPanel game) {
         Vector2I posPanel = Board.boardPosToPanelPos(getVisiblePos());
