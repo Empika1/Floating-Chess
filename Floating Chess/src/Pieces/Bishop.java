@@ -59,7 +59,7 @@ public final class Bishop extends Piece {
         Vector2I searchStartPos = new Vector2I();
         Vector2I searchDir1 = new Vector2I();
         Vector2I searchDir2 = new Vector2I();
-        if (Math.abs(diff.x) > 0 && Math.abs(diff.y) > 0) {
+        if ((diff.x > 0 && diff.y > 0) || (diff.x < 0 && diff.y < 0)) {
             searchStartPos = new Vector2I(Geometry.lineLineIntersection(new Vector2(pos), -1, new Vector2(getTruePos()), 1));
             searchDir1 = new Vector2I(-1, 1);
             searchDir2 = new Vector2I(1, -1);
@@ -69,15 +69,16 @@ public final class Bishop extends Piece {
             searchDir2 = new Vector2I(1, 1);
         }
 
-        Vector2I closestPosSoFar = null;
+        Vector2I closestPosSoFar = getTruePos();
         double closestSquaredDistanceSoFar = Double.MAX_VALUE;
         Vector2I searchPos;
         double searchSquaredDistance;
         int maxSearch = (int)(Game.boardSizeI.x * 0.16);
         for (int i = 0; i < maxSearch; i++) {
             searchPos = searchStartPos.add(searchDir1.scale(i));
-            if (!isInValidAngle(searchPos))
+            if (!isInValidAngle(searchPos)) {
                 return closestPosSoFar;
+            }
 
             searchPos = closestClearPointOnLine(searchPos, whitePieces, blackPieces);
             searchSquaredDistance = searchPos.subtract(pos).getSquaredLength();
@@ -97,7 +98,7 @@ public final class Bishop extends Piece {
         return closestPosSoFar;
     }
 
-    static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;

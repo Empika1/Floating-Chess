@@ -121,9 +121,10 @@ public final class Rook extends Piece {
         }
 
         Vector2 diff = furthestPosSoFar.subtract(posV2);
-        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x)), (int) (diff.y + Math.signum(diff.y)));
+        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x) * 3), (int) (diff.y + Math.signum(diff.y) * 3));
+        Vector2I furthestSoFarRounded = pos.add(diffI);
 
-        return pos.add(diffI);
+        return furthestSoFarRounded;
     }
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
@@ -154,12 +155,13 @@ public final class Rook extends Piece {
             searchDir2 = new Vector2I(-1, 0);
         }
 
-        Vector2I closestPosSoFar = null;
+        Vector2I closestPosSoFar = getTruePos();
         double closestSquaredDistanceSoFar = Double.MAX_VALUE;
         Vector2I searchPos;
         double searchSquaredDistance;
         int maxSearch = (int)(Game.boardSizeI.x * 0.11);
         for (int i = 0; i < maxSearch; i++) {
+            System.out.println(i);
             searchPos = searchStartPos.add(searchDir1.scale(i));
             if (!isInValidAngle(searchPos))
                 return closestPosSoFar;
@@ -182,7 +184,7 @@ public final class Rook extends Piece {
         return closestPosSoFar;
     }
 
-    static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;

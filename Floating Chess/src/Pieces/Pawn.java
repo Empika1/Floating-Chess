@@ -244,7 +244,7 @@ public final class Pawn extends Piece {
         return getTruePos();
     }
 
-    static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;
