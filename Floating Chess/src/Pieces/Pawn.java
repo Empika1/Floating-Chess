@@ -70,7 +70,7 @@ public final class Pawn extends Piece {
                     if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v))
                         return false;
                 }
-            }  
+            }
 
             ArrayList<Piece> oppositeColorPieces = color == ChessColor.WHITE ? blackPieces : whitePieces;
             for (Piece p : oppositeColorPieces) {
@@ -78,18 +78,19 @@ public final class Pawn extends Piece {
                         new Vector2(getTruePos()), new Vector2(p.getTruePos()),
                         getHitboxRadius() + p.getHitboxRadius());
                 for (Vector2 v : lineCircleIntersections) {
-                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v) && !hitboxOverlapsHitbox(pos, p))
+                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v)
+                            && !hitboxOverlapsHitbox(pos, p))
                         return false;
                 }
             }
             return true;
         }
-                
+
         return false;
     }
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        final int moveLengthScaled = (hasMoved ? moveLength : moveLength * 2);
+        int moveLengthScaled = (hasMoved ? moveLength : moveLength * 2);
 
         Vector2I posRelative = new Vector2I(pos.x, 0);
         Vector2I truePosRelative = new Vector2I(getTruePos().x, 0);
@@ -120,6 +121,12 @@ public final class Pawn extends Piece {
                 searchPosAbsolute.y = searchPos.y;
             else
                 searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+
+            if (searchPos.y >= truePosRelative.y) {
+                foundPos1 = getTruePos();
+                foundLengthSquared1 = pos.subtract(getTruePos()).getSquaredLength();
+                break;
+            }
 
             if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
                 foundPos1 = searchPosAbsolute.copy();
@@ -169,6 +176,12 @@ public final class Pawn extends Piece {
             else
                 searchPosAbsolute = new Vector2I(searchPos.x, Game.boardSizeI.y - searchPos.y);
 
+            if (searchPos.y >= truePosRelative.y) {
+                foundPos2 = getTruePos();
+                foundLengthSquared2 = pos.subtract(getTruePos()).getSquaredLength();
+                break;
+            }
+
             if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
                 foundPos2 = searchPosAbsolute.copy();
                 foundLengthSquared2 = pos.subtract(searchPosAbsolute).getSquaredLength();
@@ -205,6 +218,12 @@ public final class Pawn extends Piece {
             else
                 searchPosAbsolute = new Vector2I(searchPos.x, Game.boardSizeI.y - searchPos.y);
 
+            if (searchPos.y >= truePosRelative.y) {
+                foundPos3 = getTruePos();
+                foundLengthSquared3 = pos.subtract(getTruePos()).getSquaredLength();
+                break;
+            }
+
             if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
                 foundPos3 = searchPosAbsolute.copy();
                 foundLengthSquared3 = pos.subtract(searchPosAbsolute).getSquaredLength();
@@ -222,7 +241,7 @@ public final class Pawn extends Piece {
         if (minLengthSquared == foundLengthSquared3) {
             return foundPos3;
         }
-        return null;
+        return getTruePos();
     }
 
     static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);
