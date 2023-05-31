@@ -73,7 +73,8 @@ public final class Bishop extends Piece {
         double closestSquaredDistanceSoFar = Double.MAX_VALUE;
         Vector2I searchPos;
         double searchSquaredDistance;
-        for (int i = 0;; i++) {
+        int maxSearch = (int)(Game.boardSizeI.x * 0.16);
+        for (int i = 0; i < maxSearch; i++) {
             searchPos = searchStartPos.add(searchDir1.scale(i));
             if (!isInValidAngle(searchPos))
                 return closestPosSoFar;
@@ -93,6 +94,7 @@ public final class Bishop extends Piece {
                 closestPosSoFar = searchPos.copy();
             }
         }
+        return closestPosSoFar;
     }
 
     static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);

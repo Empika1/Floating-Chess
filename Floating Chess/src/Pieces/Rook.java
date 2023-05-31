@@ -30,7 +30,7 @@ public final class Rook extends Piece {
     }
 
     public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        Vector2I furthestPosSoFar = pos;
+        Vector2 furthestPosSoFar = new Vector2(pos);
         double furthestSquaredDistanceSoFar = pos.subtract(getTruePos()).getSquaredLength();
 
         Vector2 posV2 = new Vector2(pos);
@@ -46,17 +46,32 @@ public final class Rook extends Piece {
         Vector2 rightIntersection = Geometry.lineLineIntersection(truePosV2, posV2,
                 new Vector2(Game.boardSizeI.x - getHitboxRadius(), 0),
                 new Vector2(Game.boardSizeI.x - getHitboxRadius(), Game.boardSizeI.y));
-        Vector2[] edgeIntersections = new Vector2[] { topIntersection, bottomIntersection, leftIntersection,
-                rightIntersection };
-        for (Vector2 i : edgeIntersections) {
-            if (i == null)
-                continue;
-            if (Geometry.isPointInRect(posV2, truePosV2, i)) {
-                double squaredDistanceToIntersection = truePosV2.subtract(i).getSquaredLength();
-                if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
-                    furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
-                    furthestPosSoFar = new Vector2I(i);
-                }
+        if (topIntersection != null && truePosV2.y >= topIntersection.y && topIntersection.y >= posV2.y) {
+            double squaredDistanceToIntersection = truePosV2.subtract(topIntersection).getSquaredLength();
+            if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
+                furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
+                furthestPosSoFar = topIntersection.copy();
+            }
+        }
+        if (bottomIntersection != null && truePosV2.y <= bottomIntersection.y && bottomIntersection.y <= posV2.y) {
+            double squaredDistanceToIntersection = truePosV2.subtract(bottomIntersection).getSquaredLength();
+            if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
+                furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
+                furthestPosSoFar = bottomIntersection.copy();
+            }
+        }
+        if (leftIntersection != null && truePosV2.x >= leftIntersection.x && leftIntersection.x >= posV2.x) {
+            double squaredDistanceToIntersection = truePosV2.subtract(leftIntersection).getSquaredLength();
+            if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
+                furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
+                furthestPosSoFar = leftIntersection.copy();
+            }
+        }
+        if (rightIntersection != null && truePosV2.x <= rightIntersection.x && rightIntersection.x <= posV2.x) {
+            double squaredDistanceToIntersection = truePosV2.subtract(rightIntersection).getSquaredLength();
+            if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
+                furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
+                furthestPosSoFar = rightIntersection.copy();
             }
         }
 
@@ -69,7 +84,7 @@ public final class Rook extends Piece {
                     double squaredDistanceToIntersection = truePosV2.subtract(intersectionPoint).getSquaredLength();
                     if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
                         furthestSquaredDistanceSoFar = squaredDistanceToIntersection;
-                        furthestPosSoFar = new Vector2I(intersectionPoint);
+                        furthestPosSoFar = intersectionPoint.copy();
                     }
                 }
             }
@@ -87,23 +102,28 @@ public final class Rook extends Piece {
                 if (squaredDistanceToIntersection1 > squaredDistanceToIntersection2) {
                     if (squaredDistanceToIntersection1 < furthestSquaredDistanceSoFar) {
                         furthestSquaredDistanceSoFar = squaredDistanceToIntersection1;
-                        furthestPosSoFar = new Vector2I(lineCircleIntersections[0]);
+                        furthestPosSoFar = lineCircleIntersections[0].copy();
                     }
                 } else {
                     if (squaredDistanceToIntersection2 < furthestSquaredDistanceSoFar) {
                         furthestSquaredDistanceSoFar = squaredDistanceToIntersection2;
-                        furthestPosSoFar = new Vector2I(lineCircleIntersections[1]);
+                        furthestPosSoFar = lineCircleIntersections[1].copy();
                     }
                 }
 
                 double squaredDistanceToPiece = getTruePos().subtract(p.getTruePos()).getSquaredLength();
-                if(squaredDistanceToPiece < furthestSquaredDistanceSoFar) {
+                if (squaredDistanceToPiece < furthestSquaredDistanceSoFar) {
                     furthestSquaredDistanceSoFar = squaredDistanceToPiece;
-                    furthestPosSoFar = getTruePos().add(pos.subtract(getTruePos()).setLength(Math.sqrt(squaredDistanceToPiece)));
+                    furthestPosSoFar = truePosV2
+                            .add(posV2.subtract(truePosV2).setLength(Math.sqrt(squaredDistanceToPiece)));
                 }
             }
         }
-        return furthestPosSoFar;
+
+        Vector2 diff = furthestPosSoFar.subtract(posV2);
+        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x)), (int) (diff.y + Math.signum(diff.y)));
+
+        return pos.add(diffI);
     }
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
@@ -138,7 +158,8 @@ public final class Rook extends Piece {
         double closestSquaredDistanceSoFar = Double.MAX_VALUE;
         Vector2I searchPos;
         double searchSquaredDistance;
-        for (int i = 0;; i++) {
+        int maxSearch = (int)(Game.boardSizeI.x * 0.11);
+        for (int i = 0; i < maxSearch; i++) {
             searchPos = searchStartPos.add(searchDir1.scale(i));
             if (!isInValidAngle(searchPos))
                 return closestPosSoFar;
@@ -158,6 +179,7 @@ public final class Rook extends Piece {
                 closestPosSoFar = searchPos.copy();
             }
         }
+        return closestPosSoFar;
     }
 
     static final int hitboxRadius = (int) (0.375 * Game.boardSizeI.x / 8);
