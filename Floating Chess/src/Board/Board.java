@@ -22,7 +22,7 @@ public class Board extends JPanel {
     static ImageIcon boardIcon = ImageManager.resize(ImageManager.board, boardSizePixels);
 
     void setupPanel() {
-        setSize(boardSizePixels.x, boardSizePixels.y);
+        setPreferredSize(new Dimension(boardSizePixels.x, boardSizePixels.y));
         setVisible(true);
         offScreenBuffer = new BufferedImage(getSize().width, getSize().height, BufferedImage.TYPE_INT_ARGB);
     }
