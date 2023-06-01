@@ -18,7 +18,6 @@ public class App {
         f.setResizable(false);
         Game g = new Game();
         f.getContentPane().add(g, BorderLayout.PAGE_START);
-        g.setPreferredSize(new Dimension(512, 512));
         f.pack();
         f.setVisible(true);
         g.startRendering();

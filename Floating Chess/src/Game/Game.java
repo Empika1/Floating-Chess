@@ -17,7 +17,10 @@ public class Game extends JPanel {
     public Game() {
         setLayout(new BorderLayout());
         board = new Board();
-        add(board);
+        add(board, BorderLayout.CENTER);
+        JButton button = new JButton("hi");
+        button.setVisible(true);
+        add(button, BorderLayout.LINE_START);
         setVisible(true);
     }
 
