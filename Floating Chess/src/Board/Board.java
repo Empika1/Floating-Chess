@@ -18,13 +18,11 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         setupPieces();
     }
 
-    BufferedImage offScreenBuffer;
     static ImageIcon boardIcon = ImageManager.resize(ImageManager.board, boardSizePixels);
 
     void setupPanel() {
         setPreferredSize(new Dimension(boardSizePixels.x, boardSizePixels.y));
         setVisible(true);
-        offScreenBuffer = new BufferedImage(boardSizePixels.x, boardSizePixels.y, BufferedImage.TYPE_INT_ARGB);
         addMouseListener(this);
         addMouseMotionListener(this);
     }
@@ -128,12 +126,13 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
             whitePieces.get(i).setColor(ChessColor.WHITE);
     }
 
-    BufferedImage b = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
-
     public void draw() {
         validate();
         repaint();
     }
+
+    BufferedImage offScreenBuffer = new BufferedImage(boardSizePixels.x, boardSizePixels.y,
+            BufferedImage.TYPE_INT_ARGB);;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -153,17 +152,6 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
             p.draw(bbg, this);
         if (heldPiece != null)
             heldPiece.draw(bbg, this);
-
-        /*
-         * for(int i = 0; i < 1000; i++) {
-         * for(int i2 = 0; i2 < 1000; i2++) {
-         * int p = ((i/4) << 24) | ((i2/4) << 16) | ((i/4) << 8) | (i2/4);
-         * b.setRGB(i, i2, p);
-         * }
-         * }
-         */
-        ImageIcon test = new ImageIcon(b);
-        test.paintIcon(this, bbg, 0, 0);
 
         // draw bbg to g
         g.drawImage(offScreenBuffer, 0, 0, this);
