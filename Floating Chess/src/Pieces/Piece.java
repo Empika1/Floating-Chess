@@ -161,6 +161,10 @@ public abstract class Piece {
 
     public void draw(Graphics g, JPanel game) {
         Vector2I posPanel = Board.boardPosToPanelPos(getVisiblePos());
+        g.setColor(new Color(0, 0, 0, 64));
+        Vector2I hitboxPos = Board.boardPosToPanelPos(getVisiblePos().subtract(new Vector2I(getHitboxRadius(), getHitboxRadius())));
+        Vector2I hitboxSize = Board.boardPosToPanelPos(new Vector2I(getHitboxRadius(), getHitboxRadius()).scale(2));
+        g.fillOval(hitboxPos.x, hitboxPos.y, hitboxSize.x, hitboxSize.y);
         getImageIcon().paintIcon(game, g, posPanel.x - (pieceSizePixels.x / 2), posPanel.y - (pieceSizePixels.y / 2));
     }
 }

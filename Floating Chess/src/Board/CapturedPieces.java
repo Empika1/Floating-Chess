@@ -64,7 +64,7 @@ public class CapturedPieces extends JPanel {
     static final ImageIcon bq = ImageManager.resize(ImageManager.bq, iconSizePixels);
     static final ImageIcon wq = ImageManager.resize(ImageManager.wq, iconSizePixels);
 
-    static final ImageIcon bk = ImageManager.resize(ImageManager.bp, iconSizePixels);
+    static final ImageIcon bk = ImageManager.resize(ImageManager.bk, iconSizePixels);
     static final ImageIcon wk = ImageManager.resize(ImageManager.wk, iconSizePixels);
 
     Board board = null;
@@ -88,59 +88,61 @@ public class CapturedPieces extends JPanel {
         bbg.fillRect(0, 0, getSize().width + 100, getSize().height + 100);
 
         // draw objects to bbg
-        ArrayList<Pawn> capturedPawns = new ArrayList<Pawn>();
-        ArrayList<Knight> capturedKnights = new ArrayList<Knight>();
-        ArrayList<Bishop> capturedBishops = new ArrayList<Bishop>();
-        ArrayList<Rook> capturedRooks = new ArrayList<Rook>();
-        ArrayList<Queen> capturedQueens = new ArrayList<Queen>();
-        ArrayList<King> capturedKings = new ArrayList<King>();
+        int capturedPawnNum = 0;
+        int capturedKnightNum = 0;
+        int capturedBishopNum = 0;
+        int capturedRookNum = 0;
+        int capturedQueenNum = 0;
+        int capturedKingNum = 0;
         for (Piece p : capturedPieces) {
             if (p.getClass().equals(Pawn.class))
-                capturedPawns.add((Pawn) p);
+                capturedPawnNum++;
             else if (p.getClass().equals(Knight.class))
-                capturedKnights.add((Knight) p);
+                capturedKnightNum++;
             else if (p.getClass().equals(Bishop.class))
-                capturedBishops.add((Bishop) p);
+                capturedBishopNum++;
             else if (p.getClass().equals(Rook.class))
-                capturedRooks.add((Rook) p);
+                capturedRookNum++;
             else if (p.getClass().equals(Queen.class))
-                capturedQueens.add((Queen) p);
+                capturedQueenNum++;
             else if (p.getClass().equals(King.class))
-                capturedKings.add((King) p);
+                capturedKingNum++;
         }
 
-        int currentDrawPos = 0;
-        for (Pawn p : capturedPawns) {
+        int currentDrawPos = -nonOverlappingPiecesSpacing;
+        if (capturedPawnNum != 0)
+            currentDrawPos += nonOverlappingPiecesSpacing;
+        for (int i = 0; i < capturedPawnNum; i++) {
             pawn.paintIcon(this, bbg, currentDrawPos, 0);
             currentDrawPos += overlappingPiecesSpacing;
         }
-        if (capturedKnights.size() != 0)
+        if (capturedKnightNum != 0)
             currentDrawPos += nonOverlappingPiecesSpacing;
-        for (Knight p : capturedKnights) {
+        for (int i = 0; i < capturedKnightNum; i++) {
             knight.paintIcon(this, bbg, currentDrawPos, 0);
             currentDrawPos += overlappingPiecesSpacing;
         }
-        if (capturedBishops.size() != 0)
+        if (capturedBishopNum != 0)
             currentDrawPos += nonOverlappingPiecesSpacing;
-        for (Bishop p : capturedBishops) {
+        for (int i = 0; i < capturedBishopNum; i++) {
             bishop.paintIcon(this, bbg, currentDrawPos, 0);
             currentDrawPos += overlappingPiecesSpacing;
         }
-        if (capturedRooks.size() != 0)
+        if (capturedRookNum != 0)
             currentDrawPos += nonOverlappingPiecesSpacing;
-        for (Rook p : capturedRooks) {
+        for (int i = 0; i < capturedRookNum; i++) {
             rook.paintIcon(this, bbg, currentDrawPos, 0);
             currentDrawPos += overlappingPiecesSpacing;
         }
-        if (capturedQueens.size() != 0)
+        if (capturedQueenNum != 0)
             currentDrawPos += nonOverlappingPiecesSpacing;
-        for (Queen p : capturedQueens) {
+        for (int i = 0; i < capturedQueenNum; i++) {
             queen.paintIcon(this, bbg, currentDrawPos, 0);
             currentDrawPos += overlappingPiecesSpacing;
         }
-        if (capturedKings.size() != 0)
+        if (capturedKingNum != 0)
             currentDrawPos += nonOverlappingPiecesSpacing;
-        for (King p : capturedKings) {
+        for (int i = 0; i < capturedKingNum; i++) {
             king.paintIcon(this, bbg, currentDrawPos, 0);
             currentDrawPos += overlappingPiecesSpacing;
         }

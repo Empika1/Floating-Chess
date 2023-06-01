@@ -5,7 +5,6 @@ import java.util.*;
 import Images.*;
 import Utils.*;
 import Game.*;
-import Board.*;
 
 public final class Bishop extends Piece {
     static final String pieceName = "Bishop";
@@ -118,7 +117,7 @@ public final class Bishop extends Piece {
                 if (squaredDistanceToPiece < furthestSquaredDistanceSoFar) {
                     furthestSquaredDistanceSoFar = squaredDistanceToPiece;
                     furthestPosSoFar = truePosV2
-                            .add(posV2.subtract(truePosV2).setLength(Math.sqrt(squaredDistanceToPiece) + Board.boardSizePixels.x * 0.05));
+                            .add(posV2.subtract(truePosV2).setLength(Math.sqrt(squaredDistanceToPiece)));
                 }
             }
         }
@@ -128,9 +127,11 @@ public final class Bishop extends Piece {
                 (int) (diff.y + Math.signum(diff.y) * 3));
         Vector2I furthestPosSoFarRounded = pos.add(diffI);
 
-        Vector2I roundedDiff = furthestPosSoFarRounded.subtract(getTruePos());
+        /*Vector2I roundedDiff = furthestPosSoFarRounded.subtract(getTruePos());
         Vector2I floorDiff = roundedDiff.setLength((Math.floor(roundedDiff.getLength() / moveLength)) * moveLength);
-        return getTruePos().add(floorDiff);
+        return getTruePos().add(floorDiff);*/
+
+        return furthestPosSoFarRounded;
     }
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {

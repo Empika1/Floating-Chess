@@ -167,7 +167,7 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     }
 
     public volatile Vector2I mousePos = new Vector2I();
-    public volatile boolean mousePressed = false;
+    public volatile boolean mouseLeftPressed = false;
 
     @Override
     public void mouseMoved(MouseEvent m) {
@@ -182,14 +182,14 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     @Override
     public void mousePressed(MouseEvent m) {
         if (m.getButton() == MouseEvent.BUTTON1) {
-            mousePressed = true;
+            mouseLeftPressed = true;
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent m) {
         if (m.getButton() == MouseEvent.BUTTON1) {
-            mousePressed = false;
+            mouseLeftPressed = false;
         }
     }
 

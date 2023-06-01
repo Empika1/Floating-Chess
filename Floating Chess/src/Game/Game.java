@@ -2,12 +2,9 @@ package Game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
 import java.util.*;
 import Pieces.*;
 import Utils.*;
-import Images.*;
 import Board.*;
 
 public class Game extends JPanel {
@@ -49,13 +46,14 @@ public class Game extends JPanel {
     }
 
     Vector2I mousePosGame = new Vector2I();
-    boolean mousePressedGame;
+    boolean mouseLeftPressedGame;
+    boolean mouseRightPressedGame;
 
     public void startRendering() {
         Thread gameThread = new Thread(() -> {
             while (true) {
                 mousePosGame = board.mousePos;
-                mousePressedGame = board.mousePressed;
+                mouseLeftPressedGame = board.mouseLeftPressed;
                 movePieces();
                 board.draw();
                 whitePiecesCaptured.draw(board);
@@ -73,7 +71,7 @@ public class Game extends JPanel {
         else
             board.turn = ChessColor.WHITE;
 
-        if (mousePressedGame && board.heldPiece == null) {
+        if (mouseLeftPressedGame && board.heldPiece == null) {
             if (board.turn == ChessColor.WHITE) {
                 for (Piece p : board.whitePieces) {
                     if (p.isInHitbox(mousePosGame)) {
@@ -93,7 +91,7 @@ public class Game extends JPanel {
             }
         }
 
-        if (!mousePressedGame && board.heldPiece != null) {
+        if (!mouseLeftPressedGame && board.heldPiece != null) {
             board.heldPiece.setTruePos(board.heldPiece.getVisiblePos(), true);
             ArrayList<Piece> capturedPieces = board.heldPiece.oppositeColorPiecesOverlapping(
                     board.heldPiece.getVisiblePos(),
