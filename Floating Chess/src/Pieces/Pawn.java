@@ -1,10 +1,12 @@
 package Pieces;
 
 import javax.swing.*;
+
 import java.util.*;
 import Images.*;
 import Utils.*;
 import Game.*;
+import Board.*;
 
 public final class Pawn extends Piece {
     static final String pieceName = "Pawn";
@@ -14,7 +16,7 @@ public final class Pawn extends Piece {
     }
 
     static final int moveLength = Game.boardSizeI.x / 8;
-    static final int moveLengthDiagonal = (int) (moveLength / Math.sqrt(2));
+    static final int moveLengthDiagonal = moveLength;
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
@@ -267,6 +269,25 @@ public final class Pawn extends Piece {
                 return whiteImage;
             default:
                 return null;
+        }
+    }
+
+    static ImageIcon moveAreaImageNormalWhite = ImageManager.resize(ImageManager.pawnMoveNormalWhite, Board.boardSizePixels);
+    static ImageIcon moveAreaImageFirstWhite = ImageManager.resize(ImageManager.pawnMoveFirstWhite, Board.boardSizePixels);
+    static ImageIcon moveAreaImageNormalBlack = ImageManager.resize(ImageManager.pawnMoveNormalBlack, Board.boardSizePixels);
+    static ImageIcon moveAreaImageFirstBlack = ImageManager.resize(ImageManager.pawnMoveFirstBlack, Board.boardSizePixels);
+
+    public ImageIcon getMoveAreaIcon() {
+        if (hasMoved) {
+            if (getColor() == ChessColor.WHITE)
+                return moveAreaImageNormalWhite;
+            else
+                return moveAreaImageNormalBlack;
+        } else {
+            if (getColor() == ChessColor.WHITE)
+                return moveAreaImageFirstWhite;
+            else
+                return moveAreaImageFirstBlack;
         }
     }
 }

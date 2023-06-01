@@ -12,6 +12,7 @@ public class Game extends JPanel {
     Board board;
     CapturedPieces whitePiecesCaptured;
     CapturedPieces blackPiecesCaptured;
+
     public Game() {
         setLayout(new GridBagLayout());
         board = new Board();
@@ -54,6 +55,7 @@ public class Game extends JPanel {
             while (true) {
                 mousePosGame = board.mousePos;
                 mouseLeftPressedGame = board.mouseLeftPressed;
+                mouseRightPressedGame = board.mouseRightPressed;
                 movePieces();
                 board.draw();
                 whitePiecesCaptured.draw(board);
@@ -70,6 +72,15 @@ public class Game extends JPanel {
             board.turn = ChessColor.BLACK;
         else
             board.turn = ChessColor.WHITE;
+
+        if (mouseRightPressedGame && board.heldPiece != null) {
+            board.heldPiece.setVisiblePos(board.heldPiece.getTruePos());
+            if (board.turn == ChessColor.WHITE)
+                board.whitePieces.add(board.heldPiece);
+            else
+                board.blackPieces.add(board.heldPiece);
+            board.heldPiece = null;
+        }
 
         if (mouseLeftPressedGame && board.heldPiece == null) {
             if (board.turn == ChessColor.WHITE) {

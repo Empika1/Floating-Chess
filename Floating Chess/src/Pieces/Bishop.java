@@ -5,6 +5,7 @@ import java.util.*;
 import Images.*;
 import Utils.*;
 import Game.*;
+import Board.*;
 
 public final class Bishop extends Piece {
     static final String pieceName = "Bishop";
@@ -217,5 +218,11 @@ public final class Bishop extends Piece {
             default:
                 return null;
         }
+    }
+
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.bishopMove, Board.boardSizePixels);
+    
+    public ImageIcon getMoveAreaIcon() {
+        return moveAreaImage;
     }
 }

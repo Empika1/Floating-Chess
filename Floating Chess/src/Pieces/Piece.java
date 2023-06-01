@@ -157,14 +157,28 @@ public abstract class Piece {
 
     public abstract ImageIcon getImageIcon();
 
-    public static final Vector2I pieceSizePixels = new Vector2I(Board.boardSizePixels.x / 8, Board.boardSizePixels.y / 8);
+    public abstract ImageIcon getMoveAreaIcon();
 
-    public void draw(Graphics g, JPanel game) {
-        Vector2I posPanel = Board.boardPosToPanelPos(getVisiblePos());
-        g.setColor(new Color(0, 0, 0, 64));
-        Vector2I hitboxPos = Board.boardPosToPanelPos(getVisiblePos().subtract(new Vector2I(getHitboxRadius(), getHitboxRadius())));
-        Vector2I hitboxSize = Board.boardPosToPanelPos(new Vector2I(getHitboxRadius(), getHitboxRadius()).scale(2));
-        g.fillOval(hitboxPos.x, hitboxPos.y, hitboxSize.x, hitboxSize.y);
-        getImageIcon().paintIcon(game, g, posPanel.x - (pieceSizePixels.x / 2), posPanel.y - (pieceSizePixels.y / 2));
+    public static final Vector2I pieceSizePixels = new Vector2I(Board.boardSizePixels.x / 8,
+            Board.boardSizePixels.y / 8);
+
+    public void draw(Graphics g, JPanel game, boolean isHeld) {
+        Vector2I visiblePosPanel = Board.boardPosToPanelPos(getVisiblePos());
+        Vector2I truePosPanel = Board.boardPosToPanelPos(getTruePos());
+        /*
+         * g.setColor(new Color(0, 0, 0, 64));
+         * Vector2I hitboxPos = Board.boardPosToPanelPos(getVisiblePos().subtract(new
+         * Vector2I(getHitboxRadius(), getHitboxRadius())));
+         * Vector2I hitboxSize = Board.boardPosToPanelPos(new
+         * Vector2I(getHitboxRadius(), getHitboxRadius()).scale(2));
+         * g.fillOval(hitboxPos.x, hitboxPos.y, hitboxSize.x, hitboxSize.y);
+         */
+        
+        if (isHeld)
+            getMoveAreaIcon().paintIcon(game, g, truePosPanel.x - (Board.boardSizePixels.x / 2),
+                    truePosPanel.y - (Board.boardSizePixels.y / 2));
+
+        getImageIcon().paintIcon(game, g, visiblePosPanel.x - (pieceSizePixels.x / 2),
+                visiblePosPanel.y - (pieceSizePixels.y / 2));
     }
 }

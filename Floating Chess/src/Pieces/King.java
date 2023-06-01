@@ -5,6 +5,7 @@ import java.util.*;
 import Images.*;
 import Utils.*;
 import Game.*;
+import Board.*;
 
 public final class King extends Piece {
     static final String pieceName = "King";
@@ -13,10 +14,11 @@ public final class King extends Piece {
         return pieceName;
     }
 
-    int moveRadius = (int) (Game.boardSizeI.x / 8);
+    final static int halfMoveSideLength = (int) (Game.boardSizeI.x / 8);
 
-    public boolean isInMoveRadius(Vector2I pos) {
-        return pos.subtract(getTruePos()).getSquaredLength() <= moveRadius * moveRadius;
+    public boolean isInMoveSquare(Vector2I pos) {
+        return Geometry.isPointInRect(getTruePos().subtract(new Vector2I(halfMoveSideLength, halfMoveSideLength)),
+                getTruePos().add(new Vector2I(halfMoveSideLength, halfMoveSideLength)), pos);
     }
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
@@ -25,7 +27,7 @@ public final class King extends Piece {
             return false;
         }
 
-        return isInMoveRadius(pos);
+        return isInMoveSquare(pos);
     }
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
@@ -33,11 +35,13 @@ public final class King extends Piece {
         double closestLengthSquaredSoFar = Double.MAX_VALUE;
         Vector2I closestPointSoFar = new Vector2I();
 
-        for(searchPos.x = getTruePos().x - moveRadius; searchPos.x <= getTruePos().x + moveRadius; searchPos.x++) {
-            for(searchPos.y = getTruePos().y - moveRadius; searchPos.y <= getTruePos().y + moveRadius; searchPos.y++) {
-                if(canMoveTo(searchPos, whitePieces, blackPieces)) {
-                double lengthSquared = searchPos.subtract(pos).getSquaredLength();
-                    if(lengthSquared < closestLengthSquaredSoFar) {
+        for (searchPos.x = getTruePos().x - halfMoveSideLength; searchPos.x <= getTruePos().x
+                + halfMoveSideLength; searchPos.x++) {
+            for (searchPos.y = getTruePos().y - halfMoveSideLength; searchPos.y <= getTruePos().y
+                    + halfMoveSideLength; searchPos.y++) {
+                if (canMoveTo(searchPos, whitePieces, blackPieces)) {
+                    double lengthSquared = searchPos.subtract(pos).getSquaredLength();
+                    if (lengthSquared < closestLengthSquaredSoFar) {
                         closestLengthSquaredSoFar = lengthSquared;
                         closestPointSoFar = searchPos.copy();
                     }
@@ -71,5 +75,11 @@ public final class King extends Piece {
             default:
                 return null;
         }
+    }
+
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.kingMove, Board.boardSizePixels);
+    
+    public ImageIcon getMoveAreaIcon() {
+        return moveAreaImage;
     }
 }

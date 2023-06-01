@@ -147,11 +147,11 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         bbg.setColor(new Color(255, 0, 0, 255));
         boardIcon.paintIcon(this, bbg, 0, 0);
         for (Piece p : blackPieces)
-            p.draw(bbg, this);
+            p.draw(bbg, this, false);
         for (Piece p : whitePieces)
-            p.draw(bbg, this);
+            p.draw(bbg, this, false);
         if (heldPiece != null)
-            heldPiece.draw(bbg, this);
+            heldPiece.draw(bbg, this, true);
 
         // draw bbg to g
         g.drawImage(offScreenBuffer, 0, 0, this);
@@ -168,6 +168,7 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
     public volatile Vector2I mousePos = new Vector2I();
     public volatile boolean mouseLeftPressed = false;
+    public volatile boolean mouseRightPressed = false;
 
     @Override
     public void mouseMoved(MouseEvent m) {
@@ -181,16 +182,18 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
     @Override
     public void mousePressed(MouseEvent m) {
-        if (m.getButton() == MouseEvent.BUTTON1) {
+        if (m.getButton() == MouseEvent.BUTTON1)
             mouseLeftPressed = true;
-        }
+        if (m.getButton() == MouseEvent.BUTTON3)
+            mouseRightPressed = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent m) {
-        if (m.getButton() == MouseEvent.BUTTON1) {
+        if (m.getButton() == MouseEvent.BUTTON1)
             mouseLeftPressed = false;
-        }
+        if (m.getButton() == MouseEvent.BUTTON3)
+            mouseRightPressed = false;
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.*;
 import Images.*;
 import Utils.*;
 import Game.*;
+import Board.*;
 
 public final class Rook extends Piece {
     static final String pieceName = "Rook";
@@ -253,5 +254,11 @@ public final class Rook extends Piece {
             default:
                 return null;
         }
+    }
+
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.rookMove, Board.boardSizePixels);
+    
+    public ImageIcon getMoveAreaIcon() {
+        return moveAreaImage;
     }
 }

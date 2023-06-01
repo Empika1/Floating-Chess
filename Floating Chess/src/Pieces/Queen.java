@@ -5,6 +5,7 @@ import java.util.*;
 import Images.*;
 import Utils.*;
 import Game.*;
+import Board.*;
 
 public final class Queen extends Piece {
     static final String pieceName = "Queen";
@@ -62,5 +63,11 @@ public final class Queen extends Piece {
             default:
                 return null;
         }
+    }
+
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.queenMove, Board.boardSizePixels);
+    
+    public ImageIcon getMoveAreaIcon() {
+        return moveAreaImage;
     }
 }

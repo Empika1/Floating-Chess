@@ -5,6 +5,7 @@ import java.util.*;
 import Images.*;
 import Utils.*;
 import Game.*;
+import Board.*;
 
 public final class Knight extends Piece {
     static final String pieceName = "Knight";
@@ -109,5 +110,11 @@ public final class Knight extends Piece {
             default:
                 return null;
         }
+    }
+
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.knightMove, Board.boardSizePixels);
+    
+    public ImageIcon getMoveAreaIcon() {
+        return moveAreaImage;
     }
 }
