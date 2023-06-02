@@ -11,7 +11,7 @@ import Pieces.*;
 public class CapturedPieces extends JPanel {
     static final Vector2I iconSizePixels = new Vector2I(25, 25);
     static final int overlappingPiecesSpacing = 6;
-    static final int nonOverlappingPiecesSpacing = 18;
+    static final int nonOverlappingPiecesSpacing = 16;
 
     static final Vector2I capturedPiecesSizePixels = new Vector2I(16 * overlappingPiecesSpacing + 5 * nonOverlappingPiecesSpacing + iconSizePixels.x, iconSizePixels.y);
 
@@ -84,7 +84,7 @@ public class CapturedPieces extends JPanel {
         Graphics bbg = offScreenBuffer.getGraphics();
 
         // Clear the off-screen buffer
-        bbg.setColor(new Color(255, 255, 255, 255));
+        bbg.setColor(UIManager.getColor("Panel.background"));
         bbg.fillRect(0, 0, getSize().width + 100, getSize().height + 100);
 
         // draw objects to bbg

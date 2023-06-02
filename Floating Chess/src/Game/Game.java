@@ -15,10 +15,11 @@ public class Game extends JPanel {
 
     public Game() {
         setLayout(new GridBagLayout());
+        setBackground(UIManager.getColor("Panel.background"));
+
         board = new Board();
-        Insets boardPadding = new Insets(10, 10, 10, 10);
         GridBagConstraints boardConstraints = new GridBagConstraints();
-        boardConstraints.insets = boardPadding;
+        boardConstraints.insets = new Insets(10, 10, 0, 10);
         boardConstraints.gridheight = 1;
         boardConstraints.gridwidth = 3;
         boardConstraints.gridx = 0;
@@ -27,7 +28,7 @@ public class Game extends JPanel {
 
         whitePiecesCaptured = new CapturedPieces(ChessColor.WHITE, board);
         GridBagConstraints whitePiecesCapturedConstraints = new GridBagConstraints();
-        whitePiecesCapturedConstraints.insets = boardPadding;
+        whitePiecesCapturedConstraints.insets = new Insets(10, 10, 0, 10);
         whitePiecesCapturedConstraints.gridheight = 1;
         whitePiecesCapturedConstraints.gridwidth = 1;
         whitePiecesCapturedConstraints.gridx = 0;
@@ -36,12 +37,21 @@ public class Game extends JPanel {
 
         blackPiecesCaptured = new CapturedPieces(ChessColor.BLACK, board);
         GridBagConstraints blackPiecesCapturedConstraints = new GridBagConstraints();
-        blackPiecesCapturedConstraints.insets = boardPadding;
+        blackPiecesCapturedConstraints.insets = new Insets(10, 10, 10, 10);
         blackPiecesCapturedConstraints.gridheight = 1;
         blackPiecesCapturedConstraints.gridwidth = 1;
         blackPiecesCapturedConstraints.gridx = 0;
         blackPiecesCapturedConstraints.gridy = 2;
         add(blackPiecesCaptured, blackPiecesCapturedConstraints);
+
+        JButton menuButton = new JButton("Menu");
+        GridBagConstraints menuButtonConstraints = new GridBagConstraints();
+        menuButtonConstraints.insets = new Insets(10, 10, 0, 10);
+        menuButtonConstraints.gridheight = 1;
+        menuButtonConstraints.gridwidth = 1;
+        menuButtonConstraints.gridx = 1;
+        menuButtonConstraints.gridy = 0;
+        add(menuButton, menuButtonConstraints);
 
         setVisible(true);
     }
@@ -82,6 +92,7 @@ public class Game extends JPanel {
             else
                 board.blackPieces.add(board.heldPiece);
             board.heldPiece = null;
+            board.piecesThatWillBeCaptured.clear();
         }
 
         if (mouseLeftPressedGame && board.heldPiece == null) {
@@ -130,6 +141,8 @@ public class Game extends JPanel {
                     board.blackPieces.add(board.heldPiece);
                 }
                 board.heldPiece = null;
+                board.piecesThatWillBeCaptured.clear();
+                ;
                 board.turnNumber++;
             }
         }
