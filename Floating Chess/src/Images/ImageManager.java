@@ -1,6 +1,8 @@
 package Images;
 
-import java.awt.Image;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 import javax.swing.ImageIcon;
 import Utils.*;
 
@@ -51,7 +53,7 @@ public final class ImageManager {
     private ImageManager() {
     }
 
-    /*public static BufferedImage toBufferedImage(Image img) {
+    public static BufferedImage toBufferedImage(Image img) {
         if (img instanceof BufferedImage) {
             return (BufferedImage) img;
         }
@@ -66,11 +68,31 @@ public final class ImageManager {
 
         // Return the buffered image
         return bimage;
-    }*/
+    }
 
     public static ImageIcon resize(ImageIcon original, Vector2I size) {
         Image imgOriginal = original.getImage();
         Image imgScaled = imgOriginal.getScaledInstance(size.x, size.y, Image.SCALE_SMOOTH);
         return new ImageIcon(imgScaled);
+    }
+
+    public static ImageIcon modulateColor(ImageIcon original, Color col) {
+        BufferedImage img = toBufferedImage(original.getImage());
+        for (int x = 0; x < img.getWidth(null); x++) {
+            for (int y = 0; y < img.getHeight(null); y++) {
+                Color currentColor = new Color(img.getRGB(x, y), true);
+                int currentAlpha = currentColor.getAlpha();
+                int currentRed = currentColor.getRed();
+                int currentGreen = currentColor.getGreen();
+                int currentBlue = currentColor.getBlue();
+                int newAlpha = (int) ((currentAlpha / 255.0) * (col.getAlpha() / 255.0) * 255);
+                int newRed = (int) ((currentRed / 255.0) * (col.getRed() / 255.0) * 255);
+                int newGreen = (int) ((currentGreen / 255.0) * (col.getGreen() / 255.0) * 255);
+                int newBlue = (int) ((currentBlue / 255.0) * (col.getBlue() / 255.0) * 255);
+                int newCol = (newAlpha << 24) | (newRed << 16) | (newGreen << 8) | newBlue;
+                img.setRGB(x, y, newCol);
+            }
+        }
+        return new ImageIcon(img);
     }
 }

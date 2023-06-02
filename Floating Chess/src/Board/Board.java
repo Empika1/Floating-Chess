@@ -132,7 +132,10 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     }
 
     BufferedImage offScreenBuffer = new BufferedImage(boardSizePixels.x, boardSizePixels.y,
-            BufferedImage.TYPE_INT_ARGB);;
+            BufferedImage.TYPE_INT_ARGB);
+
+    public ArrayList<Piece> piecesThatWillBeCaptured = new ArrayList<Piece>();
+    Color capturedPieceModulateColor = new Color(255, 255, 255, 128);
 
     @Override
     public void paintComponent(Graphics g) {
@@ -156,13 +159,21 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
                 p.drawHitbox(bbg, this);
         }
 
-        for (Piece p : blackPieces)
-            p.drawPiece(bbg, this);
-        for (Piece p : whitePieces)
-            p.drawPiece(bbg, this);
+        for (Piece p : blackPieces) {
+            if (piecesThatWillBeCaptured.contains(p))
+                p.drawPiece(bbg, this, capturedPieceModulateColor);
+            else
+                p.drawPiece(bbg, this, null);
+        }
+        for (Piece p : whitePieces) {
+            if (piecesThatWillBeCaptured.contains(p))
+                p.drawPiece(bbg, this, capturedPieceModulateColor);
+            else
+                p.drawPiece(bbg, this, null);
+        }
 
         if (heldPiece != null)
-            heldPiece.drawPiece(bbg, this);
+            heldPiece.drawPiece(bbg, this, null);
 
         // draw bbg to g
         g.drawImage(offScreenBuffer, 0, 0, this);

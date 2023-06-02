@@ -74,7 +74,8 @@ public class Game extends JPanel {
             board.turn = ChessColor.WHITE;
 
         Vector2I boardBuffer = new Vector2I(-20, -20);
-        if ((!Geometry.isPointInRect(boardBuffer, boardSizeI.subtract(boardBuffer), mousePosGame)) && board.heldPiece != null) {
+        if ((!Geometry.isPointInRect(boardBuffer, boardSizeI.subtract(boardBuffer), mousePosGame))
+                && board.heldPiece != null) {
             board.heldPiece.setVisiblePos(board.heldPiece.getTruePos());
             if (board.turn == ChessColor.WHITE)
                 board.whitePieces.add(board.heldPiece);
@@ -103,32 +104,34 @@ public class Game extends JPanel {
             }
         }
 
-        if (!mouseLeftPressedGame && board.heldPiece != null) {
-            board.heldPiece.setTruePos(board.heldPiece.getVisiblePos(), true);
-            ArrayList<Piece> capturedPieces = board.heldPiece.oppositeColorPiecesOverlapping(
-                    board.heldPiece.getVisiblePos(),
-                    board.whitePieces, board.blackPieces);
-            if (board.turn == ChessColor.WHITE) {
-                for (Piece p : capturedPieces) {
-                    board.blackPieces.remove(p);
-                    board.blackPiecesCaptured.add(p);
-                }
-                board.whitePieces.add(board.heldPiece);
-            } else {
-                for (Piece p : capturedPieces) {
-                    board.whitePieces.remove(p);
-                    board.whitePiecesCaptured.add(p);
-                }
-                board.blackPieces.add(board.heldPiece);
-            }
-            board.heldPiece = null;
-            board.turnNumber++;
-        }
-
         if (board.heldPiece != null) {
             Vector2I closestValidPointToMouse = board.heldPiece.closestValidPoint(mousePosGame, board.whitePieces,
                     board.blackPieces);
             board.heldPiece.setVisiblePos(closestValidPointToMouse);
+
+            ArrayList<Piece> capturedPieces = board.heldPiece.oppositeColorPiecesOverlapping(
+                    board.heldPiece.getVisiblePos(),
+                    board.whitePieces, board.blackPieces);
+            board.piecesThatWillBeCaptured = capturedPieces;
+
+            if (!mouseLeftPressedGame) {
+                board.heldPiece.setTruePos(board.heldPiece.getVisiblePos(), true);
+                if (board.turn == ChessColor.WHITE) {
+                    for (Piece p : capturedPieces) {
+                        board.blackPieces.remove(p);
+                        board.blackPiecesCaptured.add(p);
+                    }
+                    board.whitePieces.add(board.heldPiece);
+                } else {
+                    for (Piece p : capturedPieces) {
+                        board.whitePieces.remove(p);
+                        board.whitePiecesCaptured.add(p);
+                    }
+                    board.blackPieces.add(board.heldPiece);
+                }
+                board.heldPiece = null;
+                board.turnNumber++;
+            }
         }
     }
 }

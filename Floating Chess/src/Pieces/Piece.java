@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import Game.*;
+import Images.ImageManager;
 import Utils.*;
 import Board.*;
 
@@ -164,10 +165,16 @@ public abstract class Piece {
     public static final Vector2I pieceSizePixels = new Vector2I(Board.boardSizePixels.x / 8,
             Board.boardSizePixels.y / 8);
 
-    public void drawPiece(Graphics g, JPanel board) {
+    public void drawPiece(Graphics g, JPanel board, Color modulate) {
         Vector2I visiblePosPanel = Board.boardPosToPanelPos(getVisiblePos());
-        getImageIcon().paintIcon(board, g, visiblePosPanel.x - (pieceSizePixels.x / 2),
-                visiblePosPanel.y - (pieceSizePixels.y / 2));
+        if (modulate != null) {
+            ImageIcon modulatedIcon = ImageManager.modulateColor(getImageIcon(), modulate);
+            modulatedIcon.paintIcon(board, g, visiblePosPanel.x - (pieceSizePixels.x / 2),
+                    visiblePosPanel.y - (pieceSizePixels.y / 2));
+        } else {
+            getImageIcon().paintIcon(board, g, visiblePosPanel.x - (pieceSizePixels.x / 2),
+                    visiblePosPanel.y - (pieceSizePixels.y / 2));
+        }
     }
 
     public void drawMoveArea(Graphics g, JPanel board) {
