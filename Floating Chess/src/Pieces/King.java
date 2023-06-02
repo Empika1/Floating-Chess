@@ -77,9 +77,16 @@ public final class King extends Piece {
         }
     }
 
-    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.kingMove, Board.boardSizePixels);
-    
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.kingMove, Board.boardSizePixels.scale(0.25));
+
     public ImageIcon getMoveAreaIcon() {
         return moveAreaImage;
+    }
+
+    static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
+            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+
+    public ImageIcon getHitboxIcon() {
+        return hitboxImage;
     }
 }

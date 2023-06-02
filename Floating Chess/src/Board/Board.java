@@ -146,12 +146,23 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         // draw objects to bbg
         bbg.setColor(new Color(255, 0, 0, 255));
         boardIcon.paintIcon(this, bbg, 0, 0);
+
+        if (heldPiece != null) {
+            heldPiece.drawMoveArea(bbg, this);
+            heldPiece.drawHitbox(bbg, this);
+            for (Piece p : blackPieces)
+                p.drawHitbox(bbg, this);
+            for (Piece p : whitePieces)
+                p.drawHitbox(bbg, this);
+        }
+
         for (Piece p : blackPieces)
-            p.draw(bbg, this, false);
+            p.drawPiece(bbg, this);
         for (Piece p : whitePieces)
-            p.draw(bbg, this, false);
+            p.drawPiece(bbg, this);
+
         if (heldPiece != null)
-            heldPiece.draw(bbg, this, true);
+            heldPiece.drawPiece(bbg, this);
 
         // draw bbg to g
         g.drawImage(offScreenBuffer, 0, 0, this);

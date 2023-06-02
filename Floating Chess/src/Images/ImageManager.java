@@ -1,11 +1,6 @@
 package Images;
 
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-
 import javax.swing.ImageIcon;
 import Utils.*;
 
@@ -51,10 +46,12 @@ public final class ImageManager {
 
     public static final ImageIcon kingMove = new ImageIcon(ImageManager.class.getResource("/Images/KingMove.png"));
 
+    public static final ImageIcon hitbox = new ImageIcon(ImageManager.class.getResource("/Images/Hitbox.png"));
+
     private ImageManager() {
     }
 
-    public static BufferedImage toBufferedImage(Image img) {
+    /*public static BufferedImage toBufferedImage(Image img) {
         if (img instanceof BufferedImage) {
             return (BufferedImage) img;
         }
@@ -69,7 +66,7 @@ public final class ImageManager {
 
         // Return the buffered image
         return bimage;
-    }
+    }*/
 
     public static ImageIcon resize(ImageIcon original, Vector2I size) {
         Image imgOriginal = original.getImage();

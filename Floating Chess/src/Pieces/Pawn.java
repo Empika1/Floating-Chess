@@ -272,10 +272,14 @@ public final class Pawn extends Piece {
         }
     }
 
-    static ImageIcon moveAreaImageNormalWhite = ImageManager.resize(ImageManager.pawnMoveNormalWhite, Board.boardSizePixels);
-    static ImageIcon moveAreaImageFirstWhite = ImageManager.resize(ImageManager.pawnMoveFirstWhite, Board.boardSizePixels);
-    static ImageIcon moveAreaImageNormalBlack = ImageManager.resize(ImageManager.pawnMoveNormalBlack, Board.boardSizePixels);
-    static ImageIcon moveAreaImageFirstBlack = ImageManager.resize(ImageManager.pawnMoveFirstBlack, Board.boardSizePixels);
+    static ImageIcon moveAreaImageNormalWhite = ImageManager.resize(ImageManager.pawnMoveNormalWhite,
+            Board.boardSizePixels);
+    static ImageIcon moveAreaImageFirstWhite = ImageManager.resize(ImageManager.pawnMoveFirstWhite,
+            Board.boardSizePixels);
+    static ImageIcon moveAreaImageNormalBlack = ImageManager.resize(ImageManager.pawnMoveNormalBlack,
+            Board.boardSizePixels);
+    static ImageIcon moveAreaImageFirstBlack = ImageManager.resize(ImageManager.pawnMoveFirstBlack,
+            Board.boardSizePixels);
 
     public ImageIcon getMoveAreaIcon() {
         if (hasMoved) {
@@ -289,5 +293,12 @@ public final class Pawn extends Piece {
             else
                 return moveAreaImageFirstBlack;
         }
+    }
+
+    static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
+            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+
+    public ImageIcon getHitboxIcon() {
+        return hitboxImage;
     }
 }

@@ -16,6 +16,7 @@ public final class Queen extends Piece {
 
     Rook fakeRook = new Rook();
     Bishop fakeBishop = new Bishop();
+
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         fakeRook.setTruePos(getTruePos(), false);
         fakeRook.setColor(getColor());
@@ -33,13 +34,13 @@ public final class Queen extends Piece {
         double rookSquaredDistance = pos.subtract(rookPoint).getSquaredLength();
         Vector2I bishopPoint = fakeBishop.closestValidPoint(pos, whitePieces, blackPieces);
         double bishopSquaredDistance = pos.subtract(bishopPoint).getSquaredLength();
-        if(rookSquaredDistance < bishopSquaredDistance)
+        if (rookSquaredDistance < bishopSquaredDistance)
             return rookPoint;
         else
             return bishopPoint;
     }
 
-    static final int hitboxRadius = (int)(0.35 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;
@@ -65,9 +66,16 @@ public final class Queen extends Piece {
         }
     }
 
-    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.queenMove, Board.boardSizePixels);
-    
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.queenMove, Board.boardSizePixels.scale(2));
+
     public ImageIcon getMoveAreaIcon() {
         return moveAreaImage;
+    }
+
+    static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
+            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+
+    public ImageIcon getHitboxIcon() {
+        return hitboxImage;
     }
 }

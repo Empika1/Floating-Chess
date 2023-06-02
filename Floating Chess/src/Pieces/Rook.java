@@ -126,50 +126,61 @@ public final class Rook extends Piece {
                 (int) (diff.y + Math.signum(diff.y) * 3));
         Vector2I furthestPosSoFarRounded = pos.add(diffI);
 
-        /*Vector2I furthestPosSoFarWiggled = furthestPosSoFarRounded.copy();
-        if (isOverlappingEdge(furthestPosSoFarWiggled)
-                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
-            furthestPosSoFarWiggled.x++;
-            System.out.println("wiggle 1");
-        }
-        if (isOverlappingEdge(furthestPosSoFarWiggled)
-                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
-            furthestPosSoFarWiggled.y++;
-            System.out.println("wiggle 1.5");
-        }
-        if (isOverlappingEdge(furthestPosSoFarWiggled)
-                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
-            furthestPosSoFarWiggled.x--;
-            System.out.println("wiggle 2");
-        }
-        if (isOverlappingEdge(furthestPosSoFarWiggled)
-                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
-            furthestPosSoFarWiggled.x--;
-            System.out.println("wiggle 3");
-        }
-        if (isOverlappingEdge(furthestPosSoFarWiggled)
-                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
-            furthestPosSoFarWiggled.y--;
-            System.out.println("wiggle 4");
-        }
-        if (isOverlappingEdge(furthestPosSoFarWiggled)
-                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
-            furthestPosSoFarWiggled.y--;
-            System.out.println("wiggle 5");
-        }
-        if (isOverlappingEdge(furthestPosSoFarWiggled)
-                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
-            furthestPosSoFarWiggled.x++;
-            System.out.println("wiggle 6");
-        }
-        if (isOverlappingEdge(furthestPosSoFarWiggled)
-                || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces)) {
-            furthestPosSoFarWiggled.x++;
-            System.out.println("wiggle 7");
-        }
-
-        System.out.println(isOverlappingEdge(furthestPosSoFarWiggled)
-        || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces, blackPieces));*/
+        /*
+         * Vector2I furthestPosSoFarWiggled = furthestPosSoFarRounded.copy();
+         * if (isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces)) {
+         * furthestPosSoFarWiggled.x++;
+         * System.out.println("wiggle 1");
+         * }
+         * if (isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces)) {
+         * furthestPosSoFarWiggled.y++;
+         * System.out.println("wiggle 1.5");
+         * }
+         * if (isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces)) {
+         * furthestPosSoFarWiggled.x--;
+         * System.out.println("wiggle 2");
+         * }
+         * if (isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces)) {
+         * furthestPosSoFarWiggled.x--;
+         * System.out.println("wiggle 3");
+         * }
+         * if (isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces)) {
+         * furthestPosSoFarWiggled.y--;
+         * System.out.println("wiggle 4");
+         * }
+         * if (isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces)) {
+         * furthestPosSoFarWiggled.y--;
+         * System.out.println("wiggle 5");
+         * }
+         * if (isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces)) {
+         * furthestPosSoFarWiggled.x++;
+         * System.out.println("wiggle 6");
+         * }
+         * if (isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces)) {
+         * furthestPosSoFarWiggled.x++;
+         * System.out.println("wiggle 7");
+         * }
+         * 
+         * System.out.println(isOverlappingEdge(furthestPosSoFarWiggled)
+         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
+         * blackPieces));
+         */
 
         return furthestPosSoFarRounded;
     }
@@ -256,9 +267,16 @@ public final class Rook extends Piece {
         }
     }
 
-    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.rookMove, Board.boardSizePixels);
-    
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.rookMove, Board.boardSizePixels.scale(2));
+
     public ImageIcon getMoveAreaIcon() {
         return moveAreaImage;
+    }
+
+    static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
+            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+
+    public ImageIcon getHitboxIcon() {
+        return hitboxImage;
     }
 }

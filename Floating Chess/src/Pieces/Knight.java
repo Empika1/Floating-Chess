@@ -43,7 +43,7 @@ public final class Knight extends Piece {
             if (!(isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces,
                     blackPieces))) {
                 searchDistanceSquared = searchPos.subtract(pos).getSquaredLength();
-                if(searchDistanceSquared < closestSquaredDistanceSoFar) {
+                if (searchDistanceSquared < closestSquaredDistanceSoFar) {
                     closestSquaredDistanceSoFar = searchDistanceSquared;
                     closestPosSoFar = searchPos.copy();
                 }
@@ -54,7 +54,7 @@ public final class Knight extends Piece {
             if (!(isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces,
                     blackPieces))) {
                 searchDistanceSquared = searchPos.subtract(pos).getSquaredLength();
-                if(searchDistanceSquared < closestSquaredDistanceSoFar) {
+                if (searchDistanceSquared < closestSquaredDistanceSoFar) {
                     closestSquaredDistanceSoFar = searchDistanceSquared;
                     closestPosSoFar = searchPos.copy();
                 }
@@ -65,7 +65,7 @@ public final class Knight extends Piece {
             if (!(isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces,
                     blackPieces))) {
                 searchDistanceSquared = searchPos.subtract(pos).getSquaredLength();
-                if(searchDistanceSquared < closestSquaredDistanceSoFar) {
+                if (searchDistanceSquared < closestSquaredDistanceSoFar) {
                     closestSquaredDistanceSoFar = searchDistanceSquared;
                     closestPosSoFar = searchPos.copy();
                 }
@@ -76,7 +76,7 @@ public final class Knight extends Piece {
             if (!(isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces,
                     blackPieces))) {
                 searchDistanceSquared = searchPos.subtract(pos).getSquaredLength();
-                if(searchDistanceSquared < closestSquaredDistanceSoFar) {
+                if (searchDistanceSquared < closestSquaredDistanceSoFar) {
                     closestSquaredDistanceSoFar = searchDistanceSquared;
                     closestPosSoFar = searchPos.copy();
                 }
@@ -113,8 +113,15 @@ public final class Knight extends Piece {
     }
 
     static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.knightMove, Board.boardSizePixels);
-    
+
     public ImageIcon getMoveAreaIcon() {
         return moveAreaImage;
+    }
+
+    static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
+            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+
+    public ImageIcon getHitboxIcon() {
+        return hitboxImage;
     }
 }

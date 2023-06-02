@@ -128,9 +128,13 @@ public final class Bishop extends Piece {
                 (int) (diff.y + Math.signum(diff.y) * 3));
         Vector2I furthestPosSoFarRounded = pos.add(diffI);
 
-        /*Vector2I roundedDiff = furthestPosSoFarRounded.subtract(getTruePos());
-        Vector2I floorDiff = roundedDiff.setLength((Math.floor(roundedDiff.getLength() / moveLength)) * moveLength);
-        return getTruePos().add(floorDiff);*/
+        /*
+         * Vector2I roundedDiff = furthestPosSoFarRounded.subtract(getTruePos());
+         * Vector2I floorDiff =
+         * roundedDiff.setLength((Math.floor(roundedDiff.getLength() / moveLength)) *
+         * moveLength);
+         * return getTruePos().add(floorDiff);
+         */
 
         return furthestPosSoFarRounded;
     }
@@ -220,9 +224,16 @@ public final class Bishop extends Piece {
         }
     }
 
-    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.bishopMove, Board.boardSizePixels);
-    
+    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.bishopMove, Board.boardSizePixels.scale(2));
+
     public ImageIcon getMoveAreaIcon() {
         return moveAreaImage;
+    }
+
+    static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
+            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+
+    public ImageIcon getHitboxIcon() {
+        return hitboxImage;
     }
 }

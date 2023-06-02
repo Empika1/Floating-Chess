@@ -159,26 +159,26 @@ public abstract class Piece {
 
     public abstract ImageIcon getMoveAreaIcon();
 
+    public abstract ImageIcon getHitboxIcon();
+
     public static final Vector2I pieceSizePixels = new Vector2I(Board.boardSizePixels.x / 8,
             Board.boardSizePixels.y / 8);
 
-    public void draw(Graphics g, JPanel game, boolean isHeld) {
+    public void drawPiece(Graphics g, JPanel board) {
         Vector2I visiblePosPanel = Board.boardPosToPanelPos(getVisiblePos());
-        Vector2I truePosPanel = Board.boardPosToPanelPos(getTruePos());
-        /*
-         * g.setColor(new Color(0, 0, 0, 64));
-         * Vector2I hitboxPos = Board.boardPosToPanelPos(getVisiblePos().subtract(new
-         * Vector2I(getHitboxRadius(), getHitboxRadius())));
-         * Vector2I hitboxSize = Board.boardPosToPanelPos(new
-         * Vector2I(getHitboxRadius(), getHitboxRadius()).scale(2));
-         * g.fillOval(hitboxPos.x, hitboxPos.y, hitboxSize.x, hitboxSize.y);
-         */
-        
-        if (isHeld)
-            getMoveAreaIcon().paintIcon(game, g, truePosPanel.x - (Board.boardSizePixels.x / 2),
-                    truePosPanel.y - (Board.boardSizePixels.y / 2));
-
-        getImageIcon().paintIcon(game, g, visiblePosPanel.x - (pieceSizePixels.x / 2),
+        getImageIcon().paintIcon(board, g, visiblePosPanel.x - (pieceSizePixels.x / 2),
                 visiblePosPanel.y - (pieceSizePixels.y / 2));
+    }
+
+    public void drawMoveArea(Graphics g, JPanel board) {
+        Vector2I truePosPanel = Board.boardPosToPanelPos(getTruePos());
+        getMoveAreaIcon().paintIcon(board, g, truePosPanel.x - (getMoveAreaIcon().getIconWidth() / 2),
+                truePosPanel.y - (getMoveAreaIcon().getIconHeight() / 2));
+    }
+
+    public void drawHitbox(Graphics g, JPanel board) {
+        Vector2I visiblePosPanel = Board.boardPosToPanelPos(getVisiblePos());
+        getHitboxIcon().paintIcon(board, g, visiblePosPanel.x - (getHitboxIcon().getIconWidth() / 2),
+                visiblePosPanel.y - (getHitboxIcon().getIconHeight() / 2));
     }
 }
