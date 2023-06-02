@@ -73,7 +73,8 @@ public class Game extends JPanel {
         else
             board.turn = ChessColor.WHITE;
 
-        if (mouseRightPressedGame && board.heldPiece != null) {
+        Vector2I boardBuffer = new Vector2I(-20, -20);
+        if ((!Geometry.isPointInRect(boardBuffer, boardSizeI.subtract(boardBuffer), mousePosGame)) && board.heldPiece != null) {
             board.heldPiece.setVisiblePos(board.heldPiece.getTruePos());
             if (board.turn == ChessColor.WHITE)
                 board.whitePieces.add(board.heldPiece);

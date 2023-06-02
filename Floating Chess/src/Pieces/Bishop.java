@@ -124,17 +124,9 @@ public final class Bishop extends Piece {
         }
 
         Vector2 diff = furthestPosSoFar.subtract(posV2);
-        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x) * 3),
-                (int) (diff.y + Math.signum(diff.y) * 3));
+        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x) * 2),
+                (int) (diff.y + Math.signum(diff.y) * 2));
         Vector2I furthestPosSoFarRounded = pos.add(diffI);
-
-        /*
-         * Vector2I roundedDiff = furthestPosSoFarRounded.subtract(getTruePos());
-         * Vector2I floorDiff =
-         * roundedDiff.setLength((Math.floor(roundedDiff.getLength() / moveLength)) *
-         * moveLength);
-         * return getTruePos().add(floorDiff);
-         */
 
         return furthestPosSoFarRounded;
     }

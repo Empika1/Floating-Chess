@@ -27,7 +27,23 @@ public final class King extends Piece {
             return false;
         }
 
-        return isInMoveSquare(pos);
+        if (!isInMoveSquare(pos))
+            return false;
+
+        ArrayList<Piece> sameColorPieces = color == ChessColor.WHITE ? whitePieces : blackPieces;
+        Vector2 posV2 = new Vector2(pos);
+        Vector2 truePosV2 = new Vector2(getTruePos());
+        for (Piece p : sameColorPieces) {
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
+                    new Vector2(p.getTruePos()), getHitboxRadius() + p.getHitboxRadius());
+            if (lineCircleIntersections.length != 0) {
+                if (Geometry.isPointInRect(truePosV2, posV2, lineCircleIntersections[0])
+                        || Geometry.isPointInRect(truePosV2, posV2, lineCircleIntersections[1]))
+                    return false;
+            }
+        }
+
+        return true;
     }
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {

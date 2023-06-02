@@ -9,11 +9,11 @@ import Utils.*;
 import Pieces.*;
 
 public class CapturedPieces extends JPanel {
-    static final Vector2I iconSizePixels = new Vector2I(20, 20);
+    static final Vector2I iconSizePixels = new Vector2I(25, 25);
     static final int overlappingPiecesSpacing = 6;
-    static final int nonOverlappingPiecesSpacing = 14;
+    static final int nonOverlappingPiecesSpacing = 18;
 
-    static final Vector2I capturedPiecesSizePixels = new Vector2I(16 * overlappingPiecesSpacing + 5 * nonOverlappingPiecesSpacing + iconSizePixels.x, 20);
+    static final Vector2I capturedPiecesSizePixels = new Vector2I(16 * overlappingPiecesSpacing + 5 * nonOverlappingPiecesSpacing + iconSizePixels.x, iconSizePixels.y);
 
     ChessColor color;
     ImageIcon pawn;

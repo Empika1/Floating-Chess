@@ -30,6 +30,41 @@ public final class Rook extends Piece {
         return absoluteSlope <= maxSlopeFromRightCardinal || absoluteSlope >= minSlopeFromTopCardinal;
     }
 
+    public Vector2I wiggle(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        Vector2I posWiggled = pos.copy();
+        Vector2I diff = new Vector2I();
+        int layer = 1;
+        int leg = 0;
+        while (isOverlappingSameColorPiece(posWiggled, whitePieces, blackPieces) || !isInValidAngle(posWiggled)) {
+            switch (leg) {
+                case 0:
+                    diff.x++;
+                    if (diff.x == layer)
+                        leg++;
+                    break;
+                case 1:
+                    diff.y++;
+                    if (diff.y == layer)
+                        leg++;
+                    break;
+                case 2:
+                    diff.x--;
+                    if (-diff.x == layer)
+                        leg++;
+                    break;
+                case 3:
+                    diff.y--;
+                    if (-diff.y == layer) {
+                        leg = 0;
+                        layer++;
+                    }
+                    break;
+            }
+            posWiggled = diff;
+        }
+        return posWiggled;
+    }
+
     public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         Vector2 furthestPosSoFar = new Vector2(pos);
         double furthestSquaredDistanceSoFar = pos.subtract(getTruePos()).getSquaredLength();
@@ -122,65 +157,9 @@ public final class Rook extends Piece {
         }
 
         Vector2 diff = furthestPosSoFar.subtract(posV2);
-        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x) * 3),
-                (int) (diff.y + Math.signum(diff.y) * 3));
+        Vector2I diffI = new Vector2I((int) (diff.x + Math.signum(diff.x) * 2),
+                (int) (diff.y + Math.signum(diff.y) * 2));
         Vector2I furthestPosSoFarRounded = pos.add(diffI);
-
-        /*
-         * Vector2I furthestPosSoFarWiggled = furthestPosSoFarRounded.copy();
-         * if (isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces)) {
-         * furthestPosSoFarWiggled.x++;
-         * System.out.println("wiggle 1");
-         * }
-         * if (isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces)) {
-         * furthestPosSoFarWiggled.y++;
-         * System.out.println("wiggle 1.5");
-         * }
-         * if (isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces)) {
-         * furthestPosSoFarWiggled.x--;
-         * System.out.println("wiggle 2");
-         * }
-         * if (isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces)) {
-         * furthestPosSoFarWiggled.x--;
-         * System.out.println("wiggle 3");
-         * }
-         * if (isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces)) {
-         * furthestPosSoFarWiggled.y--;
-         * System.out.println("wiggle 4");
-         * }
-         * if (isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces)) {
-         * furthestPosSoFarWiggled.y--;
-         * System.out.println("wiggle 5");
-         * }
-         * if (isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces)) {
-         * furthestPosSoFarWiggled.x++;
-         * System.out.println("wiggle 6");
-         * }
-         * if (isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces)) {
-         * furthestPosSoFarWiggled.x++;
-         * System.out.println("wiggle 7");
-         * }
-         * 
-         * System.out.println(isOverlappingEdge(furthestPosSoFarWiggled)
-         * || isOverlappingSameColorPiece(furthestPosSoFarWiggled, whitePieces,
-         * blackPieces));
-         */
 
         return furthestPosSoFarRounded;
     }
@@ -238,7 +217,7 @@ public final class Rook extends Piece {
                 closestPosSoFar = searchPos.copy();
             }
         }
-        return closestPosSoFar;
+        return wiggle(closestPosSoFar, whitePieces, blackPieces);
     }
 
     static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);

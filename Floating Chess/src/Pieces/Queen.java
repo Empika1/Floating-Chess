@@ -34,6 +34,7 @@ public final class Queen extends Piece {
         double rookSquaredDistance = pos.subtract(rookPoint).getSquaredLength();
         Vector2I bishopPoint = fakeBishop.closestValidPoint(pos, whitePieces, blackPieces);
         double bishopSquaredDistance = pos.subtract(bishopPoint).getSquaredLength();
+        
         if (rookSquaredDistance < bishopSquaredDistance)
             return rookPoint;
         else
