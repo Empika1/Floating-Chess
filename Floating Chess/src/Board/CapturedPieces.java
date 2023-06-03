@@ -90,7 +90,7 @@ public class CapturedPieces extends JPanel {
         Graphics bbg = offScreenBuffer.getGraphics();
 
         // Clear the off-screen buffer
-        bbg.setColor(UIManager.getColor("Panel.background"));
+        bbg.setColor(new Color(70, 73, 75));
         bbg.fillRect(0, 0, getSize().width + 100, getSize().height + 100);
 
         // draw objects to bbg
@@ -115,7 +115,12 @@ public class CapturedPieces extends JPanel {
                 capturedKingNum++;
         }
 
-        int currentDrawPos = -nonOverlappingPiecesSpacing;
+        int capturedPiecesWidth = capturedPieces.size() * overlappingPiecesSpacing
+                + nonOverlappingPiecesSpacing * ((capturedPawnNum != 0 ? 1 : 0) + (capturedKnightNum != 0 ? 1 : 0)
+                        + (capturedBishopNum != 0 ? 1 : 0) + (capturedRookNum != 0 ? 1 : 0)
+                        + (capturedQueenNum != 0 ? 1 : 0) + (capturedKingNum != 0 ? 1 : 0));
+
+        int currentDrawPos = -nonOverlappingPiecesSpacing + (capturedPiecesSizePixels.x - capturedPiecesWidth) / 2;
         if (capturedPawnNum != 0)
             currentDrawPos += nonOverlappingPiecesSpacing;
         for (int i = 0; i < capturedPawnNum; i++) {

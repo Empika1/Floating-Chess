@@ -62,6 +62,7 @@ public final class Rook extends Piece {
             }
             posWiggled = diff;
         }
+        System.out.println("AD");
         return posWiggled;
     }
 
@@ -217,7 +218,9 @@ public final class Rook extends Piece {
                 closestPosSoFar = searchPos.copy();
             }
         }
-        return wiggle(closestPosSoFar, whitePieces, blackPieces);
+
+        return closestPosSoFar;
+        //return wiggle(closestPosSoFar, whitePieces, blackPieces);
     }
 
     static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
