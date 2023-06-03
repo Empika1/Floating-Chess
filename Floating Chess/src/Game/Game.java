@@ -58,7 +58,7 @@ public class Game extends JPanel {
         menuButtonConstraints.gridy = 0;
         add(menuButton, menuButtonConstraints);
 
-        blackTimer = new ChessTimer(ChessColor.BLACK, 600000, 14f, whitePiecesCaptured.getPreferredSize());
+        blackTimer = new ChessTimer(ChessColor.BLACK, 10000, 14f, whitePiecesCaptured.getPreferredSize());
         blackTimer.setPreferredSize(whitePiecesCaptured.getPreferredSize());
         GridBagConstraints blackTimerConstraints = new GridBagConstraints();
         blackTimerConstraints.insets = new Insets(10, 10, 0, 10);
@@ -88,7 +88,7 @@ public class Game extends JPanel {
         backButtonConstraints.gridy = 2;
         add(backButton, backButtonConstraints);
 
-        whiteTimer = new ChessTimer(ChessColor.WHITE, 600000, 14f, blackPiecesCaptured.getPreferredSize());
+        whiteTimer = new ChessTimer(ChessColor.WHITE, 10000, 14f, blackPiecesCaptured.getPreferredSize());
         GridBagConstraints whiteTimerConstraints = new GridBagConstraints();
         whiteTimerConstraints.insets = new Insets(10, 10, 10, 10);
         whiteTimerConstraints.gridheight = 1;
@@ -208,27 +208,26 @@ public class Game extends JPanel {
     boolean isGameOver = false;
     ChessColor wonPlayer = null;
     LossState lossState = null;
+
     void checkForLoss() {
-        if(blackTimer.getTimeLeft() == 0) {
+        if (blackTimer.getTimeLeft() == 0) {
             isGameOver = true;
             wonPlayer = ChessColor.WHITE;
             lossState = LossState.OUTOFTIME;
-        }
-        else if(whiteTimer.getTimeLeft() == 0) {
+        } else if (whiteTimer.getTimeLeft() == 0) {
             isGameOver = true;
             wonPlayer = ChessColor.BLACK;
             lossState = LossState.OUTOFTIME;
-        }
-        else {
-            for(Piece p : board.whitePiecesCaptured) {
-                if(p.getPieceType() == PieceType.KING) {
+        } else {
+            for (Piece p : board.whitePiecesCaptured) {
+                if (p.getPieceType() == PieceType.KING) {
                     isGameOver = true;
                     wonPlayer = ChessColor.BLACK;
                     lossState = LossState.KINGCAPTURED;
                 }
             }
-            for(Piece p : board.blackPiecesCaptured) {
-                if(p.getPieceType() == PieceType.KING) {
+            for (Piece p : board.blackPiecesCaptured) {
+                if (p.getPieceType() == PieceType.KING) {
                     isGameOver = true;
                     wonPlayer = ChessColor.WHITE;
                     lossState = LossState.KINGCAPTURED;
@@ -236,8 +235,31 @@ public class Game extends JPanel {
             }
         }
 
-        if(isGameOver) {
-            JOptionPane.showMessageDialog(null, "Eggs are not supposed to be green.");
+        if (isGameOver) {
+            showGameOverDialog();
         }
+    }
+
+    void showGameOverDialog() {
+        String wonColor = wonPlayer == ChessColor.WHITE ? "White" : "Black";
+        String lostColor = wonPlayer == ChessColor.WHITE ? "Black" : "White";
+        String winString = lossState == LossState.KINGCAPTURED
+                ? wonColor + " wins, by capturing " + lostColor + "'s king!"
+                : wonColor + " wins, as " + lostColor + " has run out of time!";
+        ImageIcon winIcon = ImageManager.resize(wonPlayer == ChessColor.WHITE ? ImageManager.wk : ImageManager.bk,
+                new Vector2I(64, 64));
+
+        Object[] options = { "Play Again",
+                "Menu",
+                "View Replay" };
+        int n = JOptionPane.showOptionDialog(null,
+                winString,
+                "Game Over",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                winIcon,
+                options,
+                options[0]);
+        System.out.println(n);
     }
 }

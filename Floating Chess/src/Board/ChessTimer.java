@@ -3,6 +3,8 @@ package Board;
 import java.awt.Dimension;
 
 import javax.swing.*;
+import javax.swing.text.*;
+
 import Utils.*;
 import Pieces.*;
 
@@ -17,6 +19,11 @@ public class ChessTimer extends JTextPane {
         setText(StringFormatting.msToTime(startingTime));
         setFont(getFont().deriveFont(fontSize));
         setPreferredSize(preferredSize);
+
+        StyledDocument doc = getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
     }
 
     public ChessColor getColor() {
@@ -27,6 +34,8 @@ public class ChessTimer extends JTextPane {
         startingTimeMs = set;
         timeLeftMs = set;
         updateText();
+        currentTimeMs = System.currentTimeMillis();
+        oldTimeMs = System.currentTimeMillis();
     }
 
     long timeLeftMs;
@@ -34,6 +43,8 @@ public class ChessTimer extends JTextPane {
     public void setTimeLeft(long set) {
         timeLeftMs = set;
         updateText();
+        currentTimeMs = System.currentTimeMillis();
+        oldTimeMs = System.currentTimeMillis();
     }
 
     public long getTimeLeft() {
@@ -44,14 +55,16 @@ public class ChessTimer extends JTextPane {
 
     public void resume() {
         running = true;
+        currentTimeMs = System.currentTimeMillis();
+        oldTimeMs = System.currentTimeMillis();
     }
 
     public void pause() {
         running = false;
     }
 
-    long currentTimeMs = System.currentTimeMillis();
-    long oldTimeMs = System.currentTimeMillis();
+    long currentTimeMs;
+    long oldTimeMs;
 
     long timeLeftMsOld;
 

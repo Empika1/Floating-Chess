@@ -100,27 +100,14 @@ public final class Bishop extends Piece {
             Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(posV2, truePosV2,
                     new Vector2(p.getTruePos()), (double) (p.getHitboxRadius() + getHitboxRadius()));
             if (lineCircleIntersections.length == 2) {
-                double squaredDistanceToIntersection1 = truePosV2.subtract(lineCircleIntersections[0])
-                        .getSquaredLength();
-                double squaredDistanceToIntersection2 = truePosV2.subtract(lineCircleIntersections[1])
-                        .getSquaredLength();
-                if (squaredDistanceToIntersection1 > squaredDistanceToIntersection2) {
-                    if (squaredDistanceToIntersection1 < furthestSquaredDistanceSoFar) {
-                        furthestSquaredDistanceSoFar = squaredDistanceToIntersection1;
-                        furthestPosSoFar = lineCircleIntersections[0].copy();
+                if (Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[0])
+                        || Geometry.isPointInRect(posV2, truePosV2, lineCircleIntersections[1])) {
+                    double squaredDistanceToPiece = getTruePos().subtract(p.getTruePos()).getSquaredLength();
+                    if (squaredDistanceToPiece < furthestSquaredDistanceSoFar) {
+                        furthestSquaredDistanceSoFar = squaredDistanceToPiece;
+                        furthestPosSoFar = truePosV2
+                                .add(posV2.subtract(truePosV2).setLength(Math.sqrt(squaredDistanceToPiece)));
                     }
-                } else {
-                    if (squaredDistanceToIntersection2 < furthestSquaredDistanceSoFar) {
-                        furthestSquaredDistanceSoFar = squaredDistanceToIntersection2;
-                        furthestPosSoFar = lineCircleIntersections[1].copy();
-                    }
-                }
-
-                double squaredDistanceToPiece = getTruePos().subtract(p.getTruePos()).getSquaredLength();
-                if (squaredDistanceToPiece < furthestSquaredDistanceSoFar) {
-                    furthestSquaredDistanceSoFar = squaredDistanceToPiece;
-                    furthestPosSoFar = truePosV2
-                            .add(posV2.subtract(truePosV2).setLength(Math.sqrt(squaredDistanceToPiece)));
                 }
             }
         }
