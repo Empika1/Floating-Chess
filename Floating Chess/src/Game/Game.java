@@ -1,24 +1,30 @@
 package Game;
 
 import javax.swing.*;
-import javax.swing.text.*;
 import java.awt.*;
 import java.util.*;
 import Pieces.*;
 import Utils.*;
 import Board.*;
+import Images.ImageManager;
 
 public class Game extends JPanel {
 
     Board board;
+
     CapturedPieces whitePiecesCaptured;
     JButton menuButton;
-    JTextPane blackTimer;
+    ChessTimer blackTimer;
 
     CapturedPieces blackPiecesCaptured;
-    JTextPane whiteTimer;
+    JButton backButton;
+    ChessTimer whiteTimer;
 
     public Game() {
+        setupPanel();
+    }
+
+    void setupPanel() {
         setLayout(new GridBagLayout());
         setBackground(UIManager.getColor("Panel.background"));
 
@@ -40,7 +46,8 @@ public class Game extends JPanel {
         whitePiecesCapturedConstraints.gridy = 0;
         add(whitePiecesCaptured, whitePiecesCapturedConstraints);
 
-        menuButton = new JButton("Menu");;
+        menuButton = new JButton("Menu");
+        menuButton.setFocusPainted(false);
         GridBagConstraints menuButtonConstraints = new GridBagConstraints();
         menuButtonConstraints.insets = new Insets(10, 10, 0, 10);
         menuButtonConstraints.gridheight = 1;
@@ -49,14 +56,8 @@ public class Game extends JPanel {
         menuButtonConstraints.gridy = 0;
         add(menuButton, menuButtonConstraints);
 
-        blackTimer = new JTextPane();
-        blackTimer.setText("10:00");
+        blackTimer = new ChessTimer(ChessColor.BLACK, 600000, 14f, whitePiecesCaptured.getPreferredSize());
         blackTimer.setPreferredSize(whitePiecesCaptured.getPreferredSize());
-        blackTimer.setFont(blackTimer.getFont().deriveFont(14f));
-        StyledDocument blackTimerDoc = blackTimer.getStyledDocument();
-        SimpleAttributeSet blackTimerCenter = new SimpleAttributeSet();
-        StyleConstants.setAlignment(blackTimerCenter, StyleConstants.ALIGN_CENTER);
-        blackTimerDoc.setParagraphAttributes(0, blackTimerDoc.getLength(), blackTimerCenter, false);
         GridBagConstraints blackTimerConstraints = new GridBagConstraints();
         blackTimerConstraints.insets = new Insets(10, 10, 0, 10);
         blackTimerConstraints.gridheight = 1;
@@ -74,14 +75,18 @@ public class Game extends JPanel {
         blackPiecesCapturedConstraints.gridy = 2;
         add(blackPiecesCaptured, blackPiecesCapturedConstraints);
 
-        whiteTimer = new JTextPane();
-        whiteTimer.setText("10:00");
-        whiteTimer.setPreferredSize(whitePiecesCaptured.getPreferredSize());
-        whiteTimer.setFont(whiteTimer.getFont().deriveFont(14f));
-        StyledDocument whiteTimerDoc = whiteTimer.getStyledDocument();
-        SimpleAttributeSet whiteTimerCenter = new SimpleAttributeSet();
-        StyleConstants.setAlignment(whiteTimerCenter, StyleConstants.ALIGN_CENTER);
-        whiteTimerDoc.setParagraphAttributes(0, whiteTimerDoc.getLength(), whiteTimerCenter, false);
+        backButton = new JButton(ImageManager.resize(ImageManager.backButton, new Vector2I(12, 12)));
+        backButton.setEnabled(false);
+        backButton.setFocusPainted(false);
+        GridBagConstraints backButtonConstraints = new GridBagConstraints();
+        backButtonConstraints.insets = new Insets(10, 10, 10, 10);
+        backButtonConstraints.gridheight = 1;
+        backButtonConstraints.gridwidth = 1;
+        backButtonConstraints.gridx = 1;
+        backButtonConstraints.gridy = 2;
+        add(backButton, backButtonConstraints);
+
+        whiteTimer = new ChessTimer(ChessColor.WHITE, 600000, 14f, blackPiecesCaptured.getPreferredSize());
         GridBagConstraints whiteTimerConstraints = new GridBagConstraints();
         whiteTimerConstraints.insets = new Insets(10, 10, 10, 10);
         whiteTimerConstraints.gridheight = 1;
@@ -89,6 +94,7 @@ public class Game extends JPanel {
         whiteTimerConstraints.gridx = 2;
         whiteTimerConstraints.gridy = 2;
         add(whiteTimer, whiteTimerConstraints);
+        whiteTimer.start();
 
         setVisible(true);
     }
@@ -121,7 +127,7 @@ public class Game extends JPanel {
         else
             board.turn = ChessColor.WHITE;
 
-        Vector2I boardBuffer = new Vector2I(-20, -20);
+        Vector2I boardBuffer = new Vector2I(-50, -50);
         if ((!Geometry.isPointInRect(boardBuffer, boardSizeI.subtract(boardBuffer), mousePosGame))
                 && board.heldPiece != null) {
             board.heldPiece.setVisiblePos(board.heldPiece.getTruePos());
@@ -130,6 +136,7 @@ public class Game extends JPanel {
             else
                 board.blackPieces.add(board.heldPiece);
             board.heldPiece = null;
+            mouseLeftPressedGame = false;
             board.piecesThatWillBeCaptured.clear();
         }
 
@@ -185,32 +192,8 @@ public class Game extends JPanel {
         }
     }
 
-    long currentTimeMs = System.currentTimeMillis();
-    long oldTimeMs = System.currentTimeMillis();
-    long whiteTimeRemainingMs = 600000;
-    long whiteTimeRemainingMsOld = whiteTimeRemainingMs;
-    long blackTimeRemainingMs = 600000;
-    long blackTimeRemainingMsOld = blackTimeRemainingMs;
-    static final int msToUpdate = 100;
     public void updateTimers() {
-        currentTimeMs = System.currentTimeMillis();
-        long deltaTime = currentTimeMs - oldTimeMs;
-        if(board.turn == ChessColor.WHITE) {
-            whiteTimeRemainingMs -= deltaTime;
-            if(whiteTimeRemainingMsOld >= whiteTimeRemainingMs + msToUpdate) {
-                whiteTimeRemainingMsOld = whiteTimeRemainingMs;
-                whiteTimer.setText(StringFormatting.msToTime(whiteTimeRemainingMs));
-            }
-        }
-        else {
-            blackTimeRemainingMs -= deltaTime;
-            if(blackTimeRemainingMs % 100 == 0)
-            if(blackTimeRemainingMsOld >= blackTimeRemainingMs + msToUpdate) {
-                blackTimeRemainingMsOld = blackTimeRemainingMs;
-                blackTimer.setText(StringFormatting.msToTime(blackTimeRemainingMs));
-            }
-        }
-
-        oldTimeMs = currentTimeMs;
+        blackTimer.updateTime();
+        whiteTimer.updateTime();
     }
 }

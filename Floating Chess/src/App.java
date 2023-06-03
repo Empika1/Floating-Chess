@@ -13,6 +13,7 @@ public class App {
         Game g = new Game();
         f.getContentPane().add(g, BorderLayout.PAGE_START);
         f.pack();
+        f.setLocationRelativeTo(null);
         f.setVisible(true);
         g.startRendering();
     }

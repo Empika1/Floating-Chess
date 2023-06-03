@@ -76,6 +76,8 @@ public class CapturedPieces extends JPanel {
         repaint();
     }
 
+    Color backgroundColor = new JTextPane().getBackground();
+
     BufferedImage offScreenBuffer = new BufferedImage(capturedPiecesSizePixels.x, capturedPiecesSizePixels.y,
             BufferedImage.TYPE_INT_ARGB);
 
@@ -90,7 +92,7 @@ public class CapturedPieces extends JPanel {
         Graphics bbg = offScreenBuffer.getGraphics();
 
         // Clear the off-screen buffer
-        bbg.setColor(new Color(70, 73, 75));
+        bbg.setColor(backgroundColor);
         bbg.fillRect(0, 0, getSize().width + 100, getSize().height + 100);
 
         // draw objects to bbg

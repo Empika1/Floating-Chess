@@ -50,6 +50,9 @@ public final class ImageManager {
 
     public static final ImageIcon hitbox = new ImageIcon(ImageManager.class.getResource("/Images/Hitbox.png"));
 
+    public static final ImageIcon backButton = new ImageIcon(ImageManager.class.getResource("/Images/BackButton.png"));
+    public static final ImageIcon forwardButton = new ImageIcon(ImageManager.class.getResource("/Images/ForwardButton.png"));
+
     private ImageManager() {
     }
 
