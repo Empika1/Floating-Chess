@@ -10,6 +10,7 @@ public class ChessTimer extends JTextPane {
 
     ChessColor color;
     long startingTimeMs;
+
     public ChessTimer(ChessColor col, long startingTime, float fontSize, Dimension preferredSize) {
         color = col;
         setStartingTime(startingTime);
@@ -41,7 +42,7 @@ public class ChessTimer extends JTextPane {
 
     boolean running = false;
 
-    public void start() {
+    public void resume() {
         running = true;
     }
 
@@ -55,15 +56,17 @@ public class ChessTimer extends JTextPane {
     long timeLeftMsOld;
 
     static final int msToUpdate = 100;
+
     public void updateTime() {
         if (running) {
-            System.out.println(timeLeftMs);
             currentTimeMs = System.currentTimeMillis();
             long deltaTimeMs = currentTimeMs - oldTimeMs;
             timeLeftMs -= deltaTimeMs;
             oldTimeMs = currentTimeMs;
 
-            if(Math.abs(timeLeftMs - timeLeftMsOld) >= msToUpdate) {
+            if (Math.abs(timeLeftMs - timeLeftMsOld) >= msToUpdate) {
+                if (timeLeftMs < 0)
+                    timeLeftMs = 0;
                 updateText();
                 timeLeftMsOld = timeLeftMs;
             }

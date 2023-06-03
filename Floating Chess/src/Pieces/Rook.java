@@ -8,10 +8,12 @@ import Game.*;
 import Board.*;
 
 public final class Rook extends Piece {
-    static final String pieceName = "Rook";
-
     public String getPieceName() {
-        return pieceName;
+        return "Rook";
+    }
+
+    public PieceType getPieceType() {
+        return PieceType.ROOK;
     }
 
     static final double maxAngleFromCardinal = 5;

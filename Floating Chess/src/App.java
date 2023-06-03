@@ -15,6 +15,6 @@ public class App {
         f.pack();
         f.setLocationRelativeTo(null);
         f.setVisible(true);
-        g.startRendering();
+        g.startGame();
     }
 }

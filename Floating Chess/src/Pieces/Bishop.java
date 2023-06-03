@@ -8,10 +8,12 @@ import Game.*;
 import Board.*;
 
 public final class Bishop extends Piece {
-    static final String pieceName = "Bishop";
-
     public String getPieceName() {
-        return pieceName;
+        return "Bishop";
+    }
+
+    public PieceType getPieceType() {
+        return PieceType.BISHOP;
     }
 
     static final double maxAngleFromDiagonal = 5;

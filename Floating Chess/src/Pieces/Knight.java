@@ -8,10 +8,12 @@ import Game.*;
 import Board.*;
 
 public final class Knight extends Piece {
-    static final String pieceName = "Knight";
-
     public String getPieceName() {
-        return pieceName;
+        return "Knight";
+    }
+
+    public PieceType getPieceType() {
+        return PieceType.BISHOP;
     }
 
     static final int moveRadius = (int) (Math.sqrt(5) * Game.boardSizeI.x / 8.0);

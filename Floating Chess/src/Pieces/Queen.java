@@ -8,10 +8,12 @@ import Game.*;
 import Board.*;
 
 public final class Queen extends Piece {
-    static final String pieceName = "Queen";
-
     public String getPieceName() {
-        return pieceName;
+        return "Queen";
+    }
+
+    public PieceType getPieceType() {
+        return PieceType.QUEEN;
     }
 
     Rook fakeRook = new Rook();

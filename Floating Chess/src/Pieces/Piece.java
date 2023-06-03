@@ -21,6 +21,8 @@ public abstract class Piece {
 
     public abstract String getPieceName();
 
+    public abstract PieceType getPieceType();
+
     protected ChessColor color;
 
     public ChessColor getColor() {

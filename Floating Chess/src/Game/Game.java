@@ -3,6 +3,8 @@ package Game;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import Pieces.*;
 import Utils.*;
 import Board.*;
@@ -94,7 +96,6 @@ public class Game extends JPanel {
         whiteTimerConstraints.gridx = 2;
         whiteTimerConstraints.gridy = 2;
         add(whiteTimer, whiteTimerConstraints);
-        whiteTimer.start();
 
         setVisible(true);
     }
@@ -103,14 +104,17 @@ public class Game extends JPanel {
     boolean mouseLeftPressedGame;
     boolean mouseRightPressedGame;
 
-    public void startRendering() {
+    AtomicBoolean isGameRunning;
+
+    public void startGame() {
         Thread gameThread = new Thread(() -> {
-            while (true) {
+            while (!isGameOver) {
                 mousePosGame = board.mousePos;
                 mouseLeftPressedGame = board.mouseLeftPressed;
                 mouseRightPressedGame = board.mouseRightPressed;
                 movePieces();
                 updateTimers();
+                checkForLoss();
                 board.draw();
                 whitePiecesCaptured.draw(board);
                 blackPiecesCaptured.draw(board);
@@ -178,12 +182,16 @@ public class Game extends JPanel {
                         board.blackPiecesCaptured.add(p);
                     }
                     board.whitePieces.add(board.heldPiece);
+                    whiteTimer.pause();
+                    blackTimer.resume();
                 } else {
                     for (Piece p : capturedPieces) {
                         board.whitePieces.remove(p);
                         board.whitePiecesCaptured.add(p);
                     }
                     board.blackPieces.add(board.heldPiece);
+                    blackTimer.pause();
+                    whiteTimer.resume();
                 }
                 board.heldPiece = null;
                 board.piecesThatWillBeCaptured.clear();
@@ -192,8 +200,44 @@ public class Game extends JPanel {
         }
     }
 
-    public void updateTimers() {
+    void updateTimers() {
         blackTimer.updateTime();
         whiteTimer.updateTime();
+    }
+
+    boolean isGameOver = false;
+    ChessColor wonPlayer = null;
+    LossState lossState = null;
+    void checkForLoss() {
+        if(blackTimer.getTimeLeft() == 0) {
+            isGameOver = true;
+            wonPlayer = ChessColor.WHITE;
+            lossState = LossState.OUTOFTIME;
+        }
+        else if(whiteTimer.getTimeLeft() == 0) {
+            isGameOver = true;
+            wonPlayer = ChessColor.BLACK;
+            lossState = LossState.OUTOFTIME;
+        }
+        else {
+            for(Piece p : board.whitePiecesCaptured) {
+                if(p.getPieceType() == PieceType.KING) {
+                    isGameOver = true;
+                    wonPlayer = ChessColor.BLACK;
+                    lossState = LossState.KINGCAPTURED;
+                }
+            }
+            for(Piece p : board.blackPiecesCaptured) {
+                if(p.getPieceType() == PieceType.KING) {
+                    isGameOver = true;
+                    wonPlayer = ChessColor.WHITE;
+                    lossState = LossState.KINGCAPTURED;
+                }
+            }
+        }
+
+        if(isGameOver) {
+            JOptionPane.showMessageDialog(null, "Eggs are not supposed to be green.");
+        }
     }
 }

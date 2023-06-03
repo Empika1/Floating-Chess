@@ -8,10 +8,12 @@ import Game.*;
 import Board.*;
 
 public final class King extends Piece {
-    static final String pieceName = "King";
-
     public String getPieceName() {
-        return pieceName;
+        return "King";
+    }
+
+    public PieceType getPieceType() {
+        return PieceType.KING;
     }
 
     final static int halfMoveSideLength = (int) (Game.boardSizeI.x / 8);

@@ -9,10 +9,12 @@ import Game.*;
 import Board.*;
 
 public final class Pawn extends Piece {
-    static final String pieceName = "Pawn";
-
     public String getPieceName() {
-        return pieceName;
+        return "Pawn";
+    }
+
+    public PieceType getPieceType() {
+        return PieceType.PAWN;
     }
 
     static final int moveLength = Game.boardSizeI.x / 8;
