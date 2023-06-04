@@ -2,15 +2,16 @@ package Game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import Pieces.*;
+import Replay.*;
 import Utils.*;
 import Board.*;
 import Images.ImageManager;
 
-public class Game extends JPanel {
+public class GameScreen extends JPanel {
 
     Board board;
 
@@ -22,8 +23,9 @@ public class Game extends JPanel {
     JButton backButton;
     ChessTimer whiteTimer;
 
-    public Game() {
+    public GameScreen() {
         setupPanel();
+        addMoveToReplay();
     }
 
     void setupPanel() {
@@ -78,6 +80,11 @@ public class Game extends JPanel {
         add(blackPiecesCaptured, blackPiecesCapturedConstraints);
 
         backButton = new JButton(ImageManager.resize(ImageManager.backButton, new Vector2I(12, 12)));
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                backOneMove();
+            }
+        });
         backButton.setEnabled(false);
         backButton.setFocusPainted(false);
         GridBagConstraints backButtonConstraints = new GridBagConstraints();
@@ -100,11 +107,25 @@ public class Game extends JPanel {
         setVisible(true);
     }
 
+    Replay gameReplay = new Replay();
+
+    void addMoveToReplay() {
+        gameReplay.moves.add(new Move(board.whitePieces,
+                board.blackPieces,
+                board.whitePiecesCaptured,
+                board.blackPiecesCaptured,
+                whiteTimer.getTimeLeft(),
+                blackTimer.getTimeLeft(),
+                board.turnNumber).copy());
+    }
+
+    void removeMoveFromReplay() {
+        gameReplay.moves.remove(gameReplay.moves.size() - 1);
+    }
+
     Vector2I mousePosGame = new Vector2I();
     boolean mouseLeftPressedGame;
     boolean mouseRightPressedGame;
-
-    AtomicBoolean isGameRunning;
 
     public void startGame() {
         Thread gameThread = new Thread(() -> {
@@ -193,9 +214,12 @@ public class Game extends JPanel {
                     blackTimer.pause();
                     whiteTimer.resume();
                 }
+
                 board.heldPiece = null;
+                addMoveToReplay();
                 board.piecesThatWillBeCaptured.clear();
                 board.turnNumber++;
+                backButton.setEnabled(true);
             }
         }
     }
@@ -236,6 +260,8 @@ public class Game extends JPanel {
         }
 
         if (isGameOver) {
+            gameReplay.lossState = lossState;
+            backButton.setEnabled(false);
             showGameOverDialog();
         }
     }
@@ -260,6 +286,21 @@ public class Game extends JPanel {
                 winIcon,
                 options,
                 options[0]);
-        System.out.println(n);
+    }
+
+    void backOneMove() {
+        Move lastMove = gameReplay.moves.get(gameReplay.moves.size() - 2).copy();
+        board.whitePieces = lastMove.whitePieces();
+        board.blackPieces = lastMove.blackPieces();
+        board.whitePiecesCaptured = lastMove.whitePiecesCaptured();
+        board.blackPiecesCaptured = lastMove.blackPiecesCaptured();
+        whiteTimer.setTimeLeft(lastMove.whiteTimeLeft());
+        blackTimer.setTimeLeft(lastMove.blackTimeLeft());
+        board.turnNumber = lastMove.turn();
+
+        if (gameReplay.moves.size() <= 2)
+            backButton.setEnabled(false);
+
+        removeMoveFromReplay();
     }
 }

@@ -43,7 +43,7 @@ public final class Queen extends Piece {
             return bishopPoint;
     }
 
-    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;

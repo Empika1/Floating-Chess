@@ -2,13 +2,14 @@ package Pieces;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.*;
 import Game.*;
 import Images.ImageManager;
 import Utils.*;
 import Board.*;
 
-public abstract class Piece {
+public abstract class Piece implements Serializable {
     protected int id;
 
     public int getID() {
@@ -87,8 +88,8 @@ public abstract class Piece {
 
     public boolean isOverlappingEdge(Vector2I thisPos) {
         return thisPos.x - getHitboxRadius() < 0 || thisPos.y - getHitboxRadius() < 0
-                || thisPos.x + getHitboxRadius() > Game.boardSizeI.x
-                || thisPos.y + getHitboxRadius() > Game.boardSizeI.y;
+                || thisPos.x + getHitboxRadius() > GameScreen.boardSizeI.x
+                || thisPos.y + getHitboxRadius() > GameScreen.boardSizeI.y;
     }
 
     public boolean isOverlappingSameColorPiece(Vector2I thisPos, ArrayList<Piece> whitePieces,

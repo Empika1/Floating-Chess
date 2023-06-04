@@ -16,7 +16,7 @@ public final class Knight extends Piece {
         return PieceType.BISHOP;
     }
 
-    static final int moveRadius = (int) (Math.sqrt(5) * Game.boardSizeI.x / 8.0);
+    static final int moveRadius = (int) (Math.sqrt(5) * GameScreen.boardSizeI.x / 8.0);
 
     Vector2I closestPointOnRadius(Vector2I pos) {
         Vector2I diff = pos.subtract(getTruePos());
@@ -88,7 +88,7 @@ public final class Knight extends Piece {
         return closestPosSoFar;
     }
 
-    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;

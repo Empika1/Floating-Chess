@@ -16,7 +16,7 @@ public final class King extends Piece {
         return PieceType.KING;
     }
 
-    final static int halfMoveSideLength = (int) (Game.boardSizeI.x / 8);
+    final static int halfMoveSideLength = (int) (GameScreen.boardSizeI.x / 8);
 
     public boolean isInMoveSquare(Vector2I pos) {
         return Geometry.isPointInRect(getTruePos().subtract(new Vector2I(halfMoveSideLength, halfMoveSideLength)),
@@ -69,7 +69,7 @@ public final class King extends Piece {
         return closestPointSoFar;
     }
 
-    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;

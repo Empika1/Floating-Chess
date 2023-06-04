@@ -17,7 +17,7 @@ public final class Pawn extends Piece {
         return PieceType.PAWN;
     }
 
-    static final int moveLength = Game.boardSizeI.x / 8;
+    static final int moveLength = GameScreen.boardSizeI.x / 8;
     static final int moveLengthDiagonal = moveLength;
 
     public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
@@ -33,8 +33,8 @@ public final class Pawn extends Piece {
             posRelative.y = pos.y;
             truePosRelative.y = getTruePos().y;
         } else {
-            posRelative.y = Game.boardSizeI.y - pos.y;
-            truePosRelative.y = Game.boardSizeI.y - getTruePos().y;
+            posRelative.y = GameScreen.boardSizeI.y - pos.y;
+            truePosRelative.y = GameScreen.boardSizeI.y - getTruePos().y;
         }
 
         if (posRelative.x == truePosRelative.x && posRelative.y <= truePosRelative.y
@@ -102,8 +102,8 @@ public final class Pawn extends Piece {
             posRelative.y = pos.y;
             truePosRelative.y = getTruePos().y;
         } else {
-            posRelative.y = Game.boardSizeI.y - pos.y;
-            truePosRelative.y = Game.boardSizeI.y - getTruePos().y;
+            posRelative.y = GameScreen.boardSizeI.y - pos.y;
+            truePosRelative.y = GameScreen.boardSizeI.y - getTruePos().y;
         }
 
         Vector2I searchStartPos = new Vector2I(truePosRelative.x, 0);
@@ -124,7 +124,7 @@ public final class Pawn extends Piece {
             if (getColor() == ChessColor.WHITE)
                 searchPosAbsolute.y = searchPos.y;
             else
-                searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+                searchPosAbsolute.y = GameScreen.boardSizeI.y - searchPos.y;
 
             if (searchPos.y >= truePosRelative.y) {
                 foundPos1 = getTruePos();
@@ -142,7 +142,7 @@ public final class Pawn extends Piece {
             if (getColor() == ChessColor.WHITE)
                 searchPosAbsolute.y = searchPos.y;
             else
-                searchPosAbsolute.y = Game.boardSizeI.y - searchPos.y;
+                searchPosAbsolute.y = GameScreen.boardSizeI.y - searchPos.y;
 
             if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
                 foundPos1 = searchPosAbsolute.copy();
@@ -165,7 +165,7 @@ public final class Pawn extends Piece {
             if (getColor() == ChessColor.WHITE)
                 searchPosAbsolute = searchPos;
             else
-                searchPosAbsolute = new Vector2I(searchPos.x, Game.boardSizeI.y - searchPos.y);
+                searchPosAbsolute = new Vector2I(searchPos.x, GameScreen.boardSizeI.y - searchPos.y);
 
             if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
                 foundPos2 = searchPosAbsolute.copy();
@@ -178,7 +178,7 @@ public final class Pawn extends Piece {
             if (getColor() == ChessColor.WHITE)
                 searchPosAbsolute = searchPos;
             else
-                searchPosAbsolute = new Vector2I(searchPos.x, Game.boardSizeI.y - searchPos.y);
+                searchPosAbsolute = new Vector2I(searchPos.x, GameScreen.boardSizeI.y - searchPos.y);
 
             if (searchPos.y >= truePosRelative.y) {
                 foundPos2 = getTruePos();
@@ -207,7 +207,7 @@ public final class Pawn extends Piece {
             if (getColor() == ChessColor.WHITE)
                 searchPosAbsolute = searchPos;
             else
-                searchPosAbsolute = new Vector2I(searchPos.x, Game.boardSizeI.y - searchPos.y);
+                searchPosAbsolute = new Vector2I(searchPos.x, GameScreen.boardSizeI.y - searchPos.y);
 
             if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
                 foundPos3 = searchPosAbsolute.copy();
@@ -220,7 +220,7 @@ public final class Pawn extends Piece {
             if (getColor() == ChessColor.WHITE)
                 searchPosAbsolute = searchPos;
             else
-                searchPosAbsolute = new Vector2I(searchPos.x, Game.boardSizeI.y - searchPos.y);
+                searchPosAbsolute = new Vector2I(searchPos.x, GameScreen.boardSizeI.y - searchPos.y);
 
             if (searchPos.y >= truePosRelative.y) {
                 foundPos3 = getTruePos();
@@ -248,7 +248,7 @@ public final class Pawn extends Piece {
         return getTruePos();
     }
 
-    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;

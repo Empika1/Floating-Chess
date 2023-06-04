@@ -35,95 +35,111 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     public ArrayList<Piece> whitePiecesCaptured = new ArrayList<Piece>();
     public ArrayList<Piece> blackPiecesCaptured = new ArrayList<Piece>();
 
-    void setupPieces() {
-        int id = 0;
-        blackPieces.add(new Rook());
-        blackPieces.get(0).setID(id++);
-        blackPieces.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+    public ArrayList<Piece> getWhitePiecesStartingPosition() {
+        int id = 16;
+        ArrayList<Piece> whitePiecesSetup = new ArrayList<Piece>();
+
+        whitePiecesSetup.add(new Rook());
+        whitePiecesSetup.get(0).setID(id++);
+        whitePiecesSetup.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
                 false);
-        blackPieces.add(new Knight());
-        blackPieces.get(1).setID(id++);
-        blackPieces.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+        whitePiecesSetup.add(new Knight());
+        whitePiecesSetup.get(1).setID(id++);
+        whitePiecesSetup.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
                 false);
-        blackPieces.add(new Bishop());
-        blackPieces.get(2).setID(id++);
-        blackPieces.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+        whitePiecesSetup.add(new Bishop());
+        whitePiecesSetup.get(2).setID(id++);
+        whitePiecesSetup.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
                 false);
-        blackPieces.add(new Queen());
-        blackPieces.get(3).setID(id++);
-        blackPieces.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+        whitePiecesSetup.add(new Queen());
+        whitePiecesSetup.get(3).setID(id++);
+        whitePiecesSetup.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
                 false);
-        blackPieces.add(new King());
-        blackPieces.get(4).setID(id++);
-        blackPieces.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+        whitePiecesSetup.add(new King());
+        whitePiecesSetup.get(4).setID(id++);
+        whitePiecesSetup.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
                 false);
-        blackPieces.add(new Bishop());
-        blackPieces.get(5).setID(id++);
-        blackPieces.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+        whitePiecesSetup.add(new Bishop());
+        whitePiecesSetup.get(5).setID(id++);
+        whitePiecesSetup.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
                 false);
-        blackPieces.add(new Knight());
-        blackPieces.get(6).setID(id++);
-        blackPieces.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+        whitePiecesSetup.add(new Knight());
+        whitePiecesSetup.get(6).setID(id++);
+        whitePiecesSetup.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
                 false);
-        blackPieces.add(new Rook());
-        blackPieces.get(7).setID(id++);
-        blackPieces.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+        whitePiecesSetup.add(new Rook());
+        whitePiecesSetup.get(7).setID(id++);
+        whitePiecesSetup.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
                 false);
 
         for (int i = 0; i <= 7; i++) {
-            blackPieces.add(new Pawn());
-            blackPieces.get(i + 8).setID(id++);
-            blackPieces.get(i + 8)
-                    .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (1.5 * boardSizeI.x / 8)),
-                            false);
-        }
-
-        for (int i = 0; i <= 15; i++)
-            blackPieces.get(i).setColor(ChessColor.BLACK);
-
-        whitePieces.add(new Rook());
-        whitePieces.get(0).setID(id++);
-        whitePieces.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
-                false);
-        whitePieces.add(new Knight());
-        whitePieces.get(1).setID(id++);
-        whitePieces.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
-                false);
-        whitePieces.add(new Bishop());
-        whitePieces.get(2).setID(id++);
-        whitePieces.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
-                false);
-        whitePieces.add(new Queen());
-        whitePieces.get(3).setID(id++);
-        whitePieces.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
-                false);
-        whitePieces.add(new King());
-        whitePieces.get(4).setID(id++);
-        whitePieces.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
-                false);
-        whitePieces.add(new Bishop());
-        whitePieces.get(5).setID(id++);
-        whitePieces.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
-                false);
-        whitePieces.add(new Knight());
-        whitePieces.get(6).setID(id++);
-        whitePieces.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
-                false);
-        whitePieces.add(new Rook());
-        whitePieces.get(7).setID(id++);
-        whitePieces.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (7.5 * boardSizeI.x / 8)),
-                false);
-
-        for (int i = 0; i <= 7; i++) {
-            whitePieces.add(new Pawn());
-            whitePieces.get(i + 8).setID(id++);
-            whitePieces.get(i + 8)
+            whitePiecesSetup.add(new Pawn());
+            whitePiecesSetup.get(i + 8).setID(id++);
+            whitePiecesSetup.get(i + 8)
                     .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (6.5 * boardSizeI.x / 8)),
                             false);
         }
 
         for (int i = 0; i <= 15; i++)
-            whitePieces.get(i).setColor(ChessColor.WHITE);
+            whitePiecesSetup.get(i).setColor(ChessColor.WHITE);
+        
+        return whitePiecesSetup;
+    }
+
+    public ArrayList<Piece> getBlackPiecesStartingPosition() {
+        int id = 0;
+        ArrayList<Piece> blackPiecesSetup = new ArrayList<Piece>();
+
+        blackPiecesSetup.add(new Rook());
+        blackPiecesSetup.get(0).setID(id++);
+        blackPiecesSetup.get(0).setTruePos(new Vector2I((int) (0.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+                false);
+        blackPiecesSetup.add(new Knight());
+        blackPiecesSetup.get(1).setID(id++);
+        blackPiecesSetup.get(1).setTruePos(new Vector2I((int) (1.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+                false);
+        blackPiecesSetup.add(new Bishop());
+        blackPiecesSetup.get(2).setID(id++);
+        blackPiecesSetup.get(2).setTruePos(new Vector2I((int) (2.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+                false);
+        blackPiecesSetup.add(new Queen());
+        blackPiecesSetup.get(3).setID(id++);
+        blackPiecesSetup.get(3).setTruePos(new Vector2I((int) (3.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+                false);
+        blackPiecesSetup.add(new King());
+        blackPiecesSetup.get(4).setID(id++);
+        blackPiecesSetup.get(4).setTruePos(new Vector2I((int) (4.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+                false);
+        blackPiecesSetup.add(new Bishop());
+        blackPiecesSetup.get(5).setID(id++);
+        blackPiecesSetup.get(5).setTruePos(new Vector2I((int) (5.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+                false);
+        blackPiecesSetup.add(new Knight());
+        blackPiecesSetup.get(6).setID(id++);
+        blackPiecesSetup.get(6).setTruePos(new Vector2I((int) (6.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+                false);
+        blackPiecesSetup.add(new Rook());
+        blackPiecesSetup.get(7).setID(id++);
+        blackPiecesSetup.get(7).setTruePos(new Vector2I((int) (7.5 * boardSizeI.x / 8), (int) (0.5 * boardSizeI.x / 8)),
+                false);
+
+        for (int i = 0; i <= 7; i++) {
+            blackPiecesSetup.add(new Pawn());
+            blackPiecesSetup.get(i + 8).setID(id++);
+            blackPiecesSetup.get(i + 8)
+                    .setTruePos(new Vector2I((int) ((i + 0.5) * boardSizeI.x / 8), (int) (1.5 * boardSizeI.x / 8)),
+                            false);
+        }
+
+        for (int i = 0; i <= 15; i++)
+            blackPiecesSetup.get(i).setColor(ChessColor.BLACK);
+
+        return blackPiecesSetup;
+    }
+
+    void setupPieces() {
+        blackPieces = getBlackPiecesStartingPosition();
+        whitePieces = getWhitePiecesStartingPosition();
     }
 
     public void draw() {

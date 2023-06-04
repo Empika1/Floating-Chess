@@ -32,7 +32,7 @@ public final class Bishop extends Piece {
         return absoluteSlope <= maxSlopeFromRightCardinal && absoluteSlope >= minSlopeFromRightCardinal;
     }
 
-    static final double moveLength = Math.sqrt(2) * Game.boardSizeI.x / 8;
+    static final double moveLength = Math.sqrt(2) * GameScreen.boardSizeI.x / 8;
 
     public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         Vector2 furthestPosSoFar = new Vector2(pos);
@@ -42,15 +42,15 @@ public final class Bishop extends Piece {
         Vector2 truePosV2 = new Vector2(getTruePos());
 
         Vector2 topIntersection = Geometry.lineLineIntersection(truePosV2, posV2, new Vector2(0, getHitboxRadius()),
-                new Vector2(Game.boardSizeI.x, getHitboxRadius()));
+                new Vector2(GameScreen.boardSizeI.x, getHitboxRadius()));
         Vector2 bottomIntersection = Geometry.lineLineIntersection(truePosV2, posV2,
-                new Vector2(0, Game.boardSizeI.y - getHitboxRadius()),
-                new Vector2(Game.boardSizeI.x, Game.boardSizeI.y - getHitboxRadius()));
+                new Vector2(0, GameScreen.boardSizeI.y - getHitboxRadius()),
+                new Vector2(GameScreen.boardSizeI.x, GameScreen.boardSizeI.y - getHitboxRadius()));
         Vector2 leftIntersection = Geometry.lineLineIntersection(truePosV2, posV2, new Vector2(getHitboxRadius(), 0),
-                new Vector2(getHitboxRadius(), Game.boardSizeI.y));
+                new Vector2(getHitboxRadius(), GameScreen.boardSizeI.y));
         Vector2 rightIntersection = Geometry.lineLineIntersection(truePosV2, posV2,
-                new Vector2(Game.boardSizeI.x - getHitboxRadius(), 0),
-                new Vector2(Game.boardSizeI.x - getHitboxRadius(), Game.boardSizeI.y));
+                new Vector2(GameScreen.boardSizeI.x - getHitboxRadius(), 0),
+                new Vector2(GameScreen.boardSizeI.x - getHitboxRadius(), GameScreen.boardSizeI.y));
         if (topIntersection != null && truePosV2.y >= topIntersection.y && topIntersection.y >= posV2.y) {
             double squaredDistanceToIntersection = truePosV2.subtract(topIntersection).getSquaredLength();
             if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
@@ -154,7 +154,7 @@ public final class Bishop extends Piece {
         double closestSquaredDistanceSoFar = Double.MAX_VALUE;
         Vector2I searchPos;
         double searchSquaredDistance;
-        int maxSearch = (int) (Game.boardSizeI.x * 0.16);
+        int maxSearch = (int) (GameScreen.boardSizeI.x * 0.16);
         for (int i = 0; i < maxSearch; i++) {
             searchPos = searchStartPos.add(searchDir1.scale(i));
             if (!isInValidAngle(searchPos)) {
@@ -179,7 +179,7 @@ public final class Bishop extends Piece {
         return closestPosSoFar;
     }
 
-    static final int hitboxRadius = (int) (0.35 * Game.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;

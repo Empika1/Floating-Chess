@@ -1,4 +1,5 @@
 import javax.swing.*;
+
 import java.awt.*;
 import Game.*;
 
@@ -10,7 +11,7 @@ public class App {
         JFrame f = new JFrame("title");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setResizable(false);
-        Game g = new Game();
+        GameScreen g = new GameScreen();
         f.getContentPane().add(g, BorderLayout.PAGE_START);
         f.pack();
         f.setLocationRelativeTo(null);

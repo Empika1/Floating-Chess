@@ -11,9 +11,9 @@ import Pieces.*;
 public class ChessTimer extends JTextPane {
 
     ChessColor color;
-    long startingTimeMs;
+    int startingTimeMs;
 
-    public ChessTimer(ChessColor col, long startingTime, float fontSize, Dimension preferredSize) {
+    public ChessTimer(ChessColor col, int startingTime, float fontSize, Dimension preferredSize) {
         color = col;
         setStartingTime(startingTime);
         setText(StringFormatting.msToTime(startingTime));
@@ -30,7 +30,7 @@ public class ChessTimer extends JTextPane {
         return color;
     }
 
-    public void setStartingTime(long set) {
+    public void setStartingTime(int set) {
         startingTimeMs = set;
         timeLeftMs = set;
         updateText();
@@ -38,16 +38,20 @@ public class ChessTimer extends JTextPane {
         oldTimeMs = System.currentTimeMillis();
     }
 
-    long timeLeftMs;
+    public int getStartingTime() {
+        return startingTimeMs;
+    }
 
-    public void setTimeLeft(long set) {
+    int timeLeftMs;
+
+    public void setTimeLeft(int set) {
         timeLeftMs = set;
         updateText();
         currentTimeMs = System.currentTimeMillis();
         oldTimeMs = System.currentTimeMillis();
     }
 
-    public long getTimeLeft() {
+    public int getTimeLeft() {
         return timeLeftMs;
     }
 
@@ -66,14 +70,14 @@ public class ChessTimer extends JTextPane {
     long currentTimeMs;
     long oldTimeMs;
 
-    long timeLeftMsOld;
+    int timeLeftMsOld;
 
     static final int msToUpdate = 100;
 
     public void updateTime() {
         if (running) {
             currentTimeMs = System.currentTimeMillis();
-            long deltaTimeMs = currentTimeMs - oldTimeMs;
+            int deltaTimeMs = (int)(currentTimeMs - oldTimeMs);
             timeLeftMs -= deltaTimeMs;
             oldTimeMs = currentTimeMs;
 
