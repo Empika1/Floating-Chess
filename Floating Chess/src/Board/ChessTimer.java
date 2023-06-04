@@ -19,6 +19,8 @@ public class ChessTimer extends JTextPane {
         setText(StringFormatting.msToTime(startingTime));
         setFont(getFont().deriveFont(fontSize));
         setPreferredSize(preferredSize);
+        setEditable(false);
+        setBackground(new JTextPane().getBackground());
 
         StyledDocument doc = getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();

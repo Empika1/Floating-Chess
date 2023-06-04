@@ -5,14 +5,13 @@ import java.util.*;
 import Pieces.*;
 
 public record Move(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces, ArrayList<Piece> whitePiecesCaptured,
-        ArrayList<Piece> blackPiecesCaptured, int whiteTimeLeft, int blackTimeLeft, int turn) implements Serializable {
+        ArrayList<Piece> blackPiecesCaptured, int whiteTimeLeft, int blackTimeLeft, int turnNumber) implements Serializable {
     public static byte[] serialize(Move m) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(m);
             return bos.toByteArray();
         } catch (Exception e) {
-            System.out.println("serialization failed");
             return null;
         }
     }
@@ -22,7 +21,6 @@ public record Move(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces, A
                 ObjectInputStream ois = new ObjectInputStream(bis)) {
             return (Move)ois.readObject();
         } catch (Exception e) {
-            System.out.println("deserialization failed");
             return null;
         }
     }

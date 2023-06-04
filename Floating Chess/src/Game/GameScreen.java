@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-
 import Pieces.*;
 import Replay.*;
 import Utils.*;
@@ -96,6 +95,7 @@ public class GameScreen extends JPanel {
         add(backButton, backButtonConstraints);
 
         whiteTimer = new ChessTimer(ChessColor.WHITE, 10000, 14f, blackPiecesCaptured.getPreferredSize());
+        whiteTimer.setPreferredSize(blackPiecesCaptured.getPreferredSize());
         GridBagConstraints whiteTimerConstraints = new GridBagConstraints();
         whiteTimerConstraints.insets = new Insets(10, 10, 10, 10);
         whiteTimerConstraints.gridheight = 1;
@@ -289,18 +289,20 @@ public class GameScreen extends JPanel {
     }
 
     void backOneMove() {
-        Move lastMove = gameReplay.moves.get(gameReplay.moves.size() - 2).copy();
-        board.whitePieces = lastMove.whitePieces();
-        board.blackPieces = lastMove.blackPieces();
-        board.whitePiecesCaptured = lastMove.whitePiecesCaptured();
-        board.blackPiecesCaptured = lastMove.blackPiecesCaptured();
-        whiteTimer.setTimeLeft(lastMove.whiteTimeLeft());
-        blackTimer.setTimeLeft(lastMove.blackTimeLeft());
-        board.turnNumber = lastMove.turn();
+        if (board.heldPiece == null) {
+            Move lastMove = gameReplay.moves.get(gameReplay.moves.size() - 2).copy();
+            board.whitePieces = lastMove.whitePieces();
+            board.blackPieces = lastMove.blackPieces();
+            board.whitePiecesCaptured = lastMove.whitePiecesCaptured();
+            board.blackPiecesCaptured = lastMove.blackPiecesCaptured();
+            whiteTimer.setTimeLeft(lastMove.whiteTimeLeft());
+            blackTimer.setTimeLeft(lastMove.blackTimeLeft());
+            board.turnNumber = lastMove.turnNumber();
 
-        if (gameReplay.moves.size() <= 2)
-            backButton.setEnabled(false);
+            if (gameReplay.moves.size() <= 2)
+                backButton.setEnabled(false);
 
-        removeMoveFromReplay();
+            removeMoveFromReplay();
+        }
     }
 }

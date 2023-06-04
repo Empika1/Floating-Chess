@@ -51,7 +51,10 @@ public final class ImageManager {
     public static final ImageIcon hitbox = new ImageIcon(ImageManager.class.getResource("/Images/Hitbox.png"));
 
     public static final ImageIcon backButton = new ImageIcon(ImageManager.class.getResource("/Images/BackButton.png"));
+
     public static final ImageIcon forwardButton = new ImageIcon(ImageManager.class.getResource("/Images/ForwardButton.png"));
+
+    public static final ImageIcon title = new ImageIcon(ImageManager.class.getResource("/Images/FloatingChess.png"));
 
     private ImageManager() {
     }
@@ -74,6 +77,11 @@ public final class ImageManager {
         Image imgOriginal = original.getImage();
         Image imgScaled = imgOriginal.getScaledInstance(size.x, size.y, Image.SCALE_SMOOTH);
         return new ImageIcon(imgScaled);
+    }
+
+    public static ImageIcon resize(ImageIcon original, int xSize) {
+        Vector2I size = new Vector2I(xSize, xSize * original.getIconHeight() / original.getIconWidth());
+        return resize(original, size);
     }
 
     public static ImageIcon modulateColor(ImageIcon original, Color col) {
