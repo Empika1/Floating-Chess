@@ -183,11 +183,15 @@ public class ReplayScreen extends JPanel {
         Move currentMove = r.moves.get(currentMoveNum);
         board.whitePieces = currentMove.whitePieces();
         board.blackPieces = currentMove.blackPieces();
-        board.whitePiecesCaptured = currentMove.whitePiecesCaptured();
-        board.blackPiecesCaptured = currentMove.blackPiecesCaptured();
+        board.whitePiecesCaptured.clear();
+        board.whitePiecesCaptured.addAll(currentMove.whitePiecesCaptured());
+        board.blackPiecesCaptured.clear();
+        board.blackPiecesCaptured.addAll(currentMove.blackPiecesCaptured());
         whiteTimer.setTimeLeft(currentMove.whiteTimeLeft());
         blackTimer.setTimeLeft(currentMove.blackTimeLeft());
         board.draw();
+        whitePiecesCaptured.draw(board);
+        blackPiecesCaptured.draw(board);
     }
 
     void backOneMove() {

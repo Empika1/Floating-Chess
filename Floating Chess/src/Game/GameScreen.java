@@ -206,7 +206,6 @@ public class GameScreen extends JPanel {
                 if (board.turn == ChessColor.WHITE) {
                     for (Piece p : capturedPieces) {
                         board.blackPieces.remove(p);
-                        System.out.println("AOIHD");
                         board.blackPiecesCaptured.add(p);
                     }
                     board.whitePieces.add(board.heldPiece);
@@ -215,7 +214,6 @@ public class GameScreen extends JPanel {
                 } else {
                     for (Piece p : capturedPieces) {
                         board.whitePieces.remove(p);
-                        System.out.println("AVBIUG");
                         board.whitePiecesCaptured.add(p);
                     }
                     board.blackPieces.add(board.heldPiece);
