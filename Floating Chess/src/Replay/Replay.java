@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import Board.LossState;
 
-public class Replay implements Serializable{
+public class Replay implements Serializable {
     public ArrayList<Move> moves = new ArrayList<Move>();
     public LossState lossState = null;
 
@@ -24,6 +24,20 @@ public class Replay implements Serializable{
             return (Replay) ois.readObject();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public static void saveToFile(Replay replay, File f) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(f);
+                ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(replay);
+        }
+    }
+
+    public static Replay readFromFile(File f) throws IOException, ClassNotFoundException {
+        try (FileInputStream fis = new FileInputStream(f);
+                ObjectInputStream ois = new ObjectInputStream(fis)) {
+            return (Replay) ois.readObject();
         }
     }
 }

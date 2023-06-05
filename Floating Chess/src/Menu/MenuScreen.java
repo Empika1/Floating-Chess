@@ -27,7 +27,7 @@ public class MenuScreen extends JPanel {
         layeredPane.setLayout(new GridBagLayout());
         layeredPane.setBackground(UIManager.getColor("Panel.background"));
 
-        board = new Board();
+        board = new Board(false);
         GridBagConstraints boardConstraints = new GridBagConstraints();
         boardConstraints.insets = new Insets(10, 10, 10, 10);
         boardConstraints.gridheight = 4;
@@ -49,11 +49,7 @@ public class MenuScreen extends JPanel {
         playButton.setFocusPainted(false);
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        App.displayGameScreen();
-                    }
-                });
+                App.displayGameScreen();
             }
         });
         GridBagConstraints playButtonConstraints = new GridBagConstraints();
@@ -66,6 +62,11 @@ public class MenuScreen extends JPanel {
 
         JButton replayButton = new JButton("View Replay");
         replayButton.setFocusPainted(false);
+        replayButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                App.displayReplayScreen(null);
+            }
+        });
         GridBagConstraints replayButtonConstraints = new GridBagConstraints();
         replayButtonConstraints.insets = new Insets(10, 10, 10, 10);
         replayButtonConstraints.gridheight = 1;

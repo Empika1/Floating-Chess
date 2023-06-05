@@ -9,6 +9,7 @@ import Replay.*;
 import Utils.*;
 import Board.*;
 import Images.ImageManager;
+import App.*;
 
 public class GameScreen extends JPanel {
 
@@ -31,7 +32,7 @@ public class GameScreen extends JPanel {
         setLayout(new GridBagLayout());
         setBackground(UIManager.getColor("Panel.background"));
 
-        board = new Board();
+        board = new Board(true);
         GridBagConstraints boardConstraints = new GridBagConstraints();
         boardConstraints.insets = new Insets(10, 10, 0, 10);
         boardConstraints.gridheight = 1;
@@ -51,6 +52,11 @@ public class GameScreen extends JPanel {
 
         menuButton = new JButton("Menu");
         menuButton.setFocusPainted(false);
+        menuButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                App.displayMenuScreen();
+            }
+        });
         GridBagConstraints menuButtonConstraints = new GridBagConstraints();
         menuButtonConstraints.insets = new Insets(10, 10, 0, 10);
         menuButtonConstraints.gridheight = 1;
@@ -59,7 +65,7 @@ public class GameScreen extends JPanel {
         menuButtonConstraints.gridy = 0;
         add(menuButton, menuButtonConstraints);
 
-        blackTimer = new ChessTimer(ChessColor.BLACK, 10000, 14f, whitePiecesCaptured.getPreferredSize());
+        blackTimer = new ChessTimer(ChessColor.BLACK, 600000, 14f, whitePiecesCaptured.getPreferredSize());
         blackTimer.setPreferredSize(whitePiecesCaptured.getPreferredSize());
         GridBagConstraints blackTimerConstraints = new GridBagConstraints();
         blackTimerConstraints.insets = new Insets(10, 10, 0, 10);
@@ -94,7 +100,7 @@ public class GameScreen extends JPanel {
         backButtonConstraints.gridy = 2;
         add(backButton, backButtonConstraints);
 
-        whiteTimer = new ChessTimer(ChessColor.WHITE, 10000, 14f, blackPiecesCaptured.getPreferredSize());
+        whiteTimer = new ChessTimer(ChessColor.WHITE, 600000, 14f, blackPiecesCaptured.getPreferredSize());
         whiteTimer.setPreferredSize(blackPiecesCaptured.getPreferredSize());
         GridBagConstraints whiteTimerConstraints = new GridBagConstraints();
         whiteTimerConstraints.insets = new Insets(10, 10, 10, 10);
@@ -200,6 +206,7 @@ public class GameScreen extends JPanel {
                 if (board.turn == ChessColor.WHITE) {
                     for (Piece p : capturedPieces) {
                         board.blackPieces.remove(p);
+                        System.out.println("AOIHD");
                         board.blackPiecesCaptured.add(p);
                     }
                     board.whitePieces.add(board.heldPiece);
@@ -208,6 +215,7 @@ public class GameScreen extends JPanel {
                 } else {
                     for (Piece p : capturedPieces) {
                         board.whitePieces.remove(p);
+                        System.out.println("AVBIUG");
                         board.whitePiecesCaptured.add(p);
                     }
                     board.blackPieces.add(board.heldPiece);
@@ -216,9 +224,9 @@ public class GameScreen extends JPanel {
                 }
 
                 board.heldPiece = null;
-                addMoveToReplay();
                 board.piecesThatWillBeCaptured.clear();
                 board.turnNumber++;
+                addMoveToReplay();
                 backButton.setEnabled(true);
             }
         }
@@ -286,6 +294,17 @@ public class GameScreen extends JPanel {
                 winIcon,
                 options,
                 options[0]);
+        switch (n) {
+            case 0:
+                App.displayGameScreen();
+                break;
+            case 1:
+                App.displayMenuScreen();
+                break;
+            case 2:
+                App.displayReplayScreen(gameReplay);
+                break;
+        }
     }
 
     void backOneMove() {
@@ -293,11 +312,15 @@ public class GameScreen extends JPanel {
             Move lastMove = gameReplay.moves.get(gameReplay.moves.size() - 2).copy();
             board.whitePieces = lastMove.whitePieces();
             board.blackPieces = lastMove.blackPieces();
-            board.whitePiecesCaptured = lastMove.whitePiecesCaptured();
-            board.blackPiecesCaptured = lastMove.blackPiecesCaptured();
+            board.whitePiecesCaptured.clear();
+            board.whitePiecesCaptured.addAll(lastMove.whitePiecesCaptured());
+            board.blackPiecesCaptured.clear();
+            board.blackPiecesCaptured.addAll(lastMove.blackPiecesCaptured());
             whiteTimer.setTimeLeft(lastMove.whiteTimeLeft());
             blackTimer.setTimeLeft(lastMove.blackTimeLeft());
             board.turnNumber = lastMove.turnNumber();
+            board.turn = lastMove.turnNumber() % 2 == 0 ? ChessColor.BLACK : ChessColor.WHITE;
+            System.out.println(gameReplay.moves.get(gameReplay.moves.size() - 1).turnNumber());
 
             if (gameReplay.moves.size() <= 2)
                 backButton.setEnabled(false);

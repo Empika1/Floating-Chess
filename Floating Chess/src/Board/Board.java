@@ -13,9 +13,10 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     public static final Vector2I boardSizePixels = new Vector2I(512, 512);
     public static final Vector2I boardSizeI = new Vector2I(2048, 2048);
 
-    public Board() {
+    public Board(boolean setupPieces) {
         setupPanel();
-        setupPieces();
+        if (setupPieces)
+            setupPieces();
     }
 
     static ImageIcon boardIcon = ImageManager.resize(ImageManager.board, boardSizePixels);
@@ -82,7 +83,7 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
         for (int i = 0; i <= 15; i++)
             whitePiecesSetup.get(i).setColor(ChessColor.WHITE);
-        
+
         return whitePiecesSetup;
     }
 

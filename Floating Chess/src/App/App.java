@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import Game.*;
 import Menu.*;
+import Replay.*;
 
 public class App {
 
@@ -14,26 +15,32 @@ public class App {
         JFrame.setDefaultLookAndFeelDecorated(true);
 
         f = new JFrame("Floating Chess");
-        cards = new JPanel(new CardLayout());
-        f.setContentPane(cards);
-        cards.add(new MenuScreen(), "MenuScreen");
-        cards.add(new GameScreen(), "GameScreen");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setResizable(false);
-        f.pack();
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
-
         displayMenuScreen();
     }
 
     public static void displayMenuScreen() {
-        CardLayout cl = (CardLayout)(cards.getLayout());
-        cl.show(cards, "MenuScreen");
+        f.setContentPane(new MenuScreen());
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
     }
 
     public static void displayGameScreen() {
-        CardLayout cl = (CardLayout)(cards.getLayout());
-        cl.show(cards, "GameScreen");
+        GameScreen g = new GameScreen();
+        f.setContentPane(g);
+        Thread t = new Thread(() -> {
+            g.startGame();
+        });
+        t.start();
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+    }
+
+    public static void displayReplayScreen(Replay r) {
+        f.setContentPane(new ReplayScreen(r));
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
     }
 }
