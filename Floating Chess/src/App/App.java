@@ -21,6 +21,7 @@ public class App {
     }
 
     public static void displayMenuScreen() {
+        f.setTitle("Floating Chess - Menu");
         f.setContentPane(new MenuScreen());
         f.pack();
         f.setLocationRelativeTo(null);
@@ -53,6 +54,7 @@ public class App {
     }
 
     public static void displayGameScreen(int time) {
+        f.setTitle("Floating Chess - Game");
         GameScreen g = new GameScreen(time);
         f.setContentPane(g);
         Thread t = new Thread(() -> {
@@ -65,6 +67,7 @@ public class App {
     }
 
     public static void displayReplayScreen(Replay r) {
+        f.setTitle("Floating Chess - Replay");
         f.setContentPane(new ReplayScreen(r));
         f.pack();
         f.setLocationRelativeTo(null);
