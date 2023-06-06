@@ -48,6 +48,120 @@ public final class King extends Piece {
         return true;
     }
 
+    Vector2I kingCastlingPointRight = new Vector2I((int) (GameScreen.boardSizeI.x * 6.5 / 8),
+            (int) (GameScreen.boardSizeI.x * 7.5 / 8));
+    Vector2I rookCastlingPointRight = new Vector2I((int) (GameScreen.boardSizeI.x * 5.5 / 8),
+            (int) (GameScreen.boardSizeI.x * 7.5 / 8));
+    Vector2I kingCastlingPointLeft = new Vector2I((int) (GameScreen.boardSizeI.x * 2.5 / 8),
+            (int) (GameScreen.boardSizeI.x * 7.5 / 8));
+    Vector2I rookCastlingPointLeft = new Vector2I((int) (GameScreen.boardSizeI.x * 3.5 / 8),
+            (int) (GameScreen.boardSizeI.x * 7.5 / 8));
+
+    Rook getUnmovedRightRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        ArrayList<Piece> sameColorPieces = getColor() == ChessColor.WHITE ? whitePieces : blackPieces;
+        Rook rightRook = null;
+        for (Piece p : sameColorPieces) {
+            if (!p.getHasMoved() && p.getClass().equals(Rook.class) && p.getTruePos().x > truePos.x) {
+                rightRook = (Rook) p;
+                break;
+            }
+        }
+        return rightRook;
+    }
+
+    boolean canCastleRight(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        if (getHasMoved())
+            return false;
+        Rook rightRook = getUnmovedRightRook(whitePieces, blackPieces);
+        if (rightRook == null)
+            return false;
+
+        for (Piece p : whitePieces) {
+            if (p.equals(rightRook))
+                continue;
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(getTruePos()),
+                    new Vector2(rightRook.getTruePos()),
+                    new Vector2(p.getTruePos()), getHitboxRadius() + p.getHitboxRadius());
+            if (lineCircleIntersections.length != 0) {
+                if (Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(rightRook.getTruePos()),
+                        lineCircleIntersections[0])
+                        || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(rightRook.getTruePos()),
+                                lineCircleIntersections[1])) {
+                    System.out.println(lineCircleIntersections[0]);
+                    return false;
+                }
+            }
+        }
+        for (Piece p : blackPieces) {
+            if (p.equals(rightRook))
+                continue;
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(getTruePos()),
+                    new Vector2(rightRook.getTruePos()),
+                    new Vector2(p.getTruePos()), getHitboxRadius() + p.getHitboxRadius());
+            if (lineCircleIntersections.length != 0) {
+                if (Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(rightRook.getTruePos()),
+                        lineCircleIntersections[0])
+                        || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(rightRook.getTruePos()),
+                                lineCircleIntersections[1])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    Rook getUnmovedLeftRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        ArrayList<Piece> sameColorPieces = getColor() == ChessColor.WHITE ? whitePieces : blackPieces;
+        Rook rightRook = null;
+        for (Piece p : sameColorPieces) {
+            if (!p.getHasMoved() && p.getClass().equals(Rook.class) && p.getTruePos().x < truePos.x) {
+                rightRook = (Rook) p;
+                break;
+            }
+        }
+        return rightRook;
+    }
+    
+    boolean canCastleLeft(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+        if (getHasMoved())
+            return false;
+        Rook leftRook = getUnmovedLeftRook(whitePieces, blackPieces);
+        if (leftRook == null)
+            return false;
+
+        for (Piece p : whitePieces) {
+            if (p.equals(leftRook))
+                continue;
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(getTruePos()),
+                    new Vector2(leftRook.getTruePos()),
+                    new Vector2(p.getTruePos()), p.getHitboxRadius());
+            if (lineCircleIntersections.length != 0) {
+                if (Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                        lineCircleIntersections[0])
+                        || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                                lineCircleIntersections[1])) {
+                    return false;
+                }
+            }
+        }
+        for (Piece p : blackPieces) {
+            if (p.equals(leftRook))
+                continue;
+            Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(getTruePos()),
+                    new Vector2(leftRook.getTruePos()),
+                    new Vector2(p.getTruePos()), p.getHitboxRadius());
+            if (lineCircleIntersections.length != 0) {
+                if (Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                        lineCircleIntersections[0])
+                        || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                                lineCircleIntersections[1])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         Vector2I searchPos = new Vector2I();
         double closestLengthSquaredSoFar = Double.MAX_VALUE;
@@ -66,6 +180,35 @@ public final class King extends Piece {
                 }
             }
         }
+
+        if (getColor() == ChessColor.BLACK) {
+            kingCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
+            rookCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
+            kingCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
+            rookCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
+        } else {
+            kingCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
+            rookCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
+            kingCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
+            rookCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
+        }
+
+        if(canCastleRight(whitePieces, blackPieces)) {
+            double squaredDistanceToCastlingPoint = pos.subtract(kingCastlingPointRight).getSquaredLength();
+            if(squaredDistanceToCastlingPoint < closestLengthSquaredSoFar) {
+                getUnmovedRightRook(whitePieces, blackPieces).castle();
+                return kingCastlingPointRight;
+            }
+        }
+
+        if(canCastleLeft(whitePieces, blackPieces)) {
+            double squaredDistanceToCastlingPoint = pos.subtract(kingCastlingPointLeft).getSquaredLength();
+            if(squaredDistanceToCastlingPoint < closestLengthSquaredSoFar) {
+                getUnmovedLeftRook(whitePieces, blackPieces).castle();
+                return kingCastlingPointLeft;
+            }
+        }
+
         return closestPointSoFar;
     }
 

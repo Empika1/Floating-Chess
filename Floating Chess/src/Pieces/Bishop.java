@@ -32,42 +32,6 @@ public final class Bishop extends Piece {
         return absoluteSlope <= maxSlopeFromRightCardinal && absoluteSlope >= minSlopeFromRightCardinal;
     }
 
-    public Vector2I wiggle(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        Vector2I posWiggled = pos.copy();
-        Vector2I diff = new Vector2I();
-        int layer = 1;
-        int leg = 0;
-        while (isOverlappingSameColorPiece(posWiggled, getHitboxRadius() + 2, whitePieces, blackPieces) || isOverlappingEdge(posWiggled) || !isInValidAngle(posWiggled)) {
-            switch (leg) {
-                case 0:
-                    diff.x++;
-                    if (diff.x == layer)
-                        leg++;
-                    break;
-                case 1:
-                    diff.y++;
-                    if (diff.y == layer)
-                        leg++;
-                    break;
-                case 2:
-                    diff.x--;
-                    if (-diff.x == layer)
-                        leg++;
-                    break;
-                case 3:
-                    diff.y--;
-                    if (-diff.y == layer) {
-                        leg = 0;
-                        layer++;
-                    }
-                    break;
-            }
-            posWiggled = pos.add(diff);
-        }
-        System.out.println(posWiggled + " " + pos);
-        return posWiggled;
-    }
-
     public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         Vector2 furthestPosSoFar = new Vector2(pos);
         double furthestSquaredDistanceSoFar = pos.subtract(getTruePos()).getSquaredLength();
@@ -210,7 +174,7 @@ public final class Bishop extends Piece {
                 closestPosSoFar = searchPos.copy();
             }
         }
-        return wiggle(closestPosSoFar, whitePieces, blackPieces);
+        return closestPosSoFar;
     }
 
     static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
