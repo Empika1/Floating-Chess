@@ -23,12 +23,12 @@ public class GameScreen extends JPanel {
     JButton backButton;
     ChessTimer whiteTimer;
 
-    public GameScreen() {
-        setupPanel();
+    public GameScreen(int time) {
+        setupPanel(time);
         addMoveToReplay();
     }
 
-    void setupPanel() {
+    void setupPanel(int time) {
         setLayout(new GridBagLayout());
         setBackground(UIManager.getColor("Panel.background"));
 
@@ -65,7 +65,7 @@ public class GameScreen extends JPanel {
         menuButtonConstraints.gridy = 0;
         add(menuButton, menuButtonConstraints);
 
-        blackTimer = new ChessTimer(ChessColor.BLACK, 600000, 14f, whitePiecesCaptured.getPreferredSize());
+        blackTimer = new ChessTimer(ChessColor.BLACK, time, 14f, whitePiecesCaptured.getPreferredSize());
         blackTimer.setPreferredSize(whitePiecesCaptured.getPreferredSize());
         GridBagConstraints blackTimerConstraints = new GridBagConstraints();
         blackTimerConstraints.insets = new Insets(10, 10, 0, 10);
@@ -100,7 +100,7 @@ public class GameScreen extends JPanel {
         backButtonConstraints.gridy = 2;
         add(backButton, backButtonConstraints);
 
-        whiteTimer = new ChessTimer(ChessColor.WHITE, 600000, 14f, blackPiecesCaptured.getPreferredSize());
+        whiteTimer = new ChessTimer(ChessColor.WHITE, time, 14f, blackPiecesCaptured.getPreferredSize());
         whiteTimer.setPreferredSize(blackPiecesCaptured.getPreferredSize());
         GridBagConstraints whiteTimerConstraints = new GridBagConstraints();
         whiteTimerConstraints.insets = new Insets(10, 10, 10, 10);
@@ -294,7 +294,7 @@ public class GameScreen extends JPanel {
                 options[0]);
         switch (n) {
             case 0:
-                App.displayGameScreen();
+                App.displayTimeControlDialog();;
                 break;
             case 1:
                 App.displayMenuScreen();

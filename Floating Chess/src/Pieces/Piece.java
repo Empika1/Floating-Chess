@@ -67,7 +67,8 @@ public abstract class Piece implements Serializable {
         visiblePos = set;
     }
 
-    public abstract boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces);
+    // public abstract boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces,
+    // ArrayList<Piece> blackPieces);
 
     public abstract Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces,
             ArrayList<Piece> blackPieces);
@@ -80,25 +81,31 @@ public abstract class Piece implements Serializable {
         return distanceSquared <= getHitboxRadius() * getHitboxRadius();
     }
 
+    public boolean hitboxOverlapsHitbox(Vector2I thisPos, double thisRadius, Piece b) {
+        return Geometry.doesCircleOverlapCircle(thisPos, thisRadius, b.getTruePos(), b.getHitboxRadius());
+    }
+
     public boolean hitboxOverlapsHitbox(Vector2I thisPos, Piece b) {
-        Vector2I diff = thisPos.subtract(b.getTruePos());
-        double distanceSquared = diff.x * diff.x + diff.y * diff.y;
-        return distanceSquared <= (getHitboxRadius() + b.getHitboxRadius()) * (getHitboxRadius() + b.getHitboxRadius());
+        return hitboxOverlapsHitbox(thisPos, getHitboxRadius(), b);
+    }
+
+    public boolean isOverlappingEdge(Vector2I thisPos, double thisRadius) {
+        return thisPos.x - thisRadius < 0 || thisPos.y - thisRadius < 0
+                || thisPos.x + thisRadius > GameScreen.boardSizeI.x
+                || thisPos.y + thisRadius > GameScreen.boardSizeI.y;
     }
 
     public boolean isOverlappingEdge(Vector2I thisPos) {
-        return thisPos.x - getHitboxRadius() < 0 || thisPos.y - getHitboxRadius() < 0
-                || thisPos.x + getHitboxRadius() > GameScreen.boardSizeI.x
-                || thisPos.y + getHitboxRadius() > GameScreen.boardSizeI.y;
+        return isOverlappingEdge(thisPos, getHitboxRadius());
     }
 
-    public boolean isOverlappingSameColorPiece(Vector2I thisPos, ArrayList<Piece> whitePieces,
+    public boolean isOverlappingSameColorPiece(Vector2I thisPos, double thisRadius, ArrayList<Piece> whitePieces,
             ArrayList<Piece> blackPieces) {
         if (color == ChessColor.WHITE) {
             for (Piece p : whitePieces) {
                 if (equals(p))
                     continue;
-                if (hitboxOverlapsHitbox(thisPos, p))
+                if (hitboxOverlapsHitbox(thisPos, thisRadius, p))
                     return true;
             }
 
@@ -106,7 +113,33 @@ public abstract class Piece implements Serializable {
             for (Piece p : blackPieces) {
                 if (equals(p))
                     continue;
-                if (hitboxOverlapsHitbox(thisPos, p))
+                if (hitboxOverlapsHitbox(thisPos, thisRadius, p))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isOverlappingSameColorPiece(Vector2I thisPos, ArrayList<Piece> whitePieces,
+            ArrayList<Piece> blackPieces) {
+        return isOverlappingSameColorPiece(thisPos, getHitboxRadius(), whitePieces, blackPieces);
+    }
+
+    public boolean isOverlappingOppositeColorPiece(Vector2I thisPos, double thisRadius, ArrayList<Piece> whitePieces,
+            ArrayList<Piece> blackPieces) {
+        if (color == ChessColor.BLACK) {
+            for (Piece p : whitePieces) {
+                if (equals(p))
+                    continue;
+                if (hitboxOverlapsHitbox(thisPos, thisRadius, p))
+                    return true;
+            }
+
+        } else {
+            for (Piece p : blackPieces) {
+                if (equals(p))
+                    continue;
+                if (hitboxOverlapsHitbox(thisPos, thisRadius, p))
                     return true;
             }
         }
@@ -115,33 +148,18 @@ public abstract class Piece implements Serializable {
 
     public boolean isOverlappingOppositeColorPiece(Vector2I thisPos, ArrayList<Piece> whitePieces,
             ArrayList<Piece> blackPieces) {
-        if (color == ChessColor.BLACK) {
-            for (Piece p : whitePieces) {
-                if (equals(p))
-                    continue;
-                if (hitboxOverlapsHitbox(thisPos, p))
-                    return true;
-            }
-
-        } else {
-            for (Piece p : blackPieces) {
-                if (equals(p))
-                    continue;
-                if (hitboxOverlapsHitbox(thisPos, p))
-                    return true;
-            }
-        }
-        return false;
+        return isOverlappingOppositeColorPiece(thisPos, getHitboxRadius(), whitePieces, blackPieces);
     }
 
-    public ArrayList<Piece> oppositeColorPiecesOverlapping(Vector2I thisPos, ArrayList<Piece> whitePieces,
+    public ArrayList<Piece> oppositeColorPiecesOverlapping(Vector2I thisPos, double thisRadius,
+            ArrayList<Piece> whitePieces,
             ArrayList<Piece> blackPieces) {
         ArrayList<Piece> toReturn = new ArrayList<Piece>();
         if (color == ChessColor.BLACK) {
             for (Piece p : whitePieces) {
                 if (equals(p))
                     continue;
-                if (hitboxOverlapsHitbox(thisPos, p))
+                if (hitboxOverlapsHitbox(thisPos, thisRadius, p))
                     toReturn.add(p);
             }
             return toReturn;
@@ -150,11 +168,16 @@ public abstract class Piece implements Serializable {
             for (Piece p : blackPieces) {
                 if (equals(p))
                     continue;
-                if (hitboxOverlapsHitbox(thisPos, p))
+                if (hitboxOverlapsHitbox(thisPos, thisRadius, p))
                     toReturn.add(p);
             }
             return toReturn;
         }
+    }
+
+    public ArrayList<Piece> oppositeColorPiecesOverlapping(Vector2I thisPos, ArrayList<Piece> whitePieces,
+            ArrayList<Piece> blackPieces) {
+        return oppositeColorPiecesOverlapping(thisPos, getHitboxRadius(), whitePieces, blackPieces);
     }
 
     public abstract int getMaterialValue();

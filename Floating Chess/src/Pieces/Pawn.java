@@ -96,156 +96,110 @@ public final class Pawn extends Piece {
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         int moveLengthScaled = (hasMoved ? moveLength : moveLength * 2);
 
-        Vector2I posRelative = new Vector2I(pos.x, 0);
-        Vector2I truePosRelative = new Vector2I(getTruePos().x, 0);
-        if (getColor() == ChessColor.WHITE) {
-            posRelative.y = pos.y;
-            truePosRelative.y = getTruePos().y;
-        } else {
-            posRelative.y = GameScreen.boardSizeI.y - pos.y;
-            truePosRelative.y = GameScreen.boardSizeI.y - getTruePos().y;
-        }
-
-        Vector2I searchStartPos = new Vector2I(truePosRelative.x, 0);
-        Vector2I searchPos = searchStartPos.copy();
-        Vector2I searchPosAbsolute = searchStartPos.copy();
-
-        Vector2I foundPos1;
-        double foundLengthSquared1 = Double.MAX_VALUE;
-        if (posRelative.y < truePosRelative.y - moveLengthScaled)
-            searchStartPos.y = truePosRelative.y - moveLengthScaled;
-        if (posRelative.y > truePosRelative.y)
-            searchStartPos.y = truePosRelative.y;
-        else
-            searchStartPos.y = posRelative.y;
-
-        for (int i = 0;; i++) {
-            searchPos.y = searchStartPos.y + i;
-            if (getColor() == ChessColor.WHITE)
-                searchPosAbsolute.y = searchPos.y;
-            else
-                searchPosAbsolute.y = GameScreen.boardSizeI.y - searchPos.y;
-
-            if (searchPos.y >= truePosRelative.y) {
-                foundPos1 = getTruePos();
-                foundLengthSquared1 = pos.subtract(getTruePos()).getSquaredLength();
-                break;
+        Vector2I searchDir = color == ChessColor.WHITE ? new Vector2I(0, -1) : new Vector2I(0, 1);
+        Vector2I searchPos = getTruePos().copy();
+        Vector2I foundPos1 = getTruePos().copy();
+        double foundSquaredDistance1 = getTruePos().subtract(pos).getSquaredLength();
+        while (true) {
+            searchPos = searchPos.add(searchDir);
+            if (color == ChessColor.WHITE) {
+                if (searchPos.y < getTruePos().y - moveLengthScaled)
+                    break;
+            } else {
+                if (searchPos.y > getTruePos().y + moveLengthScaled)
+                    break;
             }
 
-            if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
-                foundPos1 = searchPosAbsolute.copy();
-                foundLengthSquared1 = pos.subtract(searchPosAbsolute).getSquaredLength();
+            if (isOverlappingEdge(searchPos) || isOverlappingOppositeColorPiece(searchPos, whitePieces, blackPieces)
+                    || isOverlappingSameColorPiece(searchPos, whitePieces, blackPieces))
                 break;
-            }
 
-            searchPos.y = searchStartPos.y - i;
-            if (getColor() == ChessColor.WHITE)
-                searchPosAbsolute.y = searchPos.y;
-            else
-                searchPosAbsolute.y = GameScreen.boardSizeI.y - searchPos.y;
-
-            if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
-                foundPos1 = searchPosAbsolute.copy();
-                foundLengthSquared1 = pos.subtract(searchPosAbsolute).getSquaredLength();
-                break;
+            double currentSquaredDistance = pos.subtract(searchPos).getSquaredLength();
+            if (currentSquaredDistance < foundSquaredDistance1) {
+                foundPos1 = searchPos.copy();
+                foundSquaredDistance1 = currentSquaredDistance;
             }
         }
 
-        Vector2I foundPos2;
-        double foundLengthSquared2 = Double.MAX_VALUE;
-        Vector2I topRightIntersection = new Vector2I((truePosRelative.y - posRelative.y) + truePosRelative.x,
-                posRelative.y);
-        Vector2I bottomLeftIntersection = new Vector2I(posRelative.x,
-                truePosRelative.y - (posRelative.x - truePosRelative.x));
-        searchStartPos.x = (topRightIntersection.x + bottomLeftIntersection.x) / 2;
-        searchStartPos.y = (topRightIntersection.y + bottomLeftIntersection.y) / 2;
-        for (int i = 0;; i++) {
-            searchPos.x = searchStartPos.x + i;
-            searchPos.y = searchStartPos.y - i;
-            if (getColor() == ChessColor.WHITE)
-                searchPosAbsolute = searchPos;
-            else
-                searchPosAbsolute = new Vector2I(searchPos.x, GameScreen.boardSizeI.y - searchPos.y);
-
-            if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
-                foundPos2 = searchPosAbsolute.copy();
-                foundLengthSquared2 = pos.subtract(searchPosAbsolute).getSquaredLength();
-                break;
+        searchDir = color == ChessColor.WHITE ? new Vector2I(-1, -1) : new Vector2I(-1, 1);
+        searchPos = getTruePos().copy();
+        Vector2I foundPos2 = getTruePos().copy();
+        double foundSquaredDistance2 = getTruePos().subtract(pos).getSquaredLength();
+        HashSet<Piece> oppositeColorPiecesThatHaveBeenOverlapped2 = new HashSet<Piece>();
+        search2: while (true) {
+            searchPos = searchPos.add(searchDir);
+            if (color == ChessColor.WHITE) {
+                if (searchPos.y < getTruePos().y - moveLengthDiagonal)
+                    break;
+            } else {
+                if (searchPos.y > getTruePos().y + moveLengthDiagonal)
+                    break;
             }
 
-            searchPos.x = searchStartPos.x - i;
-            searchPos.y = searchStartPos.y + i;
-            if (getColor() == ChessColor.WHITE)
-                searchPosAbsolute = searchPos;
-            else
-                searchPosAbsolute = new Vector2I(searchPos.x, GameScreen.boardSizeI.y - searchPos.y);
-
-            if (searchPos.y >= truePosRelative.y) {
-                foundPos2 = getTruePos();
-                foundLengthSquared2 = pos.subtract(getTruePos()).getSquaredLength();
+            if (isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces, blackPieces))
                 break;
+
+            for (Piece p : oppositeColorPiecesThatHaveBeenOverlapped2) {
+                if (!oppositeColorPiecesOverlapping(searchPos, whitePieces, blackPieces).contains(p))
+                    break search2;
             }
 
-            if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
-                foundPos2 = searchPosAbsolute.copy();
-                foundLengthSquared2 = pos.subtract(searchPosAbsolute).getSquaredLength();
-                break;
+            if (!isOverlappingOppositeColorPiece(searchPos, whitePieces, blackPieces))
+                continue;
+
+            oppositeColorPiecesThatHaveBeenOverlapped2
+                .addAll(oppositeColorPiecesOverlapping(searchPos, whitePieces, blackPieces));
+
+            double currentSquaredDistance = pos.subtract(searchPos).getSquaredLength();
+            if (currentSquaredDistance < foundSquaredDistance2) {
+                foundPos2 = searchPos.copy();
+                foundSquaredDistance2 = currentSquaredDistance;
             }
         }
 
-        Vector2I foundPos3;
-        double foundLengthSquared3 = Double.MAX_VALUE;
-        Vector2I topLeftIntersection = new Vector2I(truePosRelative.x - (truePosRelative.y - posRelative.y),
-                posRelative.y);
-        Vector2I bottomRightIntersection = new Vector2I(posRelative.x,
-                truePosRelative.y + (posRelative.x - truePosRelative.x));
-        searchStartPos.x = (topLeftIntersection.x + bottomRightIntersection.x) / 2;
-        searchStartPos.y = (int) Math.ceil((topLeftIntersection.y + bottomRightIntersection.y) / 2.0);
-        for (int i = 0;; i++) {
-            searchPos.x = searchStartPos.x - i;
-            searchPos.y = searchStartPos.y - i;
-            if (getColor() == ChessColor.WHITE)
-                searchPosAbsolute = searchPos;
-            else
-                searchPosAbsolute = new Vector2I(searchPos.x, GameScreen.boardSizeI.y - searchPos.y);
-
-            if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
-                foundPos3 = searchPosAbsolute.copy();
-                foundLengthSquared3 = pos.subtract(searchPosAbsolute).getSquaredLength();
-                break;
+        searchDir = color == ChessColor.WHITE ? new Vector2I(1, -1) : new Vector2I(1, 1);
+        searchPos = getTruePos().copy();
+        Vector2I foundPos3 = getTruePos().copy();
+        double foundSquaredDistance3 = getTruePos().subtract(pos).getSquaredLength();
+        HashSet<Piece> oppositeColorPiecesThatHaveBeenOverlapped3 = new HashSet<Piece>();
+        search3: while (true) {
+            searchPos = searchPos.add(searchDir);
+            if (color == ChessColor.WHITE) {
+                if (searchPos.y < getTruePos().y - moveLengthDiagonal)
+                    break;
+            } else {
+                if (searchPos.y > getTruePos().y + moveLengthDiagonal)
+                    break;
             }
 
-            searchPos.x = searchStartPos.x + i;
-            searchPos.y = searchStartPos.y + i;
-            if (getColor() == ChessColor.WHITE)
-                searchPosAbsolute = searchPos;
-            else
-                searchPosAbsolute = new Vector2I(searchPos.x, GameScreen.boardSizeI.y - searchPos.y);
-
-            if (searchPos.y >= truePosRelative.y) {
-                foundPos3 = getTruePos();
-                foundLengthSquared3 = pos.subtract(getTruePos()).getSquaredLength();
+            if (isOverlappingEdge(searchPos) || isOverlappingSameColorPiece(searchPos, whitePieces, blackPieces))
                 break;
+
+            for (Piece p : oppositeColorPiecesThatHaveBeenOverlapped3) {
+                if (!oppositeColorPiecesOverlapping(searchPos, whitePieces, blackPieces).contains(p))
+                    break search3;
             }
 
-            if (canMoveTo(searchPosAbsolute, whitePieces, blackPieces)) {
-                foundPos3 = searchPosAbsolute.copy();
-                foundLengthSquared3 = pos.subtract(searchPosAbsolute).getSquaredLength();
-                break;
+            if (!isOverlappingOppositeColorPiece(searchPos, whitePieces, blackPieces))
+                continue;
+
+            oppositeColorPiecesThatHaveBeenOverlapped3
+                .addAll(oppositeColorPiecesOverlapping(searchPos, whitePieces, blackPieces));
+
+            double currentSquaredDistance = pos.subtract(searchPos).getSquaredLength();
+            if (currentSquaredDistance < foundSquaredDistance3) {
+                foundPos3 = searchPos.copy();
+                foundSquaredDistance3 = currentSquaredDistance;
             }
         }
 
-        double minLengthSquared = Math.min(foundLengthSquared1, Math.min(foundLengthSquared2, foundLengthSquared3));
-        if (minLengthSquared == foundLengthSquared1) {
+        double minDistance = Math.min(foundSquaredDistance1, Math.min(foundSquaredDistance2, foundSquaredDistance3));
+        if (minDistance == foundSquaredDistance1)
             return foundPos1;
-        }
-        if (minLengthSquared == foundLengthSquared2) {
+        else if (minDistance == foundSquaredDistance2)
             return foundPos2;
-        }
-        if (minLengthSquared == foundLengthSquared3) {
+        else
             return foundPos3;
-        }
-        return getTruePos();
     }
 
     static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);

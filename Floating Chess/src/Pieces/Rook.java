@@ -37,7 +37,7 @@ public final class Rook extends Piece {
         Vector2I diff = new Vector2I();
         int layer = 1;
         int leg = 0;
-        while (isOverlappingSameColorPiece(posWiggled, whitePieces, blackPieces) || !isInValidAngle(posWiggled)) {
+        while (isOverlappingSameColorPiece(posWiggled, getHitboxRadius() + 2, whitePieces, blackPieces) || isOverlappingEdge(posWiggled) || !isInValidAngle(posWiggled)) {
             switch (leg) {
                 case 0:
                     diff.x++;
@@ -62,9 +62,8 @@ public final class Rook extends Piece {
                     }
                     break;
             }
-            posWiggled = diff;
+            posWiggled = pos.add(diff);
         }
-        System.out.println("AD");
         return posWiggled;
     }
 
@@ -208,8 +207,7 @@ public final class Rook extends Piece {
             }
         }
 
-        return closestPosSoFar;
-        // return wiggle(closestPosSoFar, whitePieces, blackPieces);
+        return wiggle(closestPosSoFar, whitePieces, blackPieces);
     }
 
     static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);

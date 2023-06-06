@@ -104,4 +104,14 @@ public class Geometry {
             return true;
         return false;
     }
+
+    public static boolean doesCircleOverlapCircle(Vector2 pos1, double radius1, Vector2 pos2, double radius2) {
+        Vector2 diff = pos1.subtract(pos2);
+        double distanceSquared = diff.x * diff.x + diff.y * diff.y;
+        return distanceSquared <= (radius1 + radius2) * (radius1 + radius2);
+    }
+
+    public static boolean doesCircleOverlapCircle(Vector2I pos1, double radius1, Vector2I pos2, double radius2) {
+        return doesCircleOverlapCircle(new Vector2(pos1), radius1, new Vector2(pos2), radius2);
+    }
 }
