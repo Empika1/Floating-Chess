@@ -62,6 +62,10 @@ public final class ImageManager {
 
     public static final ImageIcon title = new ImageIcon(ImageManager.class.getResource("/Images/FloatingChess.png"));
 
+    public static final ImageIcon whitePawnPromotionLine = new ImageIcon(ImageManager.class.getResource("/Images/WhitePawnPromotionLine.png"));
+
+    public static final ImageIcon blackPawnPromotionLine = new ImageIcon(ImageManager.class.getResource("/Images/BlackPawnPromotionLine.png"));
+
     private ImageManager() {
     }
 

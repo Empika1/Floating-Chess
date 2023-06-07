@@ -257,12 +257,53 @@ public class GameScreen extends JPanel {
                     whiteTimer.resume();
                 }
 
+                if(board.heldPiece.getPieceType() == PieceType.PAWN) {
+                    if(board.heldPiece.getColor() == ChessColor.WHITE) {
+                        if(board.heldPiece.getTruePos().y <= boardSizeI.y * 0.5 / 8 + 2)
+                            showPiecePromotionDialog((Pawn)board.heldPiece);
+                    }
+                    else {
+                        if(board.heldPiece.getTruePos().y >= boardSizeI.y * 7.5 / 8 - 2)
+                            showPiecePromotionDialog((Pawn)board.heldPiece);
+                    }
+                }
+
                 board.heldPiece = null;
                 board.piecesThatWillBeCaptured.clear();
                 board.turnNumber++;
                 addMoveToReplay();
                 backButton.setEnabled(true);
             }
+        }
+    }
+
+    void showPiecePromotionDialog(Pawn p) {
+        Object[] options = { "Knight", "Bishop", "Rook", "Queen" };
+        Object n = JOptionPane.showInputDialog(null,
+                "Choose a piece to promote your pawn to", "Pawn Promotion",
+                JOptionPane.PLAIN_MESSAGE, null,
+                options, options[3]);
+        Piece promotedPiece;
+        if (n.equals(options[0]))
+            promotedPiece = new Knight();
+        else if (n.equals(options[1]))
+            promotedPiece = new Bishop();
+        else if (n.equals(options[2]))
+            promotedPiece = new Rook();
+        else
+            promotedPiece = new Queen();
+
+        promotedPiece.setColor(p.getColor());
+        promotedPiece.setTruePos(p.getTruePos(), true);
+        promotedPiece.setID(p.getID());
+
+        if(p.getColor() == ChessColor.WHITE) {
+            board.whitePieces.remove(p);
+            board.whitePieces.add(promotedPiece);
+        }
+        else {
+            board.blackPieces.remove(p);
+            board.blackPieces.add(promotedPiece);
         }
     }
 
@@ -331,7 +372,6 @@ public class GameScreen extends JPanel {
         switch (n) {
             case 0:
                 App.displayTimeControlDialog();
-                ;
                 break;
             case 1:
                 App.displayMenuScreen();

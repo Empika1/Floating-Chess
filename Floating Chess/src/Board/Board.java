@@ -173,6 +173,12 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         boardIcon.paintIcon(this, bbg, 0, 0);
 
         if (heldPiece != null) {
+            if(heldPiece.getPieceType() == PieceType.PAWN) {
+                if(heldPiece.getColor() == ChessColor.WHITE)
+                    ImageManager.whitePawnPromotionLine.paintIcon(this, bbg, 0, 0);
+                else
+                    ImageManager.blackPawnPromotionLine.paintIcon(this, bbg, 0, 0);
+            }
             heldPiece.drawMoveArea(bbg, this);
             heldPiece.drawHitbox(bbg, this);
             for (Piece p : blackPieces)
