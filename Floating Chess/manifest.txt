@@ -1,0 +1,2 @@
+Main-Class: src.App.App
+Class-Path: src lib

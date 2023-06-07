@@ -195,6 +195,38 @@ public class GameScreen extends JPanel {
             Vector2I closestValidPointToMouse = board.heldPiece.closestValidPoint(mousePosGame, board.whitePieces,
                     board.blackPieces);
             board.heldPiece.setVisiblePos(closestValidPointToMouse);
+            Rook rightRook = null;
+            Rook leftRook = null;
+            //If king has castled, move the corresponding rook to its castling position too
+            if (board.heldPiece.getPieceType() == PieceType.KING && !board.heldPiece.getHasMoved()) {
+                ArrayList<Piece> sameColorPieces = board.heldPiece.getColor() == ChessColor.WHITE ? board.whitePieces
+                        : board.blackPieces;
+                for (Piece p : sameColorPieces) {
+                    if (p.getPieceType() == PieceType.ROOK && p.getTruePos().x > GameScreen.boardSizeI.x * 0.5
+                            && !p.getHasMoved()) {
+                        rightRook = (Rook) p;
+                        break;
+                    }
+                }
+                for (Piece p : sameColorPieces) {
+                    if (p.getPieceType() == PieceType.ROOK && p.getTruePos().x < GameScreen.boardSizeI.x * 0.5
+                            && !p.getHasMoved()) {
+                        leftRook = (Rook) p;
+                        break;
+                    }
+                }
+                if (rightRook != null)
+                    rightRook.setVisiblePos(rightRook.getTruePos().copy());
+                if (leftRook != null)
+                    leftRook.setVisiblePos(leftRook.getTruePos().copy());
+                if (board.heldPiece.getVisiblePos().x == (int) (GameScreen.boardSizeI.x * 6.5 / 8)) {
+                    rightRook.setVisiblePos(
+                            new Vector2I((int) (GameScreen.boardSizeI.x * 5.5 / 8), rightRook.getTruePos().y));
+                } else if (board.heldPiece.getVisiblePos().x == (int) (GameScreen.boardSizeI.x * 2.5 / 8)) {
+                    leftRook.setVisiblePos(
+                            new Vector2I((int) (GameScreen.boardSizeI.x * 3.5 / 8), leftRook.getTruePos().y));
+                }
+            }
 
             ArrayList<Piece> capturedPieces = board.heldPiece.oppositeColorPiecesOverlapping(
                     board.heldPiece.getVisiblePos(),
@@ -202,7 +234,11 @@ public class GameScreen extends JPanel {
             board.piecesThatWillBeCaptured = capturedPieces;
 
             if (!mouseLeftPressedGame) {
-                board.heldPiece.setTruePos(board.heldPiece.getVisiblePos(), true);
+                board.heldPiece.setTruePos(board.heldPiece.getVisiblePos(), true); //move the heldpiece to its proper position
+                if (rightRook != null)
+                    rightRook.setTruePos(rightRook.getVisiblePos(), true); //move the rooks to their proper positions if the move was a castle
+                if (leftRook != null)
+                    leftRook.setTruePos(leftRook.getVisiblePos(), true);
                 if (board.turn == ChessColor.WHITE) {
                     for (Piece p : capturedPieces) {
                         board.blackPieces.remove(p);
@@ -294,7 +330,8 @@ public class GameScreen extends JPanel {
                 options[0]);
         switch (n) {
             case 0:
-                App.displayTimeControlDialog();;
+                App.displayTimeControlDialog();
+                ;
                 break;
             case 1:
                 App.displayMenuScreen();
@@ -318,7 +355,6 @@ public class GameScreen extends JPanel {
             blackTimer.setTimeLeft(lastMove.blackTimeLeft());
             board.turnNumber = lastMove.turnNumber();
             board.turn = lastMove.turnNumber() % 2 == 0 ? ChessColor.BLACK : ChessColor.WHITE;
-            System.out.println(gameReplay.moves.get(gameReplay.moves.size() - 1).turnNumber());
 
             if (gameReplay.moves.size() <= 2)
                 backButton.setEnabled(false);

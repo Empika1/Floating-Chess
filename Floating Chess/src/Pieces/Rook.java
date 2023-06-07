@@ -175,21 +175,6 @@ public final class Rook extends Piece {
         return closestPosSoFar;
     }
 
-    public void castle() {
-        Vector2I rookCastlingPoint = new Vector2I();
-        if (getColor() == ChessColor.BLACK)
-            rookCastlingPoint.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
-        else
-            rookCastlingPoint.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
-
-        if (getTruePos().x > GameScreen.boardSizeI.x / 2)
-            rookCastlingPoint.x = (int) (GameScreen.boardSizeI.x * 5.5 / 8);
-        else
-            rookCastlingPoint.x = (int) (GameScreen.boardSizeI.x * 3.5 / 8);
-
-        setVisiblePos(rookCastlingPoint);
-    }
-
     static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
 
     public int getHitboxRadius() {

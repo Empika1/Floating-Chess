@@ -13,7 +13,7 @@ public final class Knight extends Piece {
     }
 
     public PieceType getPieceType() {
-        return PieceType.BISHOP;
+        return PieceType.KNIGHT;
     }
 
     static final int moveRadius = (int) (Math.sqrt(5) * GameScreen.boardSizeI.x / 8.0);

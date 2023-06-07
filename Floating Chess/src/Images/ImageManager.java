@@ -46,7 +46,13 @@ public final class ImageManager {
 
     public static final ImageIcon queenMove = new ImageIcon(ImageManager.class.getResource("/Images/QueenMove.png"));
 
-    public static final ImageIcon kingMove = new ImageIcon(ImageManager.class.getResource("/Images/KingMove.png"));
+    public static final ImageIcon kingMoveNormal = new ImageIcon(ImageManager.class.getResource("/Images/KingMove.png"));
+
+    public static final ImageIcon kingMoveLeftCastle = new ImageIcon(ImageManager.class.getResource("/Images/KingMoveLeftCastle.png"));
+
+    public static final ImageIcon kingMoveRightCastle = new ImageIcon(ImageManager.class.getResource("/Images/KingMoveRightCastle.png"));
+
+    public static final ImageIcon kingMoveLeftRightCastle = new ImageIcon(ImageManager.class.getResource("/Images/KingMoveLeftRightCastle.png"));
 
     public static final ImageIcon hitbox = new ImageIcon(ImageManager.class.getResource("/Images/Hitbox.png"));
 

@@ -48,14 +48,8 @@ public final class King extends Piece {
         return true;
     }
 
-    Vector2I kingCastlingPointRight = new Vector2I((int) (GameScreen.boardSizeI.x * 6.5 / 8),
-            (int) (GameScreen.boardSizeI.x * 7.5 / 8));
-    Vector2I rookCastlingPointRight = new Vector2I((int) (GameScreen.boardSizeI.x * 5.5 / 8),
-            (int) (GameScreen.boardSizeI.x * 7.5 / 8));
-    Vector2I kingCastlingPointLeft = new Vector2I((int) (GameScreen.boardSizeI.x * 2.5 / 8),
-            (int) (GameScreen.boardSizeI.x * 7.5 / 8));
-    Vector2I rookCastlingPointLeft = new Vector2I((int) (GameScreen.boardSizeI.x * 3.5 / 8),
-            (int) (GameScreen.boardSizeI.x * 7.5 / 8));
+    Vector2I kingCastlingPointRight = new Vector2I((int) (GameScreen.boardSizeI.x * 6.5 / 8), 0);
+    Vector2I kingCastlingPointLeft = new Vector2I((int) (GameScreen.boardSizeI.x * 2.5 / 8), 0);
 
     Rook getUnmovedRightRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         ArrayList<Piece> sameColorPieces = getColor() == ChessColor.WHITE ? whitePieces : blackPieces;
@@ -87,7 +81,6 @@ public final class King extends Piece {
                         lineCircleIntersections[0])
                         || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(rightRook.getTruePos()),
                                 lineCircleIntersections[1])) {
-                    System.out.println(lineCircleIntersections[0]);
                     return false;
                 }
             }
@@ -121,7 +114,7 @@ public final class King extends Piece {
         }
         return rightRook;
     }
-    
+
     boolean canCastleLeft(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
         if (getHasMoved())
             return false;
@@ -134,11 +127,11 @@ public final class King extends Piece {
                 continue;
             Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(getTruePos()),
                     new Vector2(leftRook.getTruePos()),
-                    new Vector2(p.getTruePos()), p.getHitboxRadius());
+                    new Vector2(p.getTruePos()), getHitboxRadius() + p.getHitboxRadius());
             if (lineCircleIntersections.length != 0) {
-                if (Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                if (Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(leftRook.getTruePos()),
                         lineCircleIntersections[0])
-                        || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                        || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(leftRook.getTruePos()),
                                 lineCircleIntersections[1])) {
                     return false;
                 }
@@ -149,11 +142,11 @@ public final class King extends Piece {
                 continue;
             Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(getTruePos()),
                     new Vector2(leftRook.getTruePos()),
-                    new Vector2(p.getTruePos()), p.getHitboxRadius());
+                    new Vector2(p.getTruePos()), getHitboxRadius() + p.getHitboxRadius());
             if (lineCircleIntersections.length != 0) {
-                if (Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                if (Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(leftRook.getTruePos()),
                         lineCircleIntersections[0])
-                        || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(p.getTruePos()),
+                        || Geometry.isPointInRect(new Vector2(getTruePos()), new Vector2(leftRook.getTruePos()),
                                 lineCircleIntersections[1])) {
                     return false;
                 }
@@ -183,28 +176,22 @@ public final class King extends Piece {
 
         if (getColor() == ChessColor.BLACK) {
             kingCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
-            rookCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
             kingCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
-            rookCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
         } else {
             kingCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
-            rookCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
             kingCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
-            rookCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
         }
 
-        if(canCastleRight(whitePieces, blackPieces)) {
+        if (canCastleRight(whitePieces, blackPieces)) {
             double squaredDistanceToCastlingPoint = pos.subtract(kingCastlingPointRight).getSquaredLength();
-            if(squaredDistanceToCastlingPoint < closestLengthSquaredSoFar) {
-                getUnmovedRightRook(whitePieces, blackPieces).castle();
+            if (squaredDistanceToCastlingPoint < closestLengthSquaredSoFar) {
                 return kingCastlingPointRight;
             }
         }
 
-        if(canCastleLeft(whitePieces, blackPieces)) {
+        if (canCastleLeft(whitePieces, blackPieces)) {
             double squaredDistanceToCastlingPoint = pos.subtract(kingCastlingPointLeft).getSquaredLength();
-            if(squaredDistanceToCastlingPoint < closestLengthSquaredSoFar) {
-                getUnmovedLeftRook(whitePieces, blackPieces).castle();
+            if (squaredDistanceToCastlingPoint < closestLengthSquaredSoFar) {
                 return kingCastlingPointLeft;
             }
         }
@@ -238,10 +225,22 @@ public final class King extends Piece {
         }
     }
 
-    static ImageIcon moveAreaImage = ImageManager.resize(ImageManager.kingMove, Board.boardSizePixels.scale(0.25));
+    static ImageIcon moveAreaImageNormal = ImageManager.resize(ImageManager.kingMoveNormal,
+            Board.boardSizePixels.scale(0.25));
+    static ImageIcon moveAreaImageLeftCastle = ImageManager.resize(ImageManager.kingMoveLeftCastle,
+            (int) (Board.boardSizePixels.x * 0.25 * ImageManager.kingMoveLeftCastle.getIconWidth()
+                    / ImageManager.kingMoveLeftCastle.getIconHeight()));
+    static ImageIcon moveAreaImageRightCastle = ImageManager.resize(ImageManager.kingMoveRightCastle,
+            (int) (Board.boardSizePixels.x * 0.25 * ImageManager.kingMoveRightCastle.getIconWidth()
+                    / ImageManager.kingMoveRightCastle.getIconHeight()));
+    static ImageIcon moveAreaImageLeftRightCastle = ImageManager.resize(ImageManager.kingMoveLeftRightCastle,
+            (int) (Board.boardSizePixels.x * 0.25 * ImageManager.kingMoveLeftRightCastle.getIconWidth()
+                    / ImageManager.kingMoveLeftRightCastle.getIconHeight()));
 
     public ImageIcon getMoveAreaIcon() {
-        return moveAreaImage;
+        if (!getHasMoved())
+            return moveAreaImageLeftRightCastle;
+        return moveAreaImageNormal;
     }
 
     static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
