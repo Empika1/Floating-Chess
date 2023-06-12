@@ -192,7 +192,7 @@ public class ReplayScreen extends JPanel {
         blackPiecesCaptured.draw();
     }
 
-    void backOneMove() {
+    void backOneMove() { //goes back one move
         currentMoveNum--; //reduce the current move
         setBoardState(); //update board state
         forwardButton.setEnabled(true); //it is always possible to go forward one move if you have just gone back one move
@@ -200,7 +200,7 @@ public class ReplayScreen extends JPanel {
             backButton.setEnabled(false); //if there are no more moves to go back, disable back button
     }
 
-    void forwardOneMove() { //exact same as backonemove but in reverse
+    void forwardOneMove() { //goes forward one move, exact same as backonemove but in reverse
         currentMoveNum++;
         setBoardState();
         backButton.setEnabled(true);
@@ -208,22 +208,22 @@ public class ReplayScreen extends JPanel {
             forwardButton.setEnabled(false);
     }
 
-    void openReplay() {
-        if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+    void openReplay() { //opens a replay from a file
+        if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { //shows open dialog, and if successful
             try {
-                Replay loadedReplay = Replay.readFromFile(fc.getSelectedFile());
-                App.displayReplayScreen(loadedReplay);
-            } catch (IOException | ClassNotFoundException e) {
+                Replay loadedReplay = Replay.readFromFile(fc.getSelectedFile()); //tries to read the file to a replay
+                App.displayReplayScreen(loadedReplay); //tries to display a new replay screen with that file
+            } catch (IOException | ClassNotFoundException e) { //if your replay file is invalid, do nothing (great error handling i know)
             }
         }
     }
 
-    void saveReplay() {
-        fc.setSelectedFile(new File("Replay.fcreplay"));
-        if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-            try {
+    void saveReplay() { //saves a replay to a file
+        fc.setSelectedFile(new File("Replay.fcreplay")); //sets the default file name as "Replay.fcreplay"
+        if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) { //shows save dialog, and if successful
+            try { //tries to save the file to a replay
                 Replay.saveToFile(r, fc.getSelectedFile());
-            } catch (IOException e) {
+            } catch (IOException e) { //if you manage to save it wrong somehow, do nothing 
             }
         }
     }
