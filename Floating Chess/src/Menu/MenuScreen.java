@@ -1,12 +1,9 @@
+//The main menu / title screen. This is what the game starts at
 package Menu;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import Pieces.*;
-import Replay.*;
-import Utils.*;
 import Board.*;
 import Images.ImageManager;
 import App.*;
@@ -17,24 +14,28 @@ public class MenuScreen extends JPanel {
     }
 
     static final ImageIcon titleLabel = ImageManager.resize(ImageManager.title, 450);
-    JLayeredPane layeredPane;
-    Board board;
+    JLayeredPane layeredPane; // layeredpane is used because i want a board behind the buttons so they have to
+                              // be on diff layers
+    Board board; // the board in the background
 
     void setupPanel() {
-        setLayout(new BorderLayout());
-        layeredPane = new JLayeredPane();
+        setLayout(new BorderLayout()); //set the layout to a boring layout because the interesting stuff is on the layeredpane
+        layeredPane = new JLayeredPane(); //make the layoutpane, add it, and set its layout
         add(layeredPane);
         layeredPane.setLayout(new GridBagLayout());
         layeredPane.setBackground(UIManager.getColor("Panel.background"));
 
-        board = new Board(false);
+        if (Math.random() > 0.1) //make it so the bg board either shows up with or without pieces, with no pieces as an easter egg
+            board = new Board(true);
+        else
+            board = new Board(false);
         GridBagConstraints boardConstraints = new GridBagConstraints();
         boardConstraints.insets = new Insets(10, 10, 10, 10);
         boardConstraints.gridheight = 4;
         boardConstraints.gridwidth = 1;
         boardConstraints.gridx = 0;
         boardConstraints.gridy = 0;
-        layeredPane.add(board, boardConstraints, 1);
+        layeredPane.add(board, boardConstraints, 1); //add the board to a further back layer. everything else goes on layer 0
 
         JLabel title = new JLabel(titleLabel, JLabel.CENTER);
         GridBagConstraints titleConstraints = new GridBagConstraints();
@@ -52,7 +53,7 @@ public class MenuScreen extends JPanel {
         playButton.setFocusPainted(false);
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                App.displayTimeControlDialog();
+                App.displayTimeControlDialog(); //if play button is pressed, show time control dialog
             }
         });
         GridBagConstraints playButtonConstraints = new GridBagConstraints();
@@ -70,7 +71,7 @@ public class MenuScreen extends JPanel {
         replayButton.setFocusPainted(false);
         replayButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                App.displayReplayScreen(null);
+                App.displayReplayScreen(null); //if replay button is pressed, go to the replay screen with no replay
             }
         });
         GridBagConstraints replayButtonConstraints = new GridBagConstraints();

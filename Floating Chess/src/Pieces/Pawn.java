@@ -1,11 +1,12 @@
+//Its a pawn. Yup
+//Some of the things in this file are very complicated and hard to explain so I will not comment all the details. Sorry.
+//Also, many of the things are explained in Piece.java already so I will not explain them twice
 package Pieces;
 
 import javax.swing.*;
-
 import java.util.*;
 import Images.*;
 import Utils.*;
-import Game.*;
 import Board.*;
 
 public final class Pawn extends Piece {
@@ -17,83 +18,10 @@ public final class Pawn extends Piece {
         return PieceType.PAWN;
     }
 
-    static final int moveLength = GameScreen.boardSizeI.x / 8;
-    static final int moveLengthDiagonal = moveLength;
+    static final int moveLength = Board.boardSizeI.x / 8; //the length that a pawn is able to move forward
+    static final int moveLengthDiagonal = moveLength; //the length that a pawn is able to move forward when taking diagonally
 
-    public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
-                blackPieces))
-            return false;
-
-        final int moveLengthScaled = (hasMoved ? moveLength : moveLength * 2);
-
-        Vector2I posRelative = new Vector2I(pos.x, 0);
-        Vector2I truePosRelative = new Vector2I(getTruePos().x, 0);
-        if (getColor() == ChessColor.WHITE) {
-            posRelative.y = pos.y;
-            truePosRelative.y = getTruePos().y;
-        } else {
-            posRelative.y = GameScreen.boardSizeI.y - pos.y;
-            truePosRelative.y = GameScreen.boardSizeI.y - getTruePos().y;
-        }
-
-        if (posRelative.x == truePosRelative.x && posRelative.y <= truePosRelative.y
-                && posRelative.y >= truePosRelative.y - moveLengthScaled
-                && !isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces)) {
-            for (Piece p : whitePieces) {
-                Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(pos),
-                        new Vector2(getTruePos()), new Vector2(p.getTruePos()),
-                        getHitboxRadius() + p.getHitboxRadius());
-                for (Vector2 v : lineCircleIntersections) {
-                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v))
-                        return false;
-                }
-            }
-            for (Piece p : blackPieces) {
-                Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(pos),
-                        new Vector2(getTruePos()), new Vector2(p.getTruePos()),
-                        getHitboxRadius() + p.getHitboxRadius());
-                for (Vector2 v : lineCircleIntersections) {
-                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v))
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        if (Math.abs(posRelative.x - truePosRelative.x) == truePosRelative.y - posRelative.y
-                && posRelative.y <= truePosRelative.y
-                && posRelative.y >= truePosRelative.y - moveLengthDiagonal
-                && isOverlappingOppositeColorPiece(pos, whitePieces, blackPieces)) {
-            ArrayList<Piece> sameColorPieces = color == ChessColor.WHITE ? whitePieces : blackPieces;
-            for (Piece p : sameColorPieces) {
-                Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(pos),
-                        new Vector2(getTruePos()), new Vector2(p.getTruePos()),
-                        getHitboxRadius() + p.getHitboxRadius());
-                for (Vector2 v : lineCircleIntersections) {
-                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v))
-                        return false;
-                }
-            }
-
-            ArrayList<Piece> oppositeColorPieces = color == ChessColor.WHITE ? blackPieces : whitePieces;
-            for (Piece p : oppositeColorPieces) {
-                Vector2[] lineCircleIntersections = Geometry.lineCircleIntersections(new Vector2(pos),
-                        new Vector2(getTruePos()), new Vector2(p.getTruePos()),
-                        getHitboxRadius() + p.getHitboxRadius());
-                for (Vector2 v : lineCircleIntersections) {
-                    if (Geometry.isPointInRect(new Vector2(pos), new Vector2(getTruePos()), v)
-                            && !hitboxOverlapsHitbox(pos, p))
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        return false;
-    }
-
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //gets the closest point to a given input point that the pawn is able to move to
         int moveLengthScaled = (hasMoved ? moveLength : moveLength * 2);
 
         Vector2I searchDir = color == ChessColor.WHITE ? new Vector2I(0, -1) : new Vector2I(0, 1);
@@ -202,7 +130,7 @@ public final class Pawn extends Piece {
             return foundPos3;
     }
 
-    static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * Board.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;
@@ -237,7 +165,7 @@ public final class Pawn extends Piece {
     static ImageIcon moveAreaImageFirstBlack = ImageManager.resize(ImageManager.pawnMoveFirstBlack,
             Board.boardSizePixels);
 
-    public ImageIcon getMoveAreaIcon() {
+    public ImageIcon getMoveAreaIcon() { //the pawn has vertically reflected move areas depending on if its white or black, and if it has moved already or not
         if (hasMoved) {
             if (getColor() == ChessColor.WHITE)
                 return moveAreaImageNormalWhite;
@@ -252,7 +180,7 @@ public final class Pawn extends Piece {
     }
 
     static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
-            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+            Board.iPosToPixelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
 
     public ImageIcon getHitboxIcon() {
         return hitboxImage;

@@ -1,58 +1,56 @@
+//The screen where replays are watched
 package Replay;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import Pieces.*;
-import Replay.*;
 import Utils.*;
 import Board.*;
 import Images.ImageManager;
 import App.*;
 
 public class ReplayScreen extends JPanel {
-    Replay r;
+    Replay r; //The replay to watch
 
-    JFileChooser fc;
+    JFileChooser fc; //The filechooser to use for saving and loading replay files
 
-    Board board;
+    Board board; //the board used for this replayscreen
 
-    CapturedPieces whitePiecesCaptured;
-    JButton menuButton;
-    ChessTimer blackTimer;
+    CapturedPieces whitePiecesCaptured; //the white capturedpieces instance
+    JButton menuButton; //the button to go back to the menu
+    ChessTimer blackTimer; //the timer for the black player
 
-    CapturedPieces blackPiecesCaptured;
-    JButton backButton;
-    JButton forwardButton;
-    ChessTimer whiteTimer;
+    CapturedPieces blackPiecesCaptured; //the black capturedpieces instance
+    JButton backButton; //the button to go back one move
+    JButton forwardButton; //the button to go forward one move
+    ChessTimer whiteTimer; //the timer for the white player
 
-    JButton saveButton;
-    JButton loadButton;
+    JButton saveButton; //the button to save the current replay to a file
+    JButton loadButton; //the button to load a replay from a file
 
     public ReplayScreen(Replay replay) {
-        r = replay;
+        r = replay; //set the replay to what it should be
 
         fc = new JFileChooser();
         FileFilter fcFilter = new FileFilter() {
             public boolean accept(File f) {
-                return f.getName().endsWith(".fcreplay");
+                return f.getName().endsWith(".fcreplay"); //you can only select .fcreplay files
             }
             public String getDescription() {
-                return "Floating Chess Replay files";
+                return "Floating Chess Replay files"; //says that a /fcreplay file is a Floating Chess Replay File
             }
         };
-        fc.setFileFilter(fcFilter);
+        fc.setFileFilter(fcFilter); //sets the file filter
 
-        setLayout(new GridBagLayout());
-        setBackground(UIManager.getColor("Panel.background"));
+        setLayout(new GridBagLayout()); //set the panel layout to a gridbaglayout
+        setBackground(UIManager.getColor("Panel.background")); //set the background color to what it should be
 
-        board = new Board(false);
-        GridBagConstraints boardConstraints = new GridBagConstraints();
+        board = new Board(false); //create a new board, but don't put any pieces on it
+        GridBagConstraints boardConstraints = new GridBagConstraints(); //put it where it should be in the container
         boardConstraints.insets = new Insets(10, 10, 0, 10);
         boardConstraints.gridheight = 1;
         boardConstraints.gridwidth = 3;
@@ -60,7 +58,7 @@ public class ReplayScreen extends JPanel {
         boardConstraints.gridy = 1;
         add(board, boardConstraints);
 
-        whitePiecesCaptured = new CapturedPieces(ChessColor.WHITE, board);
+        whitePiecesCaptured = new CapturedPieces(ChessColor.WHITE, board); //ok the rest of this is literally just adding more stuff to the panel, you get the idea
         GridBagConstraints whitePiecesCapturedConstraints = new GridBagConstraints();
         whitePiecesCapturedConstraints.insets = new Insets(10, 10, 0, 10);
         whitePiecesCapturedConstraints.gridheight = 1;
@@ -73,7 +71,7 @@ public class ReplayScreen extends JPanel {
         menuButton.setFocusPainted(false);
         menuButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                App.displayMenuScreen();
+                App.displayMenuScreen(); //go back to the menu if the button is pressed
             }
         });
         GridBagConstraints menuButtonConstraints = new GridBagConstraints();
@@ -103,7 +101,7 @@ public class ReplayScreen extends JPanel {
         blackPiecesCapturedConstraints.gridy = 2;
         add(blackPiecesCaptured, blackPiecesCapturedConstraints);
 
-        JPanel backForwardButtonContainer = new JPanel(new GridLayout(1, 2));
+        JPanel backForwardButtonContainer = new JPanel(new GridLayout(1, 2)); //the container that holds the back and forward buttons because they dont fit nicely in the gridbaglayout
         GridBagConstraints backForwardButtonConstraints = new GridBagConstraints();
         backForwardButtonConstraints.insets = new Insets(10, 10, 0, 10);
         backForwardButtonConstraints.gridheight = 1;
@@ -118,7 +116,7 @@ public class ReplayScreen extends JPanel {
             backButton.setEnabled(false);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                backOneMove();
+                backOneMove(); //go back one move if the button is pressed
             }
         });
         backForwardButtonContainer.add(backButton);
@@ -129,7 +127,7 @@ public class ReplayScreen extends JPanel {
             forwardButton.setEnabled(false);
         forwardButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                forwardOneMove();
+                forwardOneMove(); //go forward one move if the button is pressed
             }
         });
         backForwardButtonContainer.add(forwardButton);
@@ -144,7 +142,7 @@ public class ReplayScreen extends JPanel {
         whiteTimerConstraints.gridy = 2;
         add(whiteTimer, whiteTimerConstraints);
 
-        JPanel saveLoadButtonContainer = new JPanel(new GridLayout(1, 2));
+        JPanel saveLoadButtonContainer = new JPanel(new GridLayout(1, 2)); //the container that holds the save and load buttons, for the same reason as the back and forward ones
         GridBagConstraints saveLoadButtonConstraints = new GridBagConstraints();
         saveLoadButtonConstraints.insets = new Insets(10, 10, 10, 10);
         saveLoadButtonConstraints.gridheight = 1;
@@ -159,7 +157,7 @@ public class ReplayScreen extends JPanel {
             saveButton.setEnabled(false);
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                saveReplay();
+                saveReplay(); //save the replay to a file
             }
         });
         saveLoadButtonContainer.add(saveButton);
@@ -168,20 +166,20 @@ public class ReplayScreen extends JPanel {
         loadButton.setFocusPainted(false);
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                openReplay();
+                openReplay(); //load a replay from a file
             }
         });
         saveLoadButtonContainer.add(loadButton);
 
         setVisible(true);
         if(r != null)
-            setBoardState();
+            setBoardState(); //if there is a replay
     }
 
-    int currentMoveNum = 0;
+    int currentMoveNum = 0; //the current move 
     void setBoardState() {
-        Move currentMove = r.moves.get(currentMoveNum);
-        board.whitePieces = currentMove.whitePieces();
+        Move currentMove = r.moves.get(currentMoveNum); //get the current move
+        board.whitePieces = currentMove.whitePieces(); //update all stats of the board
         board.blackPieces = currentMove.blackPieces();
         board.whitePiecesCaptured.clear();
         board.whitePiecesCaptured.addAll(currentMove.whitePiecesCaptured());
@@ -190,19 +188,19 @@ public class ReplayScreen extends JPanel {
         whiteTimer.setTimeLeft(currentMove.whiteTimeLeft());
         blackTimer.setTimeLeft(currentMove.blackTimeLeft());
         board.draw();
-        whitePiecesCaptured.draw(board);
-        blackPiecesCaptured.draw(board);
+        whitePiecesCaptured.draw();
+        blackPiecesCaptured.draw();
     }
 
     void backOneMove() {
-        currentMoveNum--;
-        setBoardState();
-        forwardButton.setEnabled(true);
+        currentMoveNum--; //reduce the current move
+        setBoardState(); //update board state
+        forwardButton.setEnabled(true); //it is always possible to go forward one move if you have just gone back one move
         if(currentMoveNum == 0)
-            backButton.setEnabled(false);
+            backButton.setEnabled(false); //if there are no more moves to go back, disable back button
     }
 
-    void forwardOneMove() {
+    void forwardOneMove() { //exact same as backonemove but in reverse
         currentMoveNum++;
         setBoardState();
         backButton.setEnabled(true);

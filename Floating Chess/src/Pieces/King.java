@@ -1,10 +1,12 @@
+//Its a king. Yup
+//Some of the things in this file are very complicated and hard to explain so I will not comment all the details. Sorry.
+//Also, many of the things are explained in Piece.java already so I will not explain them twice
 package Pieces;
 
 import javax.swing.*;
 import java.util.*;
 import Images.*;
 import Utils.*;
-import Game.*;
 import Board.*;
 
 public final class King extends Piece {
@@ -16,14 +18,14 @@ public final class King extends Piece {
         return PieceType.KING;
     }
 
-    final static int halfMoveSideLength = (int) (GameScreen.boardSizeI.x / 8);
+    final static int halfMoveSideLength = (int) (Board.boardSizeI.x / 8); //Half the side length of the square that the king can move in
 
-    public boolean isInMoveSquare(Vector2I pos) {
+    public boolean isInMoveSquare(Vector2I pos) { //determines if a given point is in the move square around the king
         return Geometry.isPointInRect(getTruePos().subtract(new Vector2I(halfMoveSideLength, halfMoveSideLength)),
                 getTruePos().add(new Vector2I(halfMoveSideLength, halfMoveSideLength)), pos);
     }
 
-    public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //determines if a king can move to a given point
         if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
                 blackPieces)) {
             return false;
@@ -48,10 +50,10 @@ public final class King extends Piece {
         return true;
     }
 
-    Vector2I kingCastlingPointRight = new Vector2I((int) (GameScreen.boardSizeI.x * 6.5 / 8), 0);
-    Vector2I kingCastlingPointLeft = new Vector2I((int) (GameScreen.boardSizeI.x * 2.5 / 8), 0);
+    Vector2I kingCastlingPointRight = new Vector2I((int) (Board.boardSizeI.x * 6.5 / 8), 0);
+    Vector2I kingCastlingPointLeft = new Vector2I((int) (Board.boardSizeI.x * 2.5 / 8), 0);
 
-    Rook getUnmovedRightRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    Rook getUnmovedRightRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //gets the rook of the same color of the king, to the right of the king, if said rook hasn't moved
         ArrayList<Piece> sameColorPieces = getColor() == ChessColor.WHITE ? whitePieces : blackPieces;
         Rook rightRook = null;
         for (Piece p : sameColorPieces) {
@@ -63,7 +65,7 @@ public final class King extends Piece {
         return rightRook;
     }
 
-    boolean canCastleRight(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    boolean canCastleRight(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //determines if the king is able to castle to the right
         if (getHasMoved())
             return false;
         Rook rightRook = getUnmovedRightRook(whitePieces, blackPieces);
@@ -103,7 +105,7 @@ public final class King extends Piece {
         return true;
     }
 
-    Rook getUnmovedLeftRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    Rook getUnmovedLeftRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //ditto but left
         ArrayList<Piece> sameColorPieces = getColor() == ChessColor.WHITE ? whitePieces : blackPieces;
         Rook rightRook = null;
         for (Piece p : sameColorPieces) {
@@ -115,7 +117,7 @@ public final class King extends Piece {
         return rightRook;
     }
 
-    boolean canCastleLeft(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    boolean canCastleLeft(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //ditto but left
         if (getHasMoved())
             return false;
         Rook leftRook = getUnmovedLeftRook(whitePieces, blackPieces);
@@ -155,7 +157,7 @@ public final class King extends Piece {
         return true;
     }
 
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //loops through all the points in the move square and finds the one closest to the input point that is able to be moved to.
         Vector2I searchPos = new Vector2I();
         double closestLengthSquaredSoFar = Double.MAX_VALUE;
         Vector2I closestPointSoFar = new Vector2I();
@@ -175,11 +177,11 @@ public final class King extends Piece {
         }
 
         if (getColor() == ChessColor.BLACK) {
-            kingCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
-            kingCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 0.5 / 8);
+            kingCastlingPointRight.y = (int) (Board.boardSizeI.x * 0.5 / 8);
+            kingCastlingPointLeft.y = (int) (Board.boardSizeI.x * 0.5 / 8);
         } else {
-            kingCastlingPointRight.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
-            kingCastlingPointLeft.y = (int) (GameScreen.boardSizeI.x * 7.5 / 8);
+            kingCastlingPointRight.y = (int) (Board.boardSizeI.x * 7.5 / 8);
+            kingCastlingPointLeft.y = (int) (Board.boardSizeI.x * 7.5 / 8);
         }
 
         if (canCastleRight(whitePieces, blackPieces)) {
@@ -199,7 +201,7 @@ public final class King extends Piece {
         return closestPointSoFar;
     }
 
-    static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * Board.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;
@@ -244,7 +246,7 @@ public final class King extends Piece {
     }
 
     static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
-            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+            Board.iPosToPixelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
 
     public ImageIcon getHitboxIcon() {
         return hitboxImage;

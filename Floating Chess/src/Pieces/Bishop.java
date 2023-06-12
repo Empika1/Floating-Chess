@@ -1,10 +1,12 @@
+//Its a bishop. Yup
+//Some of the things in this file are very complicated and hard to explain so I will not comment all the details. Sorry.
+//Also, many of the things are explained in Piece.java already so I will not explain them twice
 package Pieces;
 
 import javax.swing.*;
 import java.util.*;
 import Images.*;
 import Utils.*;
-import Game.*;
 import Board.*;
 
 public final class Bishop extends Piece {
@@ -16,11 +18,11 @@ public final class Bishop extends Piece {
         return PieceType.BISHOP;
     }
 
-    static final double maxAngleFromDiagonal = 5;
+    static final double maxAngleFromDiagonal = 5; //the max angle off a perfect diagonal that a point can be and still be in the bishop's move range
     static final double maxSlopeFromRightCardinal = Math.tan((45 + maxAngleFromDiagonal) * Math.PI / 180);
     static final double minSlopeFromRightCardinal = Math.tan((45 - maxAngleFromDiagonal) * Math.PI / 180);
 
-    public boolean isInValidAngle(Vector2I pos) {
+    public boolean isInValidAngle(Vector2I pos) { //Determines if a given point is in the range of valid angles to move to
         if (pos.x == getTruePos().x)
             return true;
 
@@ -32,7 +34,7 @@ public final class Bishop extends Piece {
         return absoluteSlope <= maxSlopeFromRightCardinal && absoluteSlope >= minSlopeFromRightCardinal;
     }
 
-    public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //Given a point A and the bishop at point B, this finds the point C on line AB that is closest to A but can still be moved to.
         Vector2 furthestPosSoFar = new Vector2(pos);
         double furthestSquaredDistanceSoFar = pos.subtract(getTruePos()).getSquaredLength();
 
@@ -40,15 +42,15 @@ public final class Bishop extends Piece {
         Vector2 truePosV2 = new Vector2(getTruePos());
 
         Vector2 topIntersection = Geometry.lineLineIntersection(truePosV2, posV2, new Vector2(0, getHitboxRadius()),
-                new Vector2(GameScreen.boardSizeI.x, getHitboxRadius()));
+                new Vector2(Board.boardSizeI.x, getHitboxRadius()));
         Vector2 bottomIntersection = Geometry.lineLineIntersection(truePosV2, posV2,
-                new Vector2(0, GameScreen.boardSizeI.y - getHitboxRadius()),
-                new Vector2(GameScreen.boardSizeI.x, GameScreen.boardSizeI.y - getHitboxRadius()));
+                new Vector2(0, Board.boardSizeI.y - getHitboxRadius()),
+                new Vector2(Board.boardSizeI.x, Board.boardSizeI.y - getHitboxRadius()));
         Vector2 leftIntersection = Geometry.lineLineIntersection(truePosV2, posV2, new Vector2(getHitboxRadius(), 0),
-                new Vector2(getHitboxRadius(), GameScreen.boardSizeI.y));
+                new Vector2(getHitboxRadius(), Board.boardSizeI.y));
         Vector2 rightIntersection = Geometry.lineLineIntersection(truePosV2, posV2,
-                new Vector2(GameScreen.boardSizeI.x - getHitboxRadius(), 0),
-                new Vector2(GameScreen.boardSizeI.x - getHitboxRadius(), GameScreen.boardSizeI.y));
+                new Vector2(Board.boardSizeI.x - getHitboxRadius(), 0),
+                new Vector2(Board.boardSizeI.x - getHitboxRadius(), Board.boardSizeI.y));
         if (topIntersection != null && truePosV2.y >= topIntersection.y && topIntersection.y >= posV2.y) {
             double squaredDistanceToIntersection = truePosV2.subtract(topIntersection).getSquaredLength();
             if (squaredDistanceToIntersection < furthestSquaredDistanceSoFar) {
@@ -118,17 +120,7 @@ public final class Bishop extends Piece {
         return furthestPosSoFarRounded;
     }
 
-    public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        if (isOverlappingEdge(pos))
-            return false;
-
-        if (!isInValidAngle(pos))
-            return false;
-
-        return closestClearPointOnLine(pos, whitePieces, blackPieces).equals(pos);
-    }
-
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //finds the closest point that can be moved to to a given point.
         if (pos == getTruePos())
             return pos;
 
@@ -152,7 +144,7 @@ public final class Bishop extends Piece {
         double closestSquaredDistanceSoFar = Double.MAX_VALUE;
         Vector2I searchPos;
         double searchSquaredDistance;
-        int maxSearch = (int) (GameScreen.boardSizeI.x * 0.16);
+        int maxSearch = (int) (Board.boardSizeI.x * 0.16);
         for (int i = 0; i < maxSearch; i++) {
             searchPos = searchStartPos.add(searchDir1.scale(i));
             if (!isInValidAngle(searchPos)) {
@@ -177,7 +169,7 @@ public final class Bishop extends Piece {
         return closestPosSoFar;
     }
 
-    static final int hitboxRadius = (int) (0.35 * GameScreen.boardSizeI.x / 8);
+    static final int hitboxRadius = (int) (0.35 * Board.boardSizeI.x / 8);
 
     public int getHitboxRadius() {
         return hitboxRadius;
@@ -210,7 +202,7 @@ public final class Bishop extends Piece {
     }
 
     static ImageIcon hitboxImage = ImageManager.resize(ImageManager.hitbox,
-            Board.boardPosToPanelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
+            Board.iPosToPixelPos(new Vector2I(hitboxRadius * 2, hitboxRadius * 2)));
 
     public ImageIcon getHitboxIcon() {
         return hitboxImage;
