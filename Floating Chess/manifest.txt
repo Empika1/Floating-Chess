@@ -1,2 +1,2 @@
-Main-Class: src.App.App
-Class-Path: src lib
+Main-Class: App.App
+
