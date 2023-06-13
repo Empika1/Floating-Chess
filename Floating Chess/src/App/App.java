@@ -1,4 +1,5 @@
 //The Main class of my game. This contains the JFrame and is where the switching between screens is handled
+//Command to build to a jar: jar -cfm FloatingChess.jar manifest.txt -C bin .
 package App;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ public class App {
         JFrame.setDefaultLookAndFeelDecorated(true);
 
         f = new JFrame("Floating Chess"); //create jframe and start on the menu screen
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         displayMenuScreen(); 
     }
 
