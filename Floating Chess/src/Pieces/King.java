@@ -18,14 +18,14 @@ public final class King extends Piece {
         return PieceType.KING;
     }
 
-    final static int halfMoveSideLength = (int) (Board.boardSizeI.x / 8); //Half the side length of the square that the king can move in
+    final static int halfMoveSideLength = (int) (Board.boardSizeI.x / 8); // Half the side length of the square that the king can move in
 
-    public boolean isInMoveSquare(Vector2I pos) { //determines if a given point is in the move square around the king
+    public boolean isInMoveSquare(Vector2I pos) { // determines if a given point is in the move square around the king
         return Geometry.isPointInRect(getTruePos().subtract(new Vector2I(halfMoveSideLength, halfMoveSideLength)),
                 getTruePos().add(new Vector2I(halfMoveSideLength, halfMoveSideLength)), pos);
     }
 
-    public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //determines if a king can move to a given point
+    public boolean canMoveTo(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // determines if a king can move to a given point
         if (isOverlappingEdge(pos) || isOverlappingSameColorPiece(pos, whitePieces,
                 blackPieces)) {
             return false;
@@ -53,7 +53,7 @@ public final class King extends Piece {
     Vector2I kingCastlingPointRight = new Vector2I((int) (Board.boardSizeI.x * 6.5 / 8), 0);
     Vector2I kingCastlingPointLeft = new Vector2I((int) (Board.boardSizeI.x * 2.5 / 8), 0);
 
-    Rook getUnmovedRightRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //gets the rook of the same color of the king, to the right of the king, if said rook hasn't moved
+    Rook getUnmovedRightRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // gets the rook of the same color of the king, to the right of the king, if said rook hasn't moved
         ArrayList<Piece> sameColorPieces = getColor() == ChessColor.WHITE ? whitePieces : blackPieces;
         Rook rightRook = null;
         for (Piece p : sameColorPieces) {
@@ -65,7 +65,7 @@ public final class King extends Piece {
         return rightRook;
     }
 
-    boolean canCastleRight(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //determines if the king is able to castle to the right
+    boolean canCastleRight(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // determines if the king is able to castle to the right
         if (getHasMoved())
             return false;
         Rook rightRook = getUnmovedRightRook(whitePieces, blackPieces);
@@ -105,7 +105,7 @@ public final class King extends Piece {
         return true;
     }
 
-    Rook getUnmovedLeftRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //ditto but left
+    Rook getUnmovedLeftRook(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // ditto but left
         ArrayList<Piece> sameColorPieces = getColor() == ChessColor.WHITE ? whitePieces : blackPieces;
         Rook rightRook = null;
         for (Piece p : sameColorPieces) {
@@ -117,7 +117,7 @@ public final class King extends Piece {
         return rightRook;
     }
 
-    boolean canCastleLeft(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //ditto but left
+    boolean canCastleLeft(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // ditto but left
         if (getHasMoved())
             return false;
         Rook leftRook = getUnmovedLeftRook(whitePieces, blackPieces);
@@ -157,7 +157,7 @@ public final class King extends Piece {
         return true;
     }
 
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //loops through all the points in the move square and finds the one closest to the input point that is able to be moved to.
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // loops through all the points in the move square and finds the one closest to the input point that is able to be moved to.
         Vector2I searchPos = new Vector2I();
         double closestLengthSquaredSoFar = Double.MAX_VALUE;
         Vector2I closestPointSoFar = new Vector2I();

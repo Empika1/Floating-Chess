@@ -18,11 +18,13 @@ public final class Bishop extends Piece {
         return PieceType.BISHOP;
     }
 
-    static final double maxAngleFromDiagonal = 5; //the max angle off a perfect diagonal that a point can be and still be in the bishop's move range
+    static final double maxAngleFromDiagonal = 5; // the max angle off a perfect diagonal that a point can be and still
+                                                  // be in the bishop's move range
     static final double maxSlopeFromRightCardinal = Math.tan((45 + maxAngleFromDiagonal) * Math.PI / 180);
     static final double minSlopeFromRightCardinal = Math.tan((45 - maxAngleFromDiagonal) * Math.PI / 180);
 
-    public boolean isInValidAngle(Vector2I pos) { //Determines if a given point is in the range of valid angles to move to
+    public boolean isInValidAngle(Vector2I pos) { // Determines if a given point is in the range of valid angles to move
+                                                  // to
         if (pos.x == getTruePos().x)
             return true;
 
@@ -34,7 +36,7 @@ public final class Bishop extends Piece {
         return absoluteSlope <= maxSlopeFromRightCardinal && absoluteSlope >= minSlopeFromRightCardinal;
     }
 
-    public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //Given a point A and the bishop at point B, this finds the point C on line AB that is closest to A but can still be moved to.
+    public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // Given a point A and the bishop at point B, this finds the point C on line AB that is closest to A but can still be moved to.
         Vector2 furthestPosSoFar = new Vector2(pos);
         double furthestSquaredDistanceSoFar = pos.subtract(getTruePos()).getSquaredLength();
 
@@ -120,7 +122,7 @@ public final class Bishop extends Piece {
         return furthestPosSoFarRounded;
     }
 
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //finds the closest point that can be moved to to a given point.
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // finds the closest point that can be moved to to a given point.
         if (pos == getTruePos())
             return pos;
 

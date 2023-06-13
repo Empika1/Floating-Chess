@@ -18,11 +18,11 @@ public final class Rook extends Piece {
         return PieceType.ROOK;
     }
 
-    static final double maxAngleFromCardinal = 5; //the max angle off a perfect cardinal that a point can be and still be in the rook's move range
+    static final double maxAngleFromCardinal = 5; // the max angle off a perfect cardinal that a point can be and still be in the rook's move range
     static final double maxSlopeFromRightCardinal = Math.tan(maxAngleFromCardinal * Math.PI / 180);
     static final double minSlopeFromTopCardinal = 1 / maxSlopeFromRightCardinal;
 
-    public boolean isInValidAngle(Vector2I pos) { //Determines if a given point is in the range of valid angles to move to
+    public boolean isInValidAngle(Vector2I pos) { // Determines if a given point is in the range of valid angles to move to
         if (pos.x == getTruePos().x)
             return true;
 
@@ -34,7 +34,7 @@ public final class Rook extends Piece {
         return absoluteSlope <= maxSlopeFromRightCardinal || absoluteSlope >= minSlopeFromTopCardinal;
     }
 
-    public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //Given a point A and the rook at point B, this finds the point C on line AB that is closest to A but can still be moved to.
+    public Vector2I closestClearPointOnLine(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // Given a point A and the rook at point B, this finds the point C on line AB that is closest to A but can still be moved to.
         Vector2 furthestPosSoFar = new Vector2(pos);
         double furthestSquaredDistanceSoFar = pos.subtract(getTruePos()).getSquaredLength();
 
@@ -120,7 +120,7 @@ public final class Rook extends Piece {
         return furthestPosSoFarRounded;
     }
 
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //finds the closest point that can be moved to to a given point.
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // finds the closest point that can be moved to to a given point.
         if (pos == getTruePos())
             return pos;
 

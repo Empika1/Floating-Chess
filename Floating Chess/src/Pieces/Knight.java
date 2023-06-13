@@ -18,9 +18,9 @@ public final class Knight extends Piece {
         return PieceType.KNIGHT;
     }
 
-    static final int moveRadius = (int) (Math.sqrt(5) * Board.boardSizeI.x / 8.0); //the radius of the circle around the knight that the knight is able to move to
+    static final int moveRadius = (int) (Math.sqrt(5) * Board.boardSizeI.x / 8.0); // the radius of the circle around the knight that the knight is able to move to
 
-    Vector2I closestPointOnRadius(Vector2I pos) { //gets the closest point on the radius to an input position
+    Vector2I closestPointOnRadius(Vector2I pos) { // gets the closest point on the radius to an input position
         Vector2I diff = pos.subtract(getTruePos());
         if (diff.getSquaredLength() == 0)
             return new Vector2I(getTruePos().x + moveRadius, getTruePos().y);
@@ -28,7 +28,7 @@ public final class Knight extends Piece {
         return getTruePos().add(diffScaled);
     }
 
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //loops through all points on the move radius and finds the closest to a given input position that can be moved to
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // loops through all points on the move radius and finds the closest to a given input position that can be moved to
         Vector2I searchPosSquare = new Vector2I(getTruePos().x + moveRadius, getTruePos().y + moveRadius);
         Vector2I searchPos;
         double searchDistanceSquared;

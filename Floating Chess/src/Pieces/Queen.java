@@ -18,20 +18,20 @@ public final class Queen extends Piece {
         return PieceType.QUEEN;
     }
 
-    Rook fakeRook = new Rook(); //a queen can move in the same way as a bishop and rook combined, so i made it literally a bishop and rook combined
+    Rook fakeRook = new Rook(); // a queen can move in the same way as a bishop and rook combined, so i made it literally a bishop and rook combined
     Bishop fakeBishop = new Bishop();
 
     public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) {
-        fakeRook.setTruePos(getTruePos(), false); //moves the imaginary rook to the same place as this
-        fakeRook.setColor(getColor()); //sets the imaginary rook's color to this one's
-        fakeBishop.setTruePos(getTruePos(), false); //same with bishop
+        fakeRook.setTruePos(getTruePos(), false); // moves the imaginary rook to the same place as this
+        fakeRook.setColor(getColor()); // sets the imaginary rook's color to this one's
+        fakeBishop.setTruePos(getTruePos(), false); // same with bishop
         fakeBishop.setColor(getColor());
-        Vector2I rookPoint = fakeRook.closestValidPoint(pos, whitePieces, blackPieces); //finds the closest point that the rook can move to
-        double rookSquaredDistance = pos.subtract(rookPoint).getSquaredLength(); //gets the distance to that point
-        Vector2I bishopPoint = fakeBishop.closestValidPoint(pos, whitePieces, blackPieces); //finds the closest point tha the bishop can move to
-        double bishopSquaredDistance = pos.subtract(bishopPoint).getSquaredLength(); //gets the distance to that point
-        
-        if (rookSquaredDistance < bishopSquaredDistance) //returns the closer of the 2 points
+        Vector2I rookPoint = fakeRook.closestValidPoint(pos, whitePieces, blackPieces); // finds the closest point that the rook can move to
+        double rookSquaredDistance = pos.subtract(rookPoint).getSquaredLength(); // gets the distance to that point
+        Vector2I bishopPoint = fakeBishop.closestValidPoint(pos, whitePieces, blackPieces); // finds the closest point that the bishop can move to
+        double bishopSquaredDistance = pos.subtract(bishopPoint).getSquaredLength(); // gets the distance to that point
+
+        if (rookSquaredDistance < bishopSquaredDistance) // returns the closer of the 2 points
             return rookPoint;
         else
             return bishopPoint;

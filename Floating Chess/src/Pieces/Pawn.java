@@ -18,10 +18,10 @@ public final class Pawn extends Piece {
         return PieceType.PAWN;
     }
 
-    static final int moveLength = Board.boardSizeI.x / 8; //the length that a pawn is able to move forward
-    static final int moveLengthDiagonal = moveLength; //the length that a pawn is able to move forward when taking diagonally
+    static final int moveLength = Board.boardSizeI.x / 8; // the length that a pawn is able to move forward
+    static final int moveLengthDiagonal = moveLength; // the length that a pawn is able to move forward when taking diagonally
 
-    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { //gets the closest point to a given input point that the pawn is able to move to
+    public Vector2I closestValidPoint(Vector2I pos, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces) { // gets the closest point to a given input point that the pawn is able to move to
         int moveLengthScaled = (hasMoved ? moveLength : moveLength * 2);
 
         Vector2I searchDir = color == ChessColor.WHITE ? new Vector2I(0, -1) : new Vector2I(0, 1);
@@ -76,7 +76,7 @@ public final class Pawn extends Piece {
                 continue;
 
             oppositeColorPiecesThatHaveBeenOverlapped2
-                .addAll(oppositeColorPiecesOverlapping(searchPos, whitePieces, blackPieces));
+                    .addAll(oppositeColorPiecesOverlapping(searchPos, whitePieces, blackPieces));
 
             double currentSquaredDistance = pos.subtract(searchPos).getSquaredLength();
             if (currentSquaredDistance < foundSquaredDistance2) {
@@ -112,7 +112,7 @@ public final class Pawn extends Piece {
                 continue;
 
             oppositeColorPiecesThatHaveBeenOverlapped3
-                .addAll(oppositeColorPiecesOverlapping(searchPos, whitePieces, blackPieces));
+                    .addAll(oppositeColorPiecesOverlapping(searchPos, whitePieces, blackPieces));
 
             double currentSquaredDistance = pos.subtract(searchPos).getSquaredLength();
             if (currentSquaredDistance < foundSquaredDistance3) {
@@ -165,7 +165,7 @@ public final class Pawn extends Piece {
     static ImageIcon moveAreaImageFirstBlack = ImageManager.resize(ImageManager.pawnMoveFirstBlack,
             Board.boardSizePixels);
 
-    public ImageIcon getMoveAreaIcon() { //the pawn has vertically reflected move areas depending on if its white or black, and if it has moved already or not
+    public ImageIcon getMoveAreaIcon() { // the pawn has vertically reflected move areas depending on if its white or black, and if it has moved already or not
         if (hasMoved) {
             if (getColor() == ChessColor.WHITE)
                 return moveAreaImageNormalWhite;
