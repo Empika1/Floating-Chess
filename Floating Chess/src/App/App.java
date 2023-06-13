@@ -35,7 +35,7 @@ public class App {
                 JOptionPane.PLAIN_MESSAGE, null,
                 options, options[3]);
         if (n.equals(options[0]))
-            displayGameScreen(60000);
+            displayGameScreen(60000); //all of these options are in milliseconds
         else if (n.equals(options[1]))
             displayGameScreen(180000);
         else if (n.equals(options[2]))
