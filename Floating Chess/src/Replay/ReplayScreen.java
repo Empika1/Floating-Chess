@@ -215,8 +215,7 @@ public class ReplayScreen extends JPanel {
             try {
                 Replay loadedReplay = Replay.readFromFile(fc.getSelectedFile()); // tries to read the file to a replay
                 App.displayReplayScreen(loadedReplay); // tries to display a new replay screen with that file
-            } catch (IOException | ClassNotFoundException e) { // if your replay file is invalid, do nothing (great
-                                                               // error handling i know)
+            } catch (IOException | ClassNotFoundException e) { // if your replay file is invalid, do nothing (great error handling i know)
             }
         }
     }
