@@ -36,6 +36,8 @@ public class App {
                 "Choose a time control", "Time Control",
                 JOptionPane.PLAIN_MESSAGE, null,
                 options, options[3]);
+        if(n == null)
+            return;
         if (n.equals(options[0]))
             displayGameScreen(60000); //all of these options are in milliseconds
         else if (n.equals(options[1]))
