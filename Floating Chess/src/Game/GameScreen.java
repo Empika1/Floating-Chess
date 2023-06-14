@@ -165,6 +165,10 @@ public class GameScreen extends JPanel {
             board.heldPiece = null;
             mouseLeftPressedBoard = false; // say that the left button isnt pressed anymore
             board.piecesThatWillBeCaptured.clear(); // remove all the pieces that would have been captured
+            for(Piece p : board.whitePieces) //reset the position of all the pieces to prevent werird visual bugs
+                p.setVisiblePos(p.getTruePos());
+            for(Piece p : board.blackPieces) 
+                p.setVisiblePos(p.getTruePos());
         } else if (mouseLeftPressedBoard && board.heldPiece == null) { // else if the left mouse button is pressed and there is not a piece being held yet
             if (board.turn == ChessColor.WHITE) { // loop through all the pieces on the board of the right color, find which one is being held, and make it the held piece
                 for (Piece p : board.whitePieces) {
@@ -211,7 +215,7 @@ public class GameScreen extends JPanel {
                 if (rightRook != null) // if there is a right rook, then set its visible position to its actual position. this is so it doesnt get stuck in its castling position if you abort a castle
                     rightRook.setVisiblePos(rightRook.getTruePos().copy());
                 if (leftRook != null)
-                    leftRook.setVisiblePos(leftRook.getTruePos().copy()); // dito for leftrook
+                    leftRook.setVisiblePos(leftRook.getTruePos().copy()); // ditto for leftrook
                 if (board.heldPiece.getVisiblePos().x == (int) (Board.boardSizeI.x * 6.5 / 8)) { // if the king is in its right castling position
                     rightRook.setVisiblePos(
                             new Vector2I((int) (Board.boardSizeI.x * 5.5 / 8), rightRook.getTruePos().y)); // set the rightrook to its corresponding castling position
